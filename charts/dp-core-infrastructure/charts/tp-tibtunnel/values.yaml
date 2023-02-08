@@ -1,0 +1,50 @@
+## CONTEXT
+
+
+global:
+  tibcoDataPlaneId: "abcd"
+  subscriptionId: "sub1"
+  dockerRegistry: "reldocker.tibco.com"
+
+# tibtunnel cli flags
+connect:
+  debug: true # Enable debug logging
+  payload: false # Display payload data in the debug logs. Requires flag 'debug'. WARNING: Payload might contain sensitive data!
+  dataChunkSize: "" # Set the max size(in KB) of data for a single read/write operation, default is 32
+  dataAckMode: false # Enable/disable data ack
+  remoteDebug: true # Enable debug logging of this tunnel connection inside application (running in TIBCO Cloud)
+  logFile: "" # Full path to the output log file. If not specified, the logs will be printed on stdout
+  configDir: "" # Full path to the directory where to store the configuration file(s) (default "~/.tibtunnel")
+  networkCheckUrl: "https://www.google.com" # Url to check for network connectivity
+  infiniteRetries: false # Irrespective of any error, keep trying to discover and connect to establish hybrid connectivity
+  url: "" # Connect Url generated from TIBCO Cloud Control plane
+  onPremHost: "" #service name of on prem host
+  onPremPort: "80" #port number of the service.
+configure:
+  profile: "" #The name of the profile to create or update
+  accessKey: "abc" #Specify the TIBCO AccessKey secret to be used for authenticationd
+
+# Resources
+# https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+resources:
+  requests:
+    cpu: 500m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+
+# no of tibtunnel pods
+replicaCount: "1"
+
+image:
+  registry: ""
+  repository: /stratosphere/tp-tibtunnel
+  pullPolicy: Always
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+affinity: {}
+
+tolerations: {}
