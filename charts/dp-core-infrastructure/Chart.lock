@@ -4,9 +4,9 @@ dependencies:
   version: 1.0.14
 - name: tp-provisioner-agent
   repository: http://helmc-tcc.na.tibco.com/latest
-  version: 1.0.44
+  version: 1.0.46
 - name: haproxy-ingress
   repository: ""
   version: v0.14.0
-digest: sha256:c99d678a6c056d39a8571833668339439e14fc49607d0c9904b458f6c32cbe82
-generated: "2023-02-08T08:38:58.671507443Z"
+digest: sha256:d692e84ca675e7eecb32c9c0bbb1188d30630b1f9fd07d40a3b7e30bd39fb63c
+generated: "2023-02-09T11:49:22.7947-06:00"
