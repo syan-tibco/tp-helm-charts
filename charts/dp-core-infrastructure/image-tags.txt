@@ -1,2 +1,0 @@
-stratosphere/tp-provisioner-agent:44
-stratosphere/tp-tibtunnel:14
