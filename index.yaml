@@ -1,5 +1,20 @@
 apiVersion: v1
 entries:
+  dp-config-es:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-02-23T02:54:06.536651332Z"
+    description: dp-config-es
+    digest: 02d85078ad944c0073ac4f774642a7db02d5d1f81d82e7cd3e6a8da34ecd5ffa
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-es
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.0/dp-config-es-1.0.0.tgz
+    version: 1.0.0
   dp-core-infrastructure:
   - apiVersion: v2
     appVersion: 1.0.46
@@ -70,4 +85,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.38/dp-core-infrastructure-1.0.38.tgz
     version: 1.0.38
-generated: "2023-02-22T23:22:25.482713819Z"
+generated: "2023-02-23T02:54:06.536660132Z"
