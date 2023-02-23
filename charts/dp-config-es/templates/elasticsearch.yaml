@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  version: 8.5.0
+  version: {{ .Values.es.version }}
   nodeSets:
     - name: default
       count: 1

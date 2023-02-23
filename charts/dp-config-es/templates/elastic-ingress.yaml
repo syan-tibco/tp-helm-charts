@@ -6,15 +6,15 @@ metadata:
   annotations:
      traefik.ingress.kubernetes.io/router.entrypoints: websecure
 spec:
-  ingressClassName: {{ .Values.esIngress.ingressClassName }}
+  ingressClassName: {{ .Values.es.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.esIngress.host }}
+    - host: {{ .Values.es.ingress.host }}
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: {{ .Values.esIngress.service }}
+                name: {{ .Values.es.ingress.service }}
                 port:
                   number: 9200

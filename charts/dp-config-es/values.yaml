@@ -13,12 +13,16 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-esIngress:
-  ingressClassName: traefik
-  host: elastic.dp-platform.tcie.pro
-  service: dp-config-es-es-http
+es:
+  version: "8.5.0"
+  ingress:
+    ingressClassName: traefik
+    host: elastic.dp-platform.tcie.pro
+    service: dp-config-es-es-http
 
-kibanaIngress:
-  ingressClassName: traefik
-  host: kibana.dp-platform.tcie.pro
-  service: dp-config-es-kb-http
+kibana:
+  version: "8.5.0"
+  ingress:
+    ingressClassName: traefik
+    host: kibana.dp-platform.tcie.pro
+    service: dp-config-es-kb-http
