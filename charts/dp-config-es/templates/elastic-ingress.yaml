@@ -1,0 +1,20 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.name }}-elastic
+  namespace: {{ .Release.Namespace }}
+  annotations:
+     traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: {{ .Values.esIngress.ingressClassName }}
+  rules:
+    - host: {{ .Values.esIngress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.esIngress.service }}
+                port:
+                  number: 9200
