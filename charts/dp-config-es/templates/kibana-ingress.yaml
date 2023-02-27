@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: {{ .Values.kibana.ingress.ingressClassName }}
   rules:
-    - host: {{ .Values.kibana.ingress.host }}
+    - host: {{ .Values.kibana.ingress.host }}.{{ .Values.domain }}
       http:
         paths:
           - path: /
@@ -17,4 +17,4 @@ spec:
               service:
                 name: {{ .Values.kibana.ingress.service }}
                 port:
-                  number: 5601
+                  name: https

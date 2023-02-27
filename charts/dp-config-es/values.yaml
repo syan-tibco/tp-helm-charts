@@ -13,16 +13,24 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+storage:
+  name: gp3enc
+  reclaimPolicy: Delete
+
+domain: dp-platform.tcie.pro
+
 es:
-  version: "8.5.0"
+  version: "8.6.2"
+  storage:
+    name: gp3enc
   ingress:
     ingressClassName: traefik
-    host: elastic.dp-platform.tcie.pro
+    host: elastic
     service: dp-config-es-es-http
 
 kibana:
-  version: "8.5.0"
+  version: "8.6.2"
   ingress:
     ingressClassName: traefik
-    host: kibana.dp-platform.tcie.pro
+    host: kibana
     service: dp-config-es-kb-http

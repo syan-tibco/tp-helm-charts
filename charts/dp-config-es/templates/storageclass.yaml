@@ -1,0 +1,14 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{.Values.storage.name }}
+  namespace: {{ .Release.Namespace }}
+provisioner: ebs.csi.aws.com
+allowVolumeExpansion: true 
+reclaimPolicy: {{.Values.storage.reclaimPolicy}}
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  fsType: ext4
+  type: gp3
+  encrypted: "true" 
