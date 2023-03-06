@@ -1,6 +1,6 @@
 apiVersion: v2
 name: dp-config-aws
-version: "1.0.3"
+version: "1.0.4"
 appVersion: "1.0.0"
 description: dp-config-aws
 type: application

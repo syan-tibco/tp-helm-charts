@@ -18,7 +18,6 @@ spec:
       healthCheckSuccessCodes: "404"
     lbPort: 443
     lbProtocol: HTTPS
-    lbScheme: internal
     path: /*
     targetPort: 8443
     targetProtocol: HTTPS

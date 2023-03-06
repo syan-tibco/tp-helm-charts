@@ -53,7 +53,7 @@ spec:
         Listener01Port: "443"
         Listener01LBCertificateARN: TIBCO_COMMON_AWS_SVC_CERT_ID
         LBSecurityGroupId: TIBCO_COMMON_AWS_SECURITY_GROUP_ID_LB_TENANT
-        Scheme: internet-facing
+        Scheme: internal
         utilityBucket: TIBCO_COMMON_AWS_S3_LOGGING_BUCKET
       output:
         loadbalancerArnKey: Id
