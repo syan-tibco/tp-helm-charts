@@ -3,6 +3,24 @@ entries:
   dp-config-aws:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-03-06T23:01:59.579492439Z"
+    dependencies:
+    - name: traefik
+      repository: https://traefik.github.io/charts
+      version: 21.1.0
+    description: dp-config-aws
+    digest: 1a9c9035ef55596a62fc5e8b9997df4d438bdaf8657809c6580bb4169ed97c96
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aws
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aws-1.0.4/dp-config-aws-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-03-06T20:36:57.024565965Z"
     dependencies:
     - name: traefik
@@ -203,4 +221,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-06T20:36:57.024588865Z"
+generated: "2023-03-06T23:01:59.579518339Z"
