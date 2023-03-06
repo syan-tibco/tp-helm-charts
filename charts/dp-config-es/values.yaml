@@ -13,6 +13,8 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+evn: aws/on-perm
+
 storage:
   name: gp3enc
   reclaimPolicy: Delete
@@ -24,7 +26,7 @@ es:
   storage:
     name: gp3enc
   ingress:
-    ingressClassName: traefik
+    ingressClassName: nginx
     host: elastic
     service: dp-config-es-es-http
 

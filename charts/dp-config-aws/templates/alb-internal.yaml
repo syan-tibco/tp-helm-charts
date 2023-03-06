@@ -1,0 +1,45 @@
+{{- if .Values.internalDomain.enable -}}
+apiVersion: cloud.tibco.com/v1
+kind: TibcoAlb
+metadata:
+  name: traefik-ingress-internal
+  namespace: traefik-system
+spec:
+  profileName: lb-internal
+  endpoint:
+    healthCheckSetting:
+      checkConfig:
+        healthyThreshold: 2
+        interval: 20
+        timeout: 5
+        unhealthyThreshold: 2
+      healthCheckPath: /ping
+      healthCheckPort: 9000
+      healthCheckSuccessCodes: "404"
+    lbPort: 443
+    lbProtocol: HTTPS
+    lbScheme: Internet-facing
+    path: /*
+    targetPort: 8443
+    targetProtocol: HTTPS
+  serviceName: traefik
+
+{{- $domain := .Values.domain.internal }}
+{{- range $i, $e := .Values.internalDomain.list }}
+---
+apiVersion: cloud.tibco.com/v1
+kind: TibcoDns
+metadata:
+  name: traefik-ingress-internal-{{ $i }}
+  namespace: traefik-system
+spec:
+  dns:
+    domain: {{ $domain }}
+    vanityDomain: {{ $e.name }}
+  values:
+    crRef:
+      crKind: tibcoalb
+      name: traefik-ingress-external
+      namespace: traefik-system
+{{- end -}}
+{{- end -}}

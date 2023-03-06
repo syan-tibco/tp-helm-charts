@@ -1,0 +1,46 @@
+# name of chart
+name: dp-config-aws
+# label indicating which project this pipeline belongs to (Don't change)
+partOf: TIBCO-Platform
+# indicating which tools are used to generate this template (Don't change)
+createdBy: generator
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# the top level domain
+domain:
+  external: dp-platform.tcie.pro
+  internal: dp-platform.tcie.pro
+
+# internal domain list
+internalDomain:
+  enable: true
+  list:
+  - name: es-internal
+  - name: harbor-internal
+
+traefik:
+  hub: # for hub
+    enabled: false
+  service: # for external-dns
+    type: ClusterIP
+  ingressRoute: # for dashboard
+    dashboard:
+      matchRule: Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/api`)
+      entryPoints:
+        - traefik
+        - web
+        - websecure
+  providers: # for external service
+    kubernetesIngress:
+      allowExternalNameServices: true
+  nodeSelector: # for cic2
+    kubernetes.io/os: linux
+  additionalArguments:
+    - '--serversTransport.insecureSkipVerify=true'
