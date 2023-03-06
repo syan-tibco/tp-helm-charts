@@ -22,7 +22,7 @@ spec:
     path: /*
     targetPort: 8443
     targetProtocol: HTTPS
-  serviceName: traefik
+  serviceName: {{ .Release.Name }}-traefik
 
 {{- $domain := .Values.domain.internal }}
 {{- range $i, $e := .Values.internalDomain.list }}
