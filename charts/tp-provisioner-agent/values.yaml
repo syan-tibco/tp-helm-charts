@@ -12,7 +12,7 @@ resources:
 replicaCount: "1"
 
 image:
-  registry: reldocker.tibco.com
+  registry: ""
   repository: /stratosphere/tp-provisioner-agent
   pullPolicy: Always
 
@@ -28,9 +28,10 @@ ingress:
   annotations: {}
     # nginx custom annotation example
     #nginx.org/rewrites: "serviceName={{ include \"tp-provisioner-agent.consts.appName\" . }} rewrite=/" #https://github.com/nginxinc/kubernetes-ingress/tree/v2.4.2/examples/ingress-resources/rewrites
-  pathPrefix: /tibco/provisioner-agent/
-  className: "haproxy-{{.Values.global.subscriptionId}}-{{ .Values.global.tibcoDataPlaneId}}"  # Ex: nginx, haproxy
+  pathPrefix: /tibco/agent/infra/provisioner-agent/
+  className: "haproxy-dp-{{ .Values.global.tibcoDataPlaneId}}"  # Ex: nginx, haproxy
 
 global:
   tibcoDataPlaneId: "abcd"
   subscriptionId: "sub1"
+  dockerRegistry: reldocker.tibco.com

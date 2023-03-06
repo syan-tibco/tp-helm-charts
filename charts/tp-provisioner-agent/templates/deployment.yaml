@@ -19,7 +19,7 @@ spec:
       serviceAccountName: {{ include "tp-provisioner-agent.consts.appName" . }}
       containers:
       - name: provisioner-agent
-        image: {{ .Values.image.registry }}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
         resources:
