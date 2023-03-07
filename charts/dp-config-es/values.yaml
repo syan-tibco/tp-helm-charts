@@ -26,13 +26,13 @@ es:
   storage:
     name: gp3enc
   ingress:
-    ingressClassName: nginx
+    ingressClassName: dp-config-aws-traefik
     host: elastic
     service: dp-config-es-es-http
 
 kibana:
   version: "8.6.2"
   ingress:
-    ingressClassName: traefik
+    ingressClassName: dp-config-aws-traefik
     host: kibana
     service: dp-config-es-kb-http
