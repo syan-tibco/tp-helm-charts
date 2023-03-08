@@ -23,6 +23,7 @@ domain: dp-platform.tcie.pro
 
 es:
   version: "8.6.2"
+  count: 1
   storage:
     name: gp3enc
   ingress:
@@ -32,6 +33,7 @@ es:
 
 kibana:
   version: "8.6.2"
+  count: 1
   ingress:
     ingressClassName: dp-config-aws-traefik
     host: kibana
