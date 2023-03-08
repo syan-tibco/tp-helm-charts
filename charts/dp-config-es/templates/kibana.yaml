@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   version: {{ .Values.kibana.version }}
-  count: 1
+  count: {{ .Values.kibana.count }}
   config:
     # Configure this to a domain you control
     server.publicBaseUrl: https://kibana.{{ .Values.domain }}
