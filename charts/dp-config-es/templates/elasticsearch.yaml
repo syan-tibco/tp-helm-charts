@@ -7,7 +7,7 @@ spec:
   version: {{ .Values.es.version }}
   nodeSets:
     - name: default
-      count: 1
+      count: {{ .Values.es.count }}
       config:
         node.store.allow_mmap: false
       volumeClaimTemplates:
