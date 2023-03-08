@@ -76,6 +76,20 @@ entries:
   dp-config-es:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-03-08T21:35:58.698532236Z"
+    description: dp-config-es
+    digest: c245c76b71a43b4f47a1e45ebe25cc3cbad26e8a59dab056d0752cd889790a6d
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-es
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.5/dp-config-es-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-03-08T20:55:06.292592358Z"
     description: dp-config-es
     digest: 2d2a3303886ad95a4be5b07f76aeddff841e91329b6025fb431dbe1ef6ae75e0
@@ -249,4 +263,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-03-08T20:55:06.29262136Z"
+generated: "2023-03-08T21:35:58.698727738Z"
