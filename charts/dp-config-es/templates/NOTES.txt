@@ -5,4 +5,4 @@ TO access kibana: https://kibana.{{.Values.domain}}
 TO access service elasticsearch: https://elastic.{{.Values.domain}}
 
 To get elastic boot password:
-$ kubectl get secret dp-config-es-es-elastic-user -n ns1 -o go-template='{{.data.elastic | base64decode}}'; echo
+$ kubectl get secret dp-config-es-es-elastic-user -n {{ .Release.Namespace }} -o jsonpath="{.data.elastic}" | base64 --decode

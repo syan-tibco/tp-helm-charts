@@ -30,6 +30,8 @@ es:
     ingressClassName: dp-config-aws-traefik
     host: elastic
     service: dp-config-es-es-http
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
 kibana:
   version: "8.6.2"
@@ -38,3 +40,5 @@ kibana:
     ingressClassName: dp-config-aws-traefik
     host: kibana
     service: dp-config-es-kb-http
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
