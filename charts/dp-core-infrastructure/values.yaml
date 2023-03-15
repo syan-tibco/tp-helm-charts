@@ -31,7 +31,7 @@ tp-provisioner-agent:
     annotations: {}
       # nginx custom annotation example
       #nginx.org/rewrites: "serviceName={{ include \"tp-provisioner-agent.consts.appName\" . }} rewrite=/" #https://github.com/nginxinc/kubernetes-ingress/tree/v2.4.2/examples/ingress-resources/rewrites
-    pathPrefix: /tibco/provisioner-agent/
+    pathPrefix: /tibco/agent/infra/provisioner-agent/
     className: "haproxy-dp-{{ .Values.global.tibcoDataPlaneId}}"
     
 haproxy-ingress:
