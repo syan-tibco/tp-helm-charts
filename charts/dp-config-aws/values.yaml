@@ -25,7 +25,13 @@ internalDomain:
   - name: es-internal
   - name: harbor-internal
 
+ingressProvider: 
+  name: traefik #citrix
+  serviceName: #-cpx-service
+  port: 8443 #443
+
 traefik:
+  enabled: true
   hub: # for hub
     enabled: false
   service: # for external-dns
@@ -44,3 +50,12 @@ traefik:
     kubernetes.io/os: linux
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
+
+citrix-cpx-with-ingress-controller:
+  enabled: false
+  license:
+    accept: yes
+  crds:
+    install: true
+  ingressClass:
+    - citrix-adc
