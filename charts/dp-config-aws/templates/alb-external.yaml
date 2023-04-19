@@ -1,8 +1,8 @@
 apiVersion: cloud.tibco.com/v1
 kind: TibcoAlb
 metadata:
-  name: traefik-ingress-external
-  namespace: traefik-system
+  name: {{ .Values.ingressProvider.name }}-ingress-external
+  namespace: {{ .Release.Namespace }}
 spec:
   profileName: lb-external
   endpoint:
@@ -18,17 +18,16 @@ spec:
     lbPort: 443
     lbProtocol: HTTPS
     path: /*
-    targetPort: 8443
+    targetPort: {{ .Values.ingressProvider.port }}
     targetProtocol: HTTPS
-  serviceName: {{ .Release.Name }}-traefik
-
+  serviceName: {{ .Release.Name }}{{ .Values.ingressProvider.serviceName }}
 ---
 
 apiVersion: cloud.tibco.com/v1
 kind: TibcoDns
 metadata:
-  name: traefik-ingress-external
-  namespace: traefik-system
+  name: {{ .Values.ingressProvider.name }}-ingress-external
+  namespace: {{ .Release.Namespace }}
 spec:
   dns:
     domain: {{ .Values.domain.external }}
@@ -36,5 +35,5 @@ spec:
   values:
     crRef:
       crKind: tibcoalb
-      name: traefik-ingress-external
-      namespace: traefik-system
+      name: {{ .Values.ingressProvider.name }}-ingress-external
+      namespace: {{ .Release.Namespace }}

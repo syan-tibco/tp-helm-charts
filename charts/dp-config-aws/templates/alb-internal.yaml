@@ -2,8 +2,8 @@
 apiVersion: cloud.tibco.com/v1
 kind: TibcoAlb
 metadata:
-  name: traefik-ingress-internal
-  namespace: traefik-system
+  name: {{ .Values.ingressProvider.name }}-ingress-internal
+  namespace: {{ .Release.Namespace }}
 spec:
   profileName: lb-internal
   endpoint:
@@ -19,18 +19,20 @@ spec:
     lbPort: 443
     lbProtocol: HTTPS
     path: /*
-    targetPort: 8443
+    targetPort: {{ .Values.ingressProvider.port }}
     targetProtocol: HTTPS
-  serviceName: {{ .Release.Name }}-traefik
+  serviceName: {{ .Release.Name }}{{ .Values.ingressProvider.serviceName }}
 
 {{- $domain := .Values.domain.internal }}
+{{- $ingressName := .Values.ingressProvider.name }}
+{{- $releaseNamespace := .Release.Namespace }}
 {{- range $i, $e := .Values.internalDomain.list }}
 ---
 apiVersion: cloud.tibco.com/v1
 kind: TibcoDns
 metadata:
-  name: traefik-ingress-internal-{{ $i }}
-  namespace: traefik-system
+  name: {{ $ingressName }}-ingress-internal-{{ $i }}
+  namespace: {{ $releaseNamespace }}
 spec:
   dns:
     domain: {{ $domain }}
@@ -38,7 +40,7 @@ spec:
   values:
     crRef:
       crKind: tibcoalb
-      name: traefik-ingress-internal
-      namespace: traefik-system
+      name: {{ $ingressName }}-ingress-internal
+      namespace: {{ $releaseNamespace }}
 {{- end -}}
 {{- end -}}
