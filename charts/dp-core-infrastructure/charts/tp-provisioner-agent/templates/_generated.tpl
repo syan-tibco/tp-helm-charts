@@ -1,2 +1,2 @@
-{{- define "tp-provisioner-agent.generated.buildNumber" }}57{{end -}}
-{{- define "tp-provisioner-agent.generated.buildTimestamp" }}02-15-23_09.34.49_AM{{end -}}
+{{- define "tp-provisioner-agent.generated.buildNumber" }}93{{end -}}
+{{- define "tp-provisioner-agent.generated.buildTimestamp" }}04-19-23_09.42.00_AM{{end -}}

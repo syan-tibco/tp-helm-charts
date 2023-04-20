@@ -1,0 +1,1 @@
+stratosphere/platform-cp-proxy:latest

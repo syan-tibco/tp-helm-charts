@@ -27,6 +27,7 @@ tp-tibtunnel:
 
 tp-provisioner-agent:
   enabled: true
+  serviceAccount: ""
   ingress:
     annotations: {}
       # nginx custom annotation example
@@ -43,3 +44,9 @@ haproxy-ingress:
       enabled: true
     service:
       type: ClusterIP
+      
+tp-cp-proxy:
+  enabled: true
+  #Control Plane DNS domain.
+  # Cp Proxy will forward all the request to this DNS.
+  controlPlaneUrl: "https://account.local.cic2.pro"

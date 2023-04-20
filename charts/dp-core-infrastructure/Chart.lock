@@ -1,9 +1,15 @@
 dependencies:
-  - name: tp-tibtunnel
-    version: 1.0.*
-  - name: tp-provisioner-agent
-    version: 1.0.*
-  - name: haproxy-ingress
-    version: v0.14.0
-digest: sha256:bef6482bfdd38c2c14b9f8bc0394aba97d7264f8eb9b7bea2b3af8de90e67433
-generated: "2023-02-22T17:20:01.287643-06:00"
+- name: tp-tibtunnel
+  repository: http://helmc-tcc.na.tibco.com/latest
+  version: 1.0.17
+- name: tp-provisioner-agent
+  repository: http://helmc-tcc.na.tibco.com/latest
+  version: 1.0.93
+- name: tp-cp-proxy
+  repository: http://helmc-tcc.na.tibco.com/latest
+  version: 1.0.7
+- name: haproxy-ingress
+  repository: ""
+  version: v0.14.0
+digest: sha256:0f20537de9e040026305eb129f020b6581ebe6da3a43330f4782fd7721a3d076
+generated: "2023-04-19T10:04:54.8660699Z"

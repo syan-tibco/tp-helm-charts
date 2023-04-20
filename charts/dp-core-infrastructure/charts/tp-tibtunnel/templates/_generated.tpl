@@ -1,2 +1,2 @@
-{{- define "tp-tibtunnel.generated.buildNumber" }}15{{end -}}
-{{- define "tp-tibtunnel.generated.buildTimestamp" }}02-10-23_06.24.00_AM{{end -}}
+{{- define "tp-tibtunnel.generated.buildNumber" }}17{{end -}}
+{{- define "tp-tibtunnel.generated.buildTimestamp" }}03-17-23_05.04.20_AM{{end -}}

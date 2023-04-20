@@ -30,12 +30,14 @@ spec:
           
           {{- $debug := ternary "-d" "" .Values.connect.debug  -}}
           {{- $payload := ternary "--payload" "" .Values.connect.payload -}}
-          {{- $dataChunkSize := printf "%s%s" (ternary "--data-chunk-size " "" ( ne .Values.connect.dataChunkSize "")) .Values.connect.dataChunkSize -}}
-          {{- $dataAckMode := ternary "--data-ack-mode" "" .Values.connect.dataAckMode -}}
+          {{- $dataChunkSize := printf "%s%s" (ternary "--data-chunk-size " "" ( ne (.Values.connect.dataChunkSize| toString ) "")) (.Values.connect.dataChunkSize|toString) -}}
+          {{- $dataAckMode := printf "%s%t" "--data-ack-mode=" .Values.connect.dataAckMode -}}
           {{- $remoteDebug := ternary "--remote-debug" "" .Values.connect.remoteDebug -}}
           {{- $logFile := printf "%s%s" (ternary "--log-file " "" (ne .Values.connect.logFile "")) .Values.connect.logFile }}
-          echo "executing 'tp-tibtunnel connect {{ $debug }} {{ $payload }}  {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} -s {{tpl .Values.connect.onPremHost .}}:{{ .Values.connect.onPremPort }} {{ .Values.connect.url }}'";
-          tp-tibtunnel connect {{ $debug }} {{ $payload }} {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} -s {{ tpl .Values.connect.onPremHost .}}:{{.Values.connect.onPremPort}} {{ .Values.connect.url }};
+          {{- $networkCheckUrl := printf "%s%s" (ternary "--network-check-url " "" (ne .Values.connect.networkCheckUrl "")) .Values.connect.networkCheckUrl }}
+          {{- $infiniteRetries := ternary "--infinite-retries" "" .Values.connect.infiniteRetries -}}
+          echo "executing 'tp-tibtunnel connect {{ $debug }} {{ $payload }}  {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} {{ $networkCheckUrl }} {{ $infiniteRetries }} -s {{tpl .Values.connect.onPremHost .}}:{{ .Values.connect.onPremPort }} {{ .Values.connect.url }}'";
+          tp-tibtunnel connect {{ $debug }} {{ $payload }} {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} {{ $networkCheckUrl }} {{ $infiniteRetries }} -s {{ tpl .Values.connect.onPremHost .}}:{{.Values.connect.onPremPort}} {{ .Values.connect.url }};
           echo "exited";
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
