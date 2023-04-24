@@ -1,1 +1,1 @@
-stratosphere/platform-cp-proxy:latest
+stratosphere/tp-cp-proxy:latest

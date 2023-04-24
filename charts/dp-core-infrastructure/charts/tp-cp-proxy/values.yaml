@@ -17,7 +17,7 @@ controlPlaneUrl: "https://account.local.cic2.pro"
 
 image:
   registry: ""
-  repository: /stratosphere/platform-cp-proxy
+  repository: /stratosphere/tp-cp-proxy
   pullPolicy: IfNotPresent
 
 nodeSelector:
