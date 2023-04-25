@@ -1,12 +1,15 @@
+# User privided Service Account
+serviceAccount: ""
+
 # Resources
 # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 resources:
   requests:
     cpu: 500m
-    memory: 256Mi
+    memory: 1000Mi
   limits:
     cpu: 1000m
-    memory: 512Mi
+    memory: 1500Mi
 
 # no of replicas
 replicaCount: "1"
@@ -28,7 +31,7 @@ ingress:
   annotations: {}
     # nginx custom annotation example
     #nginx.org/rewrites: "serviceName={{ include \"tp-provisioner-agent.consts.appName\" . }} rewrite=/" #https://github.com/nginxinc/kubernetes-ingress/tree/v2.4.2/examples/ingress-resources/rewrites
-  pathPrefix: /tibco/provisioner-agent/
+  pathPrefix: /tibco/agent/infra/provisioner-agent/
   className: "haproxy-dp-{{ .Values.global.tibcoDataPlaneId}}"  # Ex: nginx, haproxy
 
 global:

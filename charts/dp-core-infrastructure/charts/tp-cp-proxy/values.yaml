@@ -1,0 +1,33 @@
+# Resources
+# https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+resources:
+  requests:
+    cpu: 100m
+    memory: 150Mi
+  limits:
+    cpu: 200m
+    memory: 300Mi
+
+# no of replicas
+replicaCount: "1"
+
+#Control Plane DNS domain.
+# Cp Proxy will forward all the request to this DNS.
+controlPlaneUrl: "https://account.local.cic2.pro"
+
+image:
+  registry: ""
+  repository: /stratosphere/tp-cp-proxy
+  pullPolicy: IfNotPresent
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+affinity: {}
+
+tolerations: {}
+
+global:
+  tibcoDataPlaneId: "abcd"
+  subscriptionId: "sub1"
+  dockerRegistry: reldocker.tibco.com

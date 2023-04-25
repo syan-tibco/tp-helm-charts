@@ -16,7 +16,11 @@ spec:
         {{- include "tp-provisioner-agent.shared.labels.standard" . | nindent 8 }}
       annotations:
     spec:
+      {{- if .Values.serviceAccount }}
+      serviceAccountName: {{ .Values.serviceAccount }}
+      {{- else }}
       serviceAccountName: {{ include "tp-provisioner-agent.consts.appName" . }}
+      {{- end }}
       containers:
       - name: provisioner-agent
         image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}

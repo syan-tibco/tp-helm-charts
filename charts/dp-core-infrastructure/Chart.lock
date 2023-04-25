@@ -1,9 +1,11 @@
 dependencies:
-  - name: tp-tibtunnel
-    version: 1.0.*
-  - name: tp-provisioner-agent
-    version: 1.0.*
-  - name: haproxy-ingress
-    version: v0.14.0
-digest: sha256:bef6482bfdd38c2c14b9f8bc0394aba97d7264f8eb9b7bea2b3af8de90e67433
-generated: "2023-02-22T17:20:01.287643-06:00"
+- name: tp-tibtunnel
+  version: 1.0.*
+- name: tp-provisioner-agent
+  version: 1.0.*
+- name: tp-cp-proxy
+  version: 1.0.*
+- name: haproxy-ingress
+  version: v0.14.0
+digest: sha256:399878393145ac95315cc5ca3aa00c5913a4883a460dc6488523e1925c5c8e60
+generated: "2023-04-24T06:04:28.967983528Z"

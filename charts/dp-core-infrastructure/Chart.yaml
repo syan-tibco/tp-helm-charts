@@ -1,16 +1,19 @@
 apiVersion: v2
-appVersion: 1.0.53
+appVersion: 1.0.68
 dependencies:
-  - condition: tp-tibtunnel.enabled
-    name: tp-tibtunnel
-    version: 1.0.*
-  - condition: tp-provisioner-agent.enabled
-    name: tp-provisioner-agent
-    version: 1.0.*
-  - condition: haproxy-ingress.enabled
-    name: haproxy-ingress
-    version: v0.14.0
+- condition: tp-tibtunnel.enabled
+  name: tp-tibtunnel
+  version: 1.0.*
+- condition: tp-provisioner-agent.enabled
+  name: tp-provisioner-agent
+  version: 1.0.*
+- condition: tp-cp-proxy.enabled
+  name: tp-cp-proxy
+  version: 1.0.*
+- condition: haproxy-ingress.enabled
+  name: haproxy-ingress
+  version: v0.14.0
 description: A Helm chart for TIBCO Platform Data Plane Infrastructure
 name: dp-core-infrastructure
 type: application
-version: 1.0.53
+version: 1.0.68

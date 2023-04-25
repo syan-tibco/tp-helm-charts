@@ -11,7 +11,7 @@ connect:
   debug: true # Enable debug logging
   payload: false # Display payload data in the debug logs. Requires flag 'debug'. WARNING: Payload might contain sensitive data!
   dataChunkSize: "" # Set the max size(in KB) of data for a single read/write operation, default is 32
-  dataAckMode: false # Enable/disable data ack
+  dataAckMode: true # Enable/disable data ack
   remoteDebug: true # Enable debug logging of this tunnel connection inside application (running in TIBCO Cloud)
   logFile: "" # Full path to the output log file. If not specified, the logs will be printed on stdout
   configDir: "" # Full path to the directory where to store the configuration file(s) (default "~/.tibtunnel")

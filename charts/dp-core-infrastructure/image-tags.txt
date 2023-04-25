@@ -1,2 +1,3 @@
-stratosphere/tp-provisioner-agent:57
-stratosphere/tp-tibtunnel:15
+stratosphere/tp-cp-proxy:13
+stratosphere/tp-provisioner-agent:93
+stratosphere/tp-tibtunnel:17
