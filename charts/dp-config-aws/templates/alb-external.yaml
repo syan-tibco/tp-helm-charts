@@ -20,7 +20,7 @@ spec:
     path: /*
     targetPort: {{ .Values.ingressProvider.port }}
     targetProtocol: HTTPS
-  serviceName: {{ .Release.Name }}{{ .Values.ingressProvider.serviceName }}
+  serviceName: {{ .Release.Name }}{{ .Values.ingressProvider.serviceNameSuffix }}
 ---
 
 apiVersion: cloud.tibco.com/v1

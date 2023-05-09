@@ -6,8 +6,9 @@
 `dp-config-aws` is used to create
 * external ingress for DP cluster
 * internal ingress for DP cluster
-* usage: helm install -n citrix-system citrix .
-* usage: helm install -n traefik-system traefik .
+* usage: helm install -n citrix-system citrix dp-config-aws --create-namespace
+* usage: helm install -n traefik-system traefik dp-config-aws --create-namespace
+* usage: helm install -n nginx-system nginx dp-config-aws --create-namespace
 
 `dp-config-es` is used to create
 * kibana 

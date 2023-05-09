@@ -25,13 +25,8 @@ internalDomain:
   - name: es-internal
   - name: harbor-internal
 
-ingressProvider: 
-  name: traefik #citrix
-  serviceName: #-cpx-service
-  port: 8443 #443
-
 traefik:
-  enabled: true
+  enabled: false
   hub: # for hub
     enabled: false
   service: # for external-dns
@@ -52,10 +47,37 @@ traefik:
     - '--serversTransport.insecureSkipVerify=true'
 
 citrix-cpx-with-ingress-controller:
-  enabled: false
+  enabled: true
   license:
     accept: yes
   crds:
     install: true
   ingressClass:
     - citrix-adc
+
+nginx:
+  enabled: false
+  controller:
+    service:
+      type: ClusterIP
+  ingressClass:
+    - nginx
+
+## traefik
+# ingressProvider:
+#   name: traefik
+#   serviceNameSuffix:
+#   port: 8443
+
+## nginx
+# ingressProvider:
+#   name: nginx
+#   serviceNameSuffix: -ingress-nginx-controller
+#   port: 443
+
+#default ingress provider
+# citrix
+ingressProvider:
+  name: citrix
+  serviceNameSuffix: -cpx-service
+  port: 443

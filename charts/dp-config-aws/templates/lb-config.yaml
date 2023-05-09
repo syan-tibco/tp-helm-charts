@@ -32,6 +32,7 @@ spec:
     - traefik-system
     - citrix-system
     - tibco-system
+    - nginx-system
 
 ---
 apiVersion: cloud.tibco.com/v1
@@ -68,3 +69,4 @@ spec:
     - traefik-system
     - citrix-system
     - tibco-system
+    - nginx-system
