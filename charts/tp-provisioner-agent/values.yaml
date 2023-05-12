@@ -35,3 +35,5 @@ global:
   tibcoDataPlaneId: "abcd"
   subscriptionId: "sub1"
   dockerRegistry: reldocker.tibco.com
+  serviceAccount: "" #user provided service account.
+  controlPlaneUrl: "https://account.local.cic2.pro"

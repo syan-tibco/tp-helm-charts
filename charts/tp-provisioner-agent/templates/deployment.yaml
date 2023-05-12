@@ -14,13 +14,21 @@ spec:
     metadata:
       labels:
         {{- include "tp-provisioner-agent.shared.labels.standard" . | nindent 8 }}
-      annotations:
     spec:
+      {{- if .Values.global.serviceAccount }}
+      serviceAccountName: {{ .Values.global.serviceAccount }}
+      {{- else }}
       serviceAccountName: {{ include "tp-provisioner-agent.consts.appName" . }}
+      {{- end }}
       containers:
       - name: provisioner-agent
         image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
+          - name: RELEASE_NAME
+            value: {{ .Release.Name }}
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10}}

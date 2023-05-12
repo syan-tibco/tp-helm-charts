@@ -1,3 +1,5 @@
+{{- if eq .Values.global.serviceAccount "" }}
+
 kind: ServiceAccount
 apiVersion: v1
 metadata:
@@ -23,4 +25,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "tp-provisioner-agent.consts.appName" . }}
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .Release.Namespace }}
+
+{{- end }}
