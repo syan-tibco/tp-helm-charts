@@ -1,0 +1,60 @@
+# name of chart
+name: dp-config-aks
+# label indicating which project this pipeline belongs to (Don't change)
+partOf: TIBCO-Platform
+# indicating which tools are used to generate this template (Don't change)
+createdBy: generator
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+ingressProvider:
+  name: traefik #citrix
+  serviceName: #-cpx-service
+  port: 8443 #443
+
+tls:
+  setup: production
+
+traefik:
+  enabled: true
+  hub: # for hub
+    enabled: false
+  service: # for external-dns
+    type: LoadBalancer
+    annotations:
+      external-dns.alpha.kubernetes.io/hostname: "*.az-dp-syan.azrtroposdev.azure.tcie.pro"
+  ingressRoute: # for dashboard
+    dashboard:
+      matchRule: Host(`traefik.az-dp-syan.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik.az-dp-syan.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/api`)
+      entryPoints:
+        - traefik
+        - web
+        - websecure
+  providers: # for external service
+    kubernetesIngress:
+      allowExternalNameServices: true
+  nodeSelector: # for cic2
+    kubernetes.io/os: linux
+  tlsStore: # for certificate
+    default:
+      defaultCertificate:
+        secretName: cic-certificate-production
+  additionalArguments:
+    - '--serversTransport.insecureSkipVerify=true'
+
+citrix-cpx-with-ingress-controller:
+  enabled: false
+  license:
+    accept: yes
+  crds:
+    install: true
+  ingressClass:
+    - citrix-adc
+
+

@@ -1,0 +1,35 @@
+{{- if eq .Values.tls.setup "staging" -}}
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cic-cert-subscription-scope-staging
+  namespace: tibco-system
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: cloud@tibco.com
+    privateKeySecretRef:
+      name: cic-cert-subscription-scope-staging
+    solvers:
+      - dns01:
+          azureDNS:
+            hostedZoneName: "{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}"
+            resourceGroupName: "{{ .Values.global.azureResourceGroup }}"
+            subscriptionID: "{{ .Values.global.azureSubscriptionId }}"
+            environment: AzurePublicCloud
+            managedIdentity:
+              clientID: "{{ .Values.global.azureAwiAsoDnsClientId }}"
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cic-certificate-staging
+  namespace: tibco-system
+spec:
+  secretName: cic-certificate-staging
+  issuerRef:
+    name: cic-cert-subscription-scope-staging
+    kind: ClusterIssuer
+  dnsNames:
+    - '*.{{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}'
+{{- end }}
