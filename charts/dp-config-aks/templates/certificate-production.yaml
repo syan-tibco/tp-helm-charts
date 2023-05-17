@@ -14,7 +14,7 @@ spec:
       - dns01:
           azureDNS:
             hostedZoneName: "{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}"
-            resourceGroupName: "{{ .Values.global.azureResourceGroup }}"
+            resourceGroupName: "{{ .Values.global.azureSubscriptionDnsResourceGroup }}"
             subscriptionID: "{{ .Values.global.azureSubscriptionId }}"
             environment: AzurePublicCloud
             managedIdentity:
