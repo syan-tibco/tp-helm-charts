@@ -30,8 +30,8 @@ traefik:
     enabled: false
   service: # for external-dns
     type: LoadBalancer
-    # annotations: # for external dns to register domain we can not set empty here as this is an array
-      # external-dns.alpha.kubernetes.io/hostname: "" # "*.az-dp-<ldap>.azrtroposdev.azure.tcie.pro"
+    annotations: # for external dns to register domain
+      external-dns.alpha.kubernetes.io/hostname: "" # "*.az-dp-<ldap>.azrtroposdev.azure.tcie.pro"
   ingressRoute: # for dashboard
     dashboard:
       matchRule: "" # Host(`traefik.az-dp-<ldap>.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik.az-dp-<ldap>.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/api`)
