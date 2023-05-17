@@ -1,5 +1,29 @@
 apiVersion: v1
 entries:
+  dp-config-aks:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-05-17T16:08:26.513928775Z"
+    dependencies:
+    - condition: traefik.enabled
+      name: traefik
+      repository: https://traefik.github.io/charts
+      version: 21.1.0
+    - condition: citrix-cpx-with-ingress-controller.enabled
+      name: citrix-cpx-with-ingress-controller
+      repository: https://citrix.github.io/citrix-helm-charts/
+      version: 1.30.1
+    description: dp-config-aks
+    digest: f65fc0004fd1b9542a5bfbea69bcaeaec54bdf5cac95b5a38cf89762b96f7bb6
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aks
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aks-1.0.0/dp-config-aks-1.0.0.tgz
+    version: 1.0.0
   dp-config-aws:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -353,4 +377,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-05-12T16:13:44.662426447Z"
+generated: "2023-05-17T16:08:26.513958875Z"
