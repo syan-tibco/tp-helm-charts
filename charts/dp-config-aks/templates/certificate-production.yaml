@@ -24,9 +24,9 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: cic-certificate-production
-  namespace: tibco-system
+  namespace: {{ .Values.tls.certificateNamespace }}
 spec:
-  secretName: cic-certificate-production
+  secretName: {{ .Values.tls.certificateSecretName }}
   issuerRef:
     name: cic-cert-subscription-scope-production
     kind: ClusterIssuer

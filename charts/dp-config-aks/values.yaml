@@ -20,6 +20,8 @@ ingressProvider:
 
 tls:
   setup: production
+  certificateNamespace: traefik-system
+  certificateSecretName: cic-certificate-production
 
 # the dns value is actually use pattern:
 # {{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}

@@ -24,9 +24,9 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: cic-certificate-staging
-  namespace: tibco-system
+  namespace: {{ .Values.tls.certificateNamespace }}
 spec:
-  secretName: cic-certificate-staging
+  secretName: {{ .Values.tls.certificateSecretName }}
   issuerRef:
     name: cic-cert-subscription-scope-staging
     kind: ClusterIssuer
