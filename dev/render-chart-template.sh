@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#
+# Copyright (c) 2023 TIBCO Software Inc.
+# All Rights Reserved. Confidential & Proprietary.
+#
+
+# ./render-chart-template.sh traefik-system dp-config-aws <path to chart>
+
+NAMESPACE=${1}
+RELEASE=${2}
+CHART_NAME=${3}
+
+[ -n "${NAMESPACE}" ] || { >&2 echo "ERROR: Please put NAMESPACE."; exit 1; }
+
+#pushd ../charts || exit
+
+# sample value
+cat <<EOF> values-customize.yaml
+traefik:
+  enabled: false
+global:
+  clusterName: "dp1-s01"
+  oidc_provider_arn: "arn:aws:iam::679789275507:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/6D124EBE627694798BA9BF7D18Exxxxx"
+  oidc_issuer_hostpath: "oidc.eks.us-east-2.amazonaws.com/id/6D124EBE627694798BA9BF7D18Exxxxx"
+  where: aws
+  env:
+    accountId: "679789275507"
+    region: "us-east-2"
+EOF
+
+get-repo-depency.sh ${CHART_NAME}
+
+echo "Generating template ${CIC_LAYER}"
+helm template --debug -n ${NAMESPACE} ${RELEASE} ${CHART_NAME} --values values-customize.yaml > template.yaml
+if [ $? -ne 0 ]; then
+  echo "helm template error"
+  exit
+fi
+
+echo "helm lint"
+helm lint -n ${NAMESPACE} ${CHART_NAME} --values values-customize.yaml
+
+#popd

@@ -5,10 +5,14 @@
 # All Rights Reserved. Confidential & Proprietary.
 #
 
-cd ../charts/dp-core-infrastructure || exit
+CHART_NAME=${1}
 
-yq -i eval 'del(.dependencies.[].repository)' Chart.yaml
-yq -i eval 'del(.dependencies.[].repository)' Chart.lock
+[ -n "${CHART_NAME}" ] || { >&2 echo "ERROR: Please set CHART_NAME."; exit 1; }
+
+pushd ../charts/${CHART_NAME} || exit
+
+#yq -i eval 'del(.dependencies.[].repository)' Chart.yaml
+#yq -i eval 'del(.dependencies.[].repository)' Chart.lock
 
 helmDepUp () {
   path=$1
@@ -34,6 +38,6 @@ helmDepUp () {
   )
 }
 
-cd .. || exit
+popd .. || exit
 
-helmDepUp dp-core-infrastructure
+helmDepUp ${CHART_NAME}

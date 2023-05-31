@@ -13,6 +13,25 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# this will create IAM role for fluent-bit to send logging message to opensearch or pipeline
+awsRole1:
+  enable: true
+  name: fluent-bit-service-role
+  namespace: tibco-system
+  # the suggested pattern is <cluster-name>-sa-<service-namespace>-<service-name>-<region> as IAM is a global object
+  iamName: dp1-s01-sa-fluent-system-fluent-bit-us-west-2
+  saName: fluent-bit # service account name
+  saNamespace: fluent-system # service namespace
+  tags:
+    tibco-platform: fluent
+  inlinePolicies:
+    - |
+      Version: '2012-10-17'
+      Statement:
+      - Action: osis:Ingest
+        Effect: Allow
+        Resource: arn:aws:osis:us-west-2:679789275507:pipeline/observability
+
 # the top level domain
 domain:
   external: dp-platform.tcie.pro
