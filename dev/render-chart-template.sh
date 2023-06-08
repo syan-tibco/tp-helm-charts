@@ -8,15 +8,19 @@
 # ./render-chart-template.sh traefik-system dp-config-aws <path to chart>
 
 NAMESPACE=${1}
-RELEASE=${2}
-CHART_NAME=${3}
+CHART_NAME=${2}
+UPDATE_REPO=${3}
 
 [ -n "${NAMESPACE}" ] || { >&2 echo "ERROR: Please put NAMESPACE."; exit 1; }
+[ -n "${CHART_NAME}" ] || { >&2 echo "ERROR: Please put CHART_NAME."; exit 1; }
+UPDATE_REPO=${UPDATE_REPO:-false}
 
-#pushd ../charts || exit
+pushd ../charts || exit
 
 # sample value
 cat <<EOF> values-customize.yaml
+awsRole2:
+  enable: true
 traefik:
   enabled: false
 global:
@@ -29,10 +33,12 @@ global:
     region: "us-east-2"
 EOF
 
-get-repo-depency.sh ${CHART_NAME}
+if [[ ${UPDATE_REPO} == true ]]; then
+  ../dev/get-repo-depency.sh ${CHART_NAME}
+fi
 
 echo "Generating template ${CIC_LAYER}"
-helm template --debug -n ${NAMESPACE} ${RELEASE} ${CHART_NAME} --values values-customize.yaml > template.yaml
+helm template --debug -n ${NAMESPACE} ${CHART_NAME} ${CHART_NAME} --values values-customize.yaml > template.yaml
 if [ $? -ne 0 ]; then
   echo "helm template error"
   exit
@@ -41,4 +47,4 @@ fi
 echo "helm lint"
 helm lint -n ${NAMESPACE} ${CHART_NAME} --values values-customize.yaml
 
-#popd
+popd

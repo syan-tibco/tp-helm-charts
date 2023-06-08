@@ -18,8 +18,6 @@ awsRole1:
   enable: true
   name: fluent-bit-service-role
   namespace: tibco-system
-  # the suggested pattern is <cluster-name>-sa-<service-namespace>-<service-name>-<region> as IAM is a global object
-  iamName: dp1-s01-sa-fluent-system-fluent-bit-us-west-2
   saName: fluent-bit # service account name
   saNamespace: fluent-system # service namespace
   tags:
@@ -31,6 +29,24 @@ awsRole1:
       - Action: osis:Ingest
         Effect: Allow
         Resource: arn:aws:osis:us-west-2:679789275507:pipeline/observability
+
+# this will create IAM role for ADOT (AWS Distro for OpenTelemetry) Collector
+# see: https://docs.aws.amazon.com/eks/latest/userguide/adot-iam.html
+awsRole2:
+  enable: false
+  name: adot-collector
+  namespace: tibco-system
+  saName: adot-collector # service account name
+  saNamespace: opentelemetry-operator-system # service namespace
+  tags:
+    tibco-platform: adot
+  attachedPolicies:
+    - "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"
+    - "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+    - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+
+adot:
+  writeEndpoint: https://aps-workspaces.us-west-2.amazonaws.com/workspaces/ws-1467d8ae-0d95-4f01-a004-c98abf459a8c/api/v1/remote_write
 
 # the top level domain
 domain:

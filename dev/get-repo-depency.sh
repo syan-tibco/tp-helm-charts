@@ -9,7 +9,7 @@ CHART_NAME=${1}
 
 [ -n "${CHART_NAME}" ] || { >&2 echo "ERROR: Please set CHART_NAME."; exit 1; }
 
-pushd ../charts/${CHART_NAME} || exit
+#pushd ../charts/${CHART_NAME} || exit
 
 #yq -i eval 'del(.dependencies.[].repository)' Chart.yaml
 #yq -i eval 'del(.dependencies.[].repository)' Chart.lock
@@ -38,6 +38,6 @@ helmDepUp () {
   )
 }
 
-popd .. || exit
+#popd .. || exit
 
 helmDepUp ${CHART_NAME}
