@@ -19,5 +19,8 @@
 {{/* Component we're a part of. */}}
 {{- define "tp-provisioner-agent.consts.component" }}tibco-platform-data-plane{{ end -}}
 
+{{/* Data plane workload type */}}
+{{- define "tp-provisioner-agent.consts.workloadType" }}infra{{ end -}}
+
 {{/* Team we're a part of. */}}
 {{- define "tp-provisioner-agent.consts.team" }}cic-compute{{ end -}}

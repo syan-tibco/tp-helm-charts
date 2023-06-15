@@ -63,6 +63,9 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "haproxy-ingress.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "haproxy-ingress.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- /* platform specific labels. Copy paste these labels after upgrading the haproxy chart.*/}}
+platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+platform.tibco.com/workload-type: infra
 {{- end }}
 
 {{- define "haproxy-ingress.defaultBackend.labels" -}}

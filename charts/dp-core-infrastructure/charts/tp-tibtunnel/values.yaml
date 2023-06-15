@@ -2,9 +2,10 @@
 
 
 global:
-  tibcoDataPlaneId: "abcd"
-  subscriptionId: "sub1"
-  dockerRegistry: "reldocker.tibco.com"
+  tibco:
+    dockerRegistry: "reldocker.tibco.com"
+    dataPlaneId: "abcd"
+    subscriptionId: "sub1"
 
 # tibtunnel cli flags
 connect:
