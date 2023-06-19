@@ -16,17 +16,17 @@ spec:
     spec:
       containers:
       - name: tibtunnel
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
         command: ["/bin/sh","-c"]
         args:
         - |
           set -e;
           echo "configuring tibtunnel";
           {{- $profile := printf "%s%s" (ternary "--profile " "" (ne .Values.configure.profile "")) .Values.configure.profile  -}}
-          {{- $tibcoDataPlaneId := printf "%s%s" (ternary "--tibcoDataPlaneId " "" (ne .Values.global.tibcoDataPlaneId "")) .Values.global.tibcoDataPlaneId -}}
+          {{- $dataPlaneId := printf "%s%s" (ternary "--tibcoDataPlaneId " "" (ne .Values.global.tibco.dataPlaneId "")) .Values.global.tibco.dataPlaneId -}}
           {{-  $accessKey := printf "%s%s" (ternary "-a " "" (ne .Values.configure.accessKey "")) .Values.configure.accessKey }}
-          echo "executing 'tp-tibtunnel configure {{ $profile }} {{ $tibcoDataPlaneId }} {{ $accessKey }} '";
-          tp-tibtunnel configure {{ $profile }} {{ $tibcoDataPlaneId }} {{ $accessKey }} ;
+          echo "executing 'tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} {{ $accessKey }} '";
+          tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} {{ $accessKey }} ;
           
           {{- $debug := ternary "-d" "" .Values.connect.debug  -}}
           {{- $payload := ternary "--payload" "" .Values.connect.payload -}}

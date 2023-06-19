@@ -21,3 +21,9 @@
 
 {{/* Team we're a part of. */}}
 {{- define "tp-cp-proxy.consts.team" }}cic-compute{{ end -}}
+
+{{/* Data plane workload type */}}
+{{- define "tp-cp-proxy.consts.workloadType" }}infra{{ end -}}
+
+{{/* Secret name created as part of client credentials generation */}}
+{{- define "tp-cp-proxy.consts.outputSecretName"}}cp-proxy-client-credentials{{ end -}}

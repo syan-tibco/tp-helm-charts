@@ -11,14 +11,19 @@ resources:
 # no of replicas
 replicaCount: "1"
 
-#Control Plane DNS domain.
-# Cp Proxy will forward all the request to this DNS.
-controlPlaneUrl: "https://account.local.cic2.pro"
+
 
 image:
   registry: ""
   repository: /stratosphere/tp-cp-proxy
   pullPolicy: IfNotPresent
+
+# Kubectl and curl are required by the job responsible for creating. TODO: we should revisit docker-image(this one is 445 mb). bitnami/kubectl does not support curl.
+clientCredentials:
+  # intialAccessToken : Control Plane Authentication TODO: terminologies are not fixed yet, will revisit later.
+  # this is used to generate client id and client secret.
+  # Client Id and secret are used to generate time bound access token
+  initialAccessToken: "test" #initial access token used to generate client credentials
 
 nodeSelector:
   kubernetes.io/os: linux
@@ -28,6 +33,9 @@ affinity: {}
 tolerations: {}
 
 global:
-  tibcoDataPlaneId: "abcd"
-  subscriptionId: "sub1"
-  dockerRegistry: reldocker.tibco.com
+  serviceAccount: ""
+  tibco:
+    dataPlaneId: "abcd"
+    subscriptionId: "sub1"
+    dockerRegistry: reldocker.tibco.com
+    controlPlaneUrl: "https://account.local.cic2.pro"

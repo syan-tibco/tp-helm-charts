@@ -22,4 +22,7 @@
 {{/* Team we're a part of. */}}
 {{- define "tp-tibtunnel.consts.team" }}cic-compute{{ end -}}
 
+{{/* Data plane workload type */}}
+{{- define "tp-tibtunnel.consts.workloadType" }}infra{{ end -}}
+
 {{- define "tp-tibtunnel.consts.fluentbit.buildNumber" }}1.9.4{{end -}}

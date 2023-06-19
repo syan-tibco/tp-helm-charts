@@ -1,0 +1,27 @@
+{{ if eq .Values.global.serviceAccount "" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "tp-cp-proxy.consts.appName" .}}-job-role
+  labels:
+    {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 4 }}
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get","create","delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "tp-cp-proxy.consts.appName" .}}-job-rolebinding
+  labels:
+    {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "tp-cp-proxy.consts.appName" .}}-job-sa
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: {{ include "tp-cp-proxy.consts.appName" .}}-job-role
+  apiGroup: rbac.authorization.k8s.io
+{{ end }}

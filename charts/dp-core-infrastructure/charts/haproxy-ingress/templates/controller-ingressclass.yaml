@@ -14,7 +14,8 @@ metadata:
     ingressclass.kubernetes.io/is-default-class: "true"
 {{- end }}
 spec:
-  controller: haproxy-ingress.github.io/controller{{ with .Values.controller.ingressClassResource.controllerClass }}/{{ . }}{{ end }}
+  {{- $root := . }}
+  controller: haproxy-ingress.github.io/controller{{ with .Values.controller.ingressClassResource.controllerClass }}/{{ tpl . $root }}{{ end }}
 {{- with .Values.controller.ingressClassResource.parameters }}
   parameters:
     {{- toYaml . | nindent 4 }}

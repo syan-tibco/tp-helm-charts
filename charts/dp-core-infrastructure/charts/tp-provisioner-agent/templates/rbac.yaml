@@ -1,4 +1,4 @@
-{{- if eq .Values.serviceAccount "" }}
+{{- if eq .Values.global.serviceAccount "" }}
 
 kind: ServiceAccount
 apiVersion: v1
@@ -15,7 +15,7 @@ metadata:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ include "tp-provisioner-agent.consts.appName" . }}-{{ .Values.global.tibcoDataPlaneId }}-crb
+  name: {{ include "tp-provisioner-agent.consts.appName" . }}-{{ .Values.global.tibco.dataPlaneId }}-crb
   labels:
     {{- include "tp-provisioner-agent.shared.labels.standard" . | nindent 4 }}
 roleRef:

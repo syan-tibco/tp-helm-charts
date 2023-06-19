@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-secret-creation
+  labels:
+    {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: client-credential-creation
+      labels:
+        {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Values.global.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      containers:
+        - name: post-install-job
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.dockerRegistry }}{{end}}/stratosphere/cli:latest
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash","/etc/config/clientCredentialCreation.sh"]
+          volumeMounts:
+            - mountPath: /etc/config
+              name: client-credential-scripts
+      volumes:
+        - name: client-credential-scripts
+          configMap:
+            name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-secret-scripts
+            items:
+              - key: clientCredentialCreation.sh
+                path: clientCredentialCreation.sh
+                mode: 0777
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-deletion
+  labels:
+    {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-delete
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: client-credential-secret-deletion
+      labels:
+        {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Values.global.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      containers:
+        - name: pre-delete-job
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.dockerRegistry }}{{end}}/stratosphere/cli:latest
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/bash","/etc/config/clientCredentialDeletion.sh"]
+          volumeMounts:
+            - mountPath: /etc/config
+              name: client-credential-scripts
+      volumes:
+        - name: client-credential-scripts
+          configMap:
+            name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-secret-scripts
+            items:
+              - key: clientCredentialDeletion.sh
+                path: clientCredentialDeletion.sh
+                mode: 0777
