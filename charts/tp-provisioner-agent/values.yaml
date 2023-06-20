@@ -29,11 +29,12 @@ ingress:
     # nginx custom annotation example
     #nginx.org/rewrites: "serviceName={{ include \"tp-provisioner-agent.consts.appName\" . }} rewrite=/" #https://github.com/nginxinc/kubernetes-ingress/tree/v2.4.2/examples/ingress-resources/rewrites
   pathPrefix: /tibco/agent/infra/provisioner-agent/
-  className: "haproxy-dp-{{ .Values.global.tibcoDataPlaneId}}"  # Ex: nginx, haproxy
+  className: "haproxy-dp-{{ .Values.global.tibco.dataPlaneId}}"  # Ex: nginx, haproxy
 
 global:
-  tibcoDataPlaneId: "abcd"
-  subscriptionId: "sub1"
-  dockerRegistry: reldocker.tibco.com
   serviceAccount: "" #user provided service account.
-  controlPlaneUrl: "https://account.local.cic2.pro"
+  tibco:
+    dataPlaneId: "abcd"
+    subscriptionId: "sub1"
+    dockerRegistry: reldocker.tibco.com
+    controlPlaneUrl: "https://account.local.cic2.pro"

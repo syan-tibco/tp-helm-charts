@@ -9,6 +9,8 @@ metadata:
     {{- with .Values.ingress.annotations }}
     {{- tpl (toYaml .) $ | nindent 4}}
     {{- end }}
+  labels:
+    {{- include "tp-provisioner-agent.shared.labels.standard" .| nindent 4}}
 spec:
   ingressClassName: {{ tpl .Values.ingress.className . }}
   rules:

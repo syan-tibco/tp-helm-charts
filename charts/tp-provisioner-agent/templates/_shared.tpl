@@ -39,9 +39,16 @@ Includes labels used as selectors (i.e. template "labels.selector")
 */}}
 {{- define "tp-provisioner-agent.shared.labels.standard" -}}
 {{ include  "tp-provisioner-agent.shared.labels.selector" . }}
+{{ include "tp-provisioner-agent.shared.labels.platform" . }}
 app.cloud.tibco.com/created-by: {{ include "tp-provisioner-agent.consts.team" . }}
 app.cloud.tibco.com/build-timestamp: {{ include "tp-provisioner-agent.generated.buildTimestamp" . }}
 app.cloud.tibco.com/tenant-name: {{ include "tp-provisioner-agent.consts.tenantName" . }}
 helm.sh/chart: {{ include "tp-provisioner-agent.shared.labels.chartLabelValue" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- end -}}
+
+{{/* Platform labels to be added in all the resources created by this chart.*/}}
+{{- define "tp-provisioner-agent.shared.labels.platform" -}}
+platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+platform.tibco.com/workload-type: {{ include "tp-provisioner-agent.consts.workloadType" .}}
+{{- end }}

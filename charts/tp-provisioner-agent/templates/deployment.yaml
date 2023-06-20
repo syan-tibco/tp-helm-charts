@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tp-provisioner-agent
+  name: provisioner-agent
   namespace: {{ .Release.Namespace}}
   labels:
     {{- include "tp-provisioner-agent.shared.labels.standard" . | nindent 4 }}
@@ -22,7 +22,7 @@ spec:
       {{- end }}
       containers:
       - name: provisioner-agent
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: NAMESPACE
