@@ -1,7 +1,25 @@
 # tp-helm-charts
 
+This is temporary repo for helm charts for TIBCO Platform (TP) data plane components.
+
+All the charts are supposed to submit under (charts)[charts] folder. 
+
+The charts are supposed to be used by helm repo hosted on github pages. There is a github action to update the helm repo index.yaml file and automatically release new charts if the chart version is updated.
+
+## How to use
+
+```bash
+helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts/
+helm repo update tibco-platform
+
+helm upgrade --install --create-namespace -n <namespace> <release name> tibco-platform/<your chart> -f <your values file>
+```
 
 ## Config helm charts
+
+`dp-config-ask` is used to create
+* ask ingress
+* ask certificate
 
 `dp-config-aws` is used to create
 * external ingress for DP cluster
