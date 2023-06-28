@@ -517,6 +517,21 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.38/dp-core-infrastructure-1.0.38.tgz
     version: 1.0.38
+  tp-dp-monitor-agent:
+  - apiVersion: v2
+    appVersion: 1.0.35
+    created: "2023-06-28T18:49:44.348635968Z"
+    description: TIBCO Platform Finops -- Monitoring
+    digest: 4645b511b6b2766da9674a7cd94bad8bb179ac75433461d89d91cf3cc2284f53
+    home: https://github.com/tibco/tp-dp-monitor-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: cdash-dev@tibco.com
+      name: TIBCO FINOPS Dev Team
+    name: tp-dp-monitor-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-monitor-agent-1.0.35/tp-dp-monitor-agent-1.0.35.tgz
+    version: 1.0.35
   tp-provisioner-agent:
   - apiVersion: v2
     appVersion: 1.0.137
@@ -603,4 +618,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-06-20T17:35:30.204261156Z"
+generated: "2023-06-28T18:49:44.348728569Z"
