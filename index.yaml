@@ -261,6 +261,25 @@ entries:
   dp-config-es:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-07-06T22:39:00.521125716Z"
+    dependencies:
+    - condition: eck-custom-resources-operator.enabled
+      name: eck-custom-resources-operator
+      repository: https://xco-sk.github.io/eck-custom-resources/
+      version: 0.5.6
+    description: dp-config-es
+    digest: 8755e26e8b9d1614571c48678ea975007a7a0680384cf3f926a0b112b6157b9b
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-es
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.7/dp-config-es-1.0.7.tgz
+    version: 1.0.7
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-07-06T22:29:38.657826593Z"
     dependencies:
     - condition: eck-custom-resources-operator.enabled
@@ -651,4 +670,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-06T22:29:38.657894994Z"
+generated: "2023-07-06T22:39:00.521201719Z"
