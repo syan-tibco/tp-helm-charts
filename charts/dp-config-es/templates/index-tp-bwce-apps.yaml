@@ -23,14 +23,13 @@ spec:
                   "lifecycle":
                     {
                       "name": "tibco-60-day-service-policy",
-                      "rollover_alias": "tci-apps"
+                      "rollover_alias": "user-apps"
                     }
                 }
             },
           "aliases":
             {
-              "tci-apps":
-                {}
+              "user-apps": {}
             },
           "mappings":
             {
