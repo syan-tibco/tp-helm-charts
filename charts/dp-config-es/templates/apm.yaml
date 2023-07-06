@@ -1,0 +1,20 @@
+{{- if .Values.apm.enabled -}}
+apiVersion: apm.k8s.elastic.co/v1
+kind: ApmServer
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  version: {{ .Values.apm.version }}
+  count: {{ .Values.apm.count }}
+  elasticsearchRef:
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
+  kibanaRef:
+    name: {{ .Release.Name }}
+    namespace: {{ .Release.Namespace }}
+  http:
+    service:
+      spec:
+        type: ClusterIP
+{{- end }}

@@ -1,0 +1,14 @@
+{{- if .Values.index.enabled -}}
+apiVersion: es.eck.github.com/v1alpha1
+kind: ElasticsearchInstance
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  enabled: true
+  url: https://{{ .Values.es.ingress.host }}.{{ .Values.domain }}
+  authentication:
+    usernamePasswordSecret:
+      secretName: {{ .Release.Name }}-es-elastic-user
+      userName: elastic
+{{- end }}

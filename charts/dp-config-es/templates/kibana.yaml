@@ -1,7 +1,7 @@
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
 spec:
   version: {{ .Values.kibana.version }}
@@ -11,7 +11,7 @@ spec:
     server.publicBaseUrl: https://kibana.{{ .Values.domain }}
     xpack.security.sameSiteCookies: None
   elasticsearchRef:
-    name: {{ .Values.name }}
+    name: {{ .Release.Name }}
     namespace: {{ .Release.Namespace }}
   http:
     service:

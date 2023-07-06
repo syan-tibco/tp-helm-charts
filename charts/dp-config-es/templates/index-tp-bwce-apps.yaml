@@ -1,0 +1,87 @@
+{{- if .Values.index.enabled -}}
+apiVersion: es.eck.github.com/v1alpha1
+kind: IndexTemplate
+metadata:
+  name: {{ .Release.Name }}-user-apps-index-template
+  namespace: elastic-system
+spec:
+  targetInstance:
+    name: {{ .Release.Name }}
+  body: |
+    {
+      "index_patterns": {{ .Values.index.patterns.userApps | toJson }},
+      "template":
+        {
+          "settings":
+            {
+              "number_of_shards": 1,
+              "number_of_replicas": 0,
+              "refresh_interval": "5s",
+              "index":
+                {
+                  "codec": "best_compression",
+                  "lifecycle":
+                    {
+                      "name": "tibco-60-day-service-policy",
+                      "rollover_alias": "tci-apps"
+                    }
+                }
+            },
+          "aliases":
+            {
+              "tci-apps":
+                {}
+            },
+          "mappings":
+            {
+              "properties":
+                {
+                  "@timestamp":
+                    {
+                      "type": "date"
+                    },
+                  "app_type":
+                    {
+                      "type": "keyword"
+                    },
+                  "pod_name":
+                    {
+                      "type": "keyword"
+                    },
+                  "pod_namespace":
+                    {
+                      "type": "keyword"
+                    },
+                  "stream":
+                    {
+                      "type": "keyword"
+                    },
+                  "subscription_id":
+                    {
+                      "type": "keyword"
+                    },
+                  "container_name":
+                    {
+                      "type": "keyword"
+                    },
+                  "app_id":
+                    {
+                      "type": "keyword"
+                    },
+                  "message":
+                    {
+                      "type": "text"
+                    },
+                  "logLevel":
+                    {
+                      "type": "keyword"
+                    },
+                  "logTime":
+                    {
+                      "type": "keyword"
+                    }
+                }
+            }
+        }
+    }
+{{- end }}

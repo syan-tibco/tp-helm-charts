@@ -22,7 +22,7 @@ storage:
 domain: dp-platform.tcie.pro
 
 es:
-  version: "8.6.2"
+  version: "8.8.0"
   count: 1
   storage:
     name: gp3enc
@@ -34,7 +34,7 @@ es:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
 
 kibana:
-  version: "8.6.2"
+  version: "8.8.0"
   count: 1
   ingress:
     ingressClassName: dp-config-aws-traefik
@@ -42,3 +42,20 @@ kibana:
     service: dp-config-es-kb-http
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+apm:
+  enabled: true
+  version: "8.8.0"
+  count: 1
+  ingress:
+    ingressClassName: dp-config-aws-traefik
+    host: apm
+    service: dp-config-es-apm-http
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: websecure
+
+index:
+  enabled: true
+  patterns:
+    userApps: ["user-app-*"]
+
