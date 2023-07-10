@@ -2,7 +2,7 @@
 apiVersion: es.eck.github.com/v1alpha1
 kind: IndexLifecyclePolicy
 metadata:
-  name: {{ .Release.Name }}-user-index-lifecycle-policy
+  name: {{ .Release.Name }}-user-index-60d-lifecycle-policy
   namespace: {{ .Release.Namespace }}
 spec:
   targetInstance:

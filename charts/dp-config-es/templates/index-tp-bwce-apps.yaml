@@ -22,7 +22,7 @@ spec:
                   "codec": "best_compression",
                   "lifecycle":
                     {
-                      "name": "tibco-60-day-service-policy",
+                      "name": "{{ .Release.Name }}-user-index-60d-lifecycle-policy",
                       "rollover_alias": "user-apps"
                     }
                 }
