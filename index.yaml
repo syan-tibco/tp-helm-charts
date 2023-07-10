@@ -119,6 +119,29 @@ entries:
   dp-config-aws:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-07-10T20:08:30.73041543Z"
+    dependencies:
+    - condition: traefik.enabled
+      name: traefik
+      repository: https://traefik.github.io/charts
+      version: 21.1.0
+    - condition: citrix-cpx-with-ingress-controller.enabled
+      name: citrix-cpx-with-ingress-controller
+      repository: https://citrix.github.io/citrix-helm-charts/
+      version: 1.30.1
+    description: dp-config-aws is used to config CIC2 TIBCO Dataplane
+    digest: 26d342fb29f8c2fd42fa656ba165b6fbd79c14481e19e297ea9796057f84318f
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aws
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aws-1.0.8/dp-config-aws-1.0.8.tgz
+    version: 1.0.8
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-06-08T19:36:12.414361272Z"
     dependencies:
     - condition: traefik.enabled
@@ -670,4 +693,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-06T22:39:00.521201719Z"
+generated: "2023-07-10T20:08:30.730509331Z"
