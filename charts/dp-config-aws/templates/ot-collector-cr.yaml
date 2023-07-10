@@ -329,7 +329,7 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: otel-prometheus-role
+  name: {{ .Values.awsRole2.clusterRoleName }}
 rules:
   - apiGroups:
       - ""
@@ -360,13 +360,13 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: otel-prometheus-role-binding
+  name: {{ .Values.awsRole2.clusterRoleName }}-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: otel-prometheus-role
+  name: {{ .Values.awsRole2.clusterRoleName }}
 subjects:
   - kind: ServiceAccount
-    name: adot-collector
-    namespace: opentelemetry-operator-system
+    name: {{ .Values.awsRole2.saName }}
+    namespace: {{ .Values.awsRole2.saNamespace }}
 {{- end -}}

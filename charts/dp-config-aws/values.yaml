@@ -36,8 +36,9 @@ awsRole2:
   enable: false
   name: adot-collector
   namespace: tibco-system
-  saName: adot-collector # service account name
+  saName: adot # service account name
   saNamespace: opentelemetry-operator-system # service namespace
+  clusterRoleName: otel-prometheus-role # cluster role name
   tags:
     tibco-platform: adot
   attachedPolicies:
