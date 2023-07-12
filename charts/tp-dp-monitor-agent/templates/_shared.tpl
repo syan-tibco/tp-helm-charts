@@ -31,7 +31,8 @@ app.kubernetes.io/part-of: {{ include "tp-dp-monitor-agent.consts.team" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 platform.tibco.com/workload-type: infra
-platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- end -}}
 
 {{/*

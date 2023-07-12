@@ -94,9 +94,9 @@ spec:
         - name: CP_PROXY_HOST
           value: cp-proxy.{{ .Release.Namespace }}.svc.cluster.local
         - name: DATA_PLANE_ID
-          value: {{ .Values.global.tibco.dataPlaneId }}
+          value: {{ .Values.global.cp.dataplaneId }}
         - name: DP_SUBSCRIPTION_ID
-          value: {{ .Values.global.tibco.subscriptionId }}
+          value: {{ .Values.global.cp.subscriptionId }}
 {{- if .Values.global.enableLogging }}
       - name: fluentbit
         image: {{ .Values.global.dockerRegistry }}/stratosphere/fluentbit:{{ include "tp-dp-monitor-agent.consts.fluentbit.buildNumber" . }}
