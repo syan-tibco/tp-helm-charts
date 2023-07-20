@@ -39,45 +39,135 @@ spec:
                     {
                       "type": "date"
                     },
-                  "app_type":
+                  "Body":
                     {
-                      "type": "keyword"
-                    },
-                  "pod_name":
-                    {
-                      "type": "keyword"
-                    },
-                  "pod_namespace":
-                    {
-                      "type": "keyword"
-                    },
-                  "stream":
-                    {
-                      "type": "keyword"
-                    },
-                  "subscription_id":
-                    {
-                      "type": "keyword"
-                    },
-                  "container_name":
-                    {
-                      "type": "keyword"
-                    },
-                  "app_id":
-                    {
-                      "type": "keyword"
-                    },
-                  "message":
-                    {
-                      "type": "text"
-                    },
-                  "logLevel":
-                    {
-                      "type": "keyword"
-                    },
-                  "logTime":
-                    {
-                      "type": "keyword"
+                      "properties":
+                        {
+                          "@timestamp":
+                            {
+                              "type": "date"
+                            },
+                          "app-id":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "app-type":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "dataplane-id":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "log_time":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "log_level":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "message":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "namespace":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "pod_id":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "pod_name":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "workload-type":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
