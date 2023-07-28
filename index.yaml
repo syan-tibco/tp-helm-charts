@@ -689,6 +689,24 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-monitor-agent-1.0.0/tp-dp-monitor-agent-1.0.0.tgz
     version: 1.0.0
+  tp-dp-secret-controller:
+  - apiVersion: v2
+    appVersion: 1.0.20
+    created: "2023-07-28T11:04:51.880824403Z"
+    description: TIBCO Data Plane -- Secret Controller
+    digest: 8f00c98714073bf6112602bcc3646c26536b1dab20d20ae0c48e17e810006e0d
+    home: https://github.com/tibco/tp-core-dp-secret-controller
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - secret-controller
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-dp-secret-controller
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.20/tp-dp-secret-controller-1.0.20.tgz
+    version: 1.0.20
   tp-provisioner-agent:
   - apiVersion: v2
     appVersion: 1.0.137
@@ -775,4 +793,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-28T07:59:30.958142004Z"
+generated: "2023-07-28T11:04:51.880903004Z"
