@@ -425,6 +425,37 @@ entries:
     version: 1.0.0
   dp-core-infrastructure:
   - apiVersion: v2
+    appVersion: 1.0.208
+    created: "2023-07-28T07:59:30.839888309Z"
+    dependencies:
+    - condition: tp-tibtunnel.enabled
+      name: tp-tibtunnel
+      repository: ""
+      version: 1.0.*
+    - condition: tp-provisioner-agent.enabled
+      name: tp-provisioner-agent
+      repository: ""
+      version: 1.0.*
+    - condition: tp-cp-proxy.enabled
+      name: tp-cp-proxy
+      repository: ""
+      version: 1.0.*
+    - condition: haproxy-ingress.enabled
+      name: haproxy-ingress
+      repository: ""
+      version: v0.14.0
+    - condition: config.enabled
+      name: config
+      repository: ""
+      version: 1.0.0
+    description: A Helm chart for TIBCO Platform Data Plane Infrastructure
+    digest: c95c7129b088cca9b3438ab64c73eea9fb91b8adc1828b13d0201282ca55b543
+    name: dp-core-infrastructure
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.208/dp-core-infrastructure-1.0.208.tgz
+    version: 1.0.208
+  - apiVersion: v2
     appVersion: 1.0.111
     created: "2023-06-20T17:23:34.354478407Z"
     dependencies:
@@ -597,6 +628,24 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.38/dp-core-infrastructure-1.0.38.tgz
     version: 1.0.38
+  tp-cp-proxy:
+  - apiVersion: v2
+    appVersion: 1.0.67
+    created: "2023-07-28T07:59:30.957954104Z"
+    description: TIBCO Data Plane -- Control Plane Proxy
+    digest: f35ed56f96d314c38daaea67ee76b5bf3af636b750e7afd3c3fbd39be828b6f8
+    home: https://github.com/tibco/tp-core-cp-proxy
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - cp-proxy
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-cp-proxy
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.67/tp-cp-proxy-1.0.67.tgz
+    version: 1.0.67
   tp-dp-monitor-agent:
   - apiVersion: v2
     appVersion: 1.0.37
@@ -726,4 +775,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-07-13T06:35:32.199697787Z"
+generated: "2023-07-28T07:59:30.958142004Z"
