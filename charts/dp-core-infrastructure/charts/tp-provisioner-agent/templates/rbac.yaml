@@ -1,4 +1,4 @@
-{{- if eq .Values.global.serviceAccount "" }}
+{{- if eq .Values.global.tibco.serviceAccount "" }}
 
 kind: ServiceAccount
 apiVersion: v1

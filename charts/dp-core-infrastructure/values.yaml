@@ -3,12 +3,16 @@
 # Declare variables to be passed into your templates.
 
 global:
-  serviceAccount: ""                                # customer provided service account
   tibco:
     dataPlaneId: "abcd"
     subscriptionId: "sub1"
     controlPlaneUrl: "https://account.local.cic2.pro" # Control Plane DNS domain
-    dockerRegistry: reldocker.tibco.com
+    serviceAccount: ""                                # customer provided service account
+    containerRegistry:
+      url: "reldocker.tibco.com" 
+      # username: "test" # [optional] Create a imagePullSecret named <dpId> for private container registry.
+      # password: "test"
+      # email: "tibco-plt@tibco.com"
 
 tp-tibtunnel:
   enabled: true
@@ -50,4 +54,7 @@ haproxy-ingress:
     service:
       type: ClusterIP
 tp-cp-proxy:
+  enabled: true
+
+config:
   enabled: true

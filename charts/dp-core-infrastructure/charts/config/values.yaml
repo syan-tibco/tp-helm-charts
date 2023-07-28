@@ -1,0 +1,10 @@
+global:
+  tibco:
+    dataPlaneId: "abcd"
+    subscriptionId: "sub1"
+    #[optional] Create an image pull secret <dpId> with this creds
+    containerRegistry:
+      url: "reldocker.tibco.com" 
+      # username: ""
+      # password: ""
+      # email: "tibco-plt@tibco.com"

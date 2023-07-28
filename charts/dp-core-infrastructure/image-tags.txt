@@ -1,4 +1,7 @@
+"reldocker.tibco.com:2.4.20-alpine"
+"reldocker.tibco.com:latest"
 stratosphere/cli:latest
-stratosphere/tp-cp-proxy:29
-stratosphere/tp-provisioner-agent:133
-stratosphere/tp-tibtunnel:25
+stratosphere/haproxy:v0.14.0
+stratosphere/tp-cp-proxy:67
+stratosphere/tp-provisioner-agent:178
+stratosphere/tp-tibtunnel:49

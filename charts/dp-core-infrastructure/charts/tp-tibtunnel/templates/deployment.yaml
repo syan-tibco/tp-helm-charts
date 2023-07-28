@@ -16,34 +16,35 @@ spec:
     spec:
       containers:
       - name: tibtunnel
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
-        command: ["/bin/sh","-c"]
-        args:
-        - |
-          set -e;
-          echo "configuring tibtunnel";
-          {{- $profile := printf "%s%s" (ternary "--profile " "" (ne .Values.configure.profile "")) .Values.configure.profile  -}}
-          {{- $dataPlaneId := printf "%s%s" (ternary "--tibcoDataPlaneId " "" (ne .Values.global.tibco.dataPlaneId "")) .Values.global.tibco.dataPlaneId -}}
-          {{-  $accessKey := printf "%s%s" (ternary "-a " "" (ne .Values.configure.accessKey "")) .Values.configure.accessKey }}
-          echo "executing 'tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} {{ $accessKey }} '";
-          tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} {{ $accessKey }} ;
-          
-          {{- $debug := ternary "-d" "" .Values.connect.debug  -}}
-          {{- $payload := ternary "--payload" "" .Values.connect.payload -}}
-          {{- $dataChunkSize := printf "%s%s" (ternary "--data-chunk-size " "" ( ne (.Values.connect.dataChunkSize| toString ) "")) (.Values.connect.dataChunkSize|toString) -}}
-          {{- $dataAckMode := printf "%s%t" "--data-ack-mode=" .Values.connect.dataAckMode -}}
-          {{- $remoteDebug := ternary "--remote-debug" "" .Values.connect.remoteDebug -}}
-          {{- $logFile := printf "%s%s" (ternary "--log-file " "" (ne .Values.connect.logFile "")) .Values.connect.logFile }}
-          {{- $networkCheckUrl := printf "%s%s" (ternary "--network-check-url " "" (ne .Values.connect.networkCheckUrl "")) .Values.connect.networkCheckUrl }}
-          {{- $infiniteRetries := ternary "--infinite-retries" "" .Values.connect.infiniteRetries -}}
-          echo "executing 'tp-tibtunnel connect {{ $debug }} {{ $payload }}  {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} {{ $networkCheckUrl }} {{ $infiniteRetries }} -s {{tpl .Values.connect.onPremHost .}}:{{ .Values.connect.onPremPort }} {{ .Values.connect.url }}'";
-          tp-tibtunnel connect {{ $debug }} {{ $payload }} {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} {{ $networkCheckUrl }} {{ $infiniteRetries }} -s {{ tpl .Values.connect.onPremHost .}}:{{.Values.connect.onPremPort}} {{ .Values.connect.url }};
-          echo "exited";
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
+        {{/* Converting the command from "" to ["",""]. Split input command by space and coverting it into array of string */}}
+        {{/* @input: "tp-tibtunnel connect --remote-debug -s localhost:80 connecturl" */}}
+        {{/* @output: ["tp-tibtunnel", "connect", "--remote-debug","-s","localhost:80","connecturl"] */}}
+        command: [{{- range $v := (mustRegexSplit " +" (include "tp-tibtunnel.helpers.command.connect" .) -1) -}}"{{- $v -}}",{{- end -}}]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10}}
         {{- end }}
+        volumeMounts:
+        - name: config-dir
+          mountPath: /etc/config
+      initContainers:
+      - name: tibtunnel-init
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
+        command: [{{- range $v := (mustRegexSplit " +" (include "tp-tibtunnel.helpers.command.configure" .) -1) -}}"{{- $v -}}",{{- end -}}]
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10}}
+        {{- end }}
+        volumeMounts:
+        - name: config-dir
+          mountPath: /etc/config
+      imagePullSecrets:
+        {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
+        - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
+        {{- end }}{{ end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -56,3 +57,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+        - name: config-dir
+          emptyDir: {}
