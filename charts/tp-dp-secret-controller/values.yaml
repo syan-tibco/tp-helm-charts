@@ -1,0 +1,35 @@
+# Resources
+# https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+resources:
+  requests:
+    cpu: 100m
+    memory: 150Mi
+  limits:
+    cpu: 200m
+    memory: 300Mi
+
+# no of replicas
+replicaCount: "1"
+
+
+
+image:
+  registry: ""
+  repository: stratosphere/tp-dp-secret-controller
+  pullPolicy: IfNotPresent
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+affinity: {}
+
+tolerations: {}
+
+global:
+  cp:
+    dataplaneId: "abcd"
+    subscriptionId: "sub1"
+    containerRegistry:
+      url: reldocker.tibco.com
+      secret: "{{.Values.global.cp.dataplaneId}}"
+    serviceAccount: ""

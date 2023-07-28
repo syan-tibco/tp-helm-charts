@@ -13,7 +13,7 @@ data:
     secret_name={{ include "tp-cp-proxy.consts.outputSecretName" .}}
     namespace={{ .Release.Namespace }}
     initial_access_token={{ .Values.clientCredentials.initialAccessToken}}
-    server_dns={{ .Values.global.tibco.controlPlaneUrl }}
+    server_dns={{ .Values.global.cp.controlPlaneUrl }}
     api_path="/register/token"
 
     #check if I can create/delete secrets and return early before creating client credentials.

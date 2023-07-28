@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tp-dp-secret-controller.consts.appName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tp-dp-secret-controller.shared.labels.standard" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "tp-dp-secret-controller.shared.labels.selector" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "tp-dp-secret-controller.shared.labels.standard" . | nindent 8 }}
+    spec:
+      {{- if .Values.global.cp.serviceAccount }}
+      serviceAccountName: {{ .Values.global.cp.serviceAccount }}
+      {{- else }}
+      serviceAccountName: {{ include "tp-dp-secret-controller.consts.appName" . }}
+      {{- end }}
+      containers:
+        - name: controller
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{ "/" }}{{ .Values.image.repository }}:{{ include "tp-dp-secret-controller.generated.buildNumber" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: DATAPLANE_ID
+              value: {{ .Values.global.cp.dataplaneId }}
+      imagePullSecrets:
+        - name: {{ tpl .Values.global.cp.containerRegistry.secret . }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
