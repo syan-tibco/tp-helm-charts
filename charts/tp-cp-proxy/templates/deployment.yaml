@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
       - name: cp-proxy
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: CONTROL_PLANE_URL
-            value: {{ .Values.global.tibco.controlPlaneUrl }}
+            value: {{ .Values.global.cp.controlPlaneUrl }}
           - name: CLIENT_CREDENTIALS
             valueFrom:
               secretKeyRef:
@@ -47,6 +47,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       imagePullSecrets:
-        {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
-        - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
+        {{- if .Values.global.cp.containerRegistry.username }}{{if .Values.global.cp.containerRegistry.password }}
+        - name: {{ .Values.global.cp.dataplaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
         {{- end }}{{ end }}

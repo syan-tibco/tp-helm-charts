@@ -16,18 +16,18 @@ spec:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.global.tibco.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      serviceAccountName: {{ .Values.global.cp.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
       containers:
         - name: post-install-job
-          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}/stratosphere/cli:latest
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}/stratosphere/cli:latest
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/bash","/etc/config/clientCredentialCreation.sh"]
           volumeMounts:
             - mountPath: /etc/config
               name: client-credential-scripts
       imagePullSecrets:
-        {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
-        - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
+        {{- if .Values.global.cp.containerRegistry.username }}{{if .Values.global.cp.containerRegistry.password }}
+        - name: {{ .Values.global.cp.dataplaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
         {{- end }}{{ end }}
 
       volumes:
@@ -57,18 +57,18 @@ spec:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.global.tibco.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      serviceAccountName: {{ .Values.global.cp.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
       containers:
         - name: pre-delete-job
-          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}/stratosphere/cli:latest
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}/stratosphere/cli:latest
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/bash","/etc/config/clientCredentialDeletion.sh"]
           volumeMounts:
             - mountPath: /etc/config
               name: client-credential-scripts
       imagePullSecrets:
-        {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
-        - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
+        {{- if .Values.global.cp.containerRegistry.username }}{{if .Values.global.cp.containerRegistry.password }}
+        - name: {{ .Values.global.cp.dataplaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
         {{- end }}{{ end }}
       volumes:
         - name: client-credential-scripts
