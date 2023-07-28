@@ -15,14 +15,14 @@ spec:
       labels:
         {{- include "tp-provisioner-agent.shared.labels.standard" . | nindent 8 }}
     spec:
-      {{- if .Values.global.serviceAccount }}
-      serviceAccountName: {{ .Values.global.serviceAccount }}
+      {{- if .Values.global.tibco.serviceAccount }}
+      serviceAccountName: {{ .Values.global.tibco.serviceAccount }}
       {{- else }}
       serviceAccountName: {{ include "tp-provisioner-agent.consts.appName" . }}
       {{- end }}
       containers:
       - name: provisioner-agent
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.dockerRegistry }}{{end}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
+        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: NAMESPACE
@@ -68,3 +68,7 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      imagePullSecrets:
+        {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
+        - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
+        {{- end }}{{ end }}

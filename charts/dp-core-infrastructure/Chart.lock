@@ -11,5 +11,8 @@ dependencies:
 - name: haproxy-ingress
   repository: ""
   version: v0.14.0
-digest: sha256:a7f3cfde7e22e72e74403d88a58293dbed1631442aca0d1c07c4eebc5d1e919a
-generated: "2023-06-19T16:41:46.23667596+05:30"
+- name: config
+  repository: ""
+  version: 1.0.0
+digest: sha256:4a3a7ace19d6a9d37df82b6c6bba48fec66c72ed5e28d58954d418293c2c71f8
+generated: "2023-07-28T11:53:43.16060159+05:30"
