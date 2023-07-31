@@ -30,8 +30,6 @@ nodeSelector:
 
 affinity: {}
 
-tolerations: {}
-
 global:
   cp:
     dataplaneId: "abcd"
