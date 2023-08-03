@@ -1,0 +1,33 @@
+# Example helm deployment
+##helm upgrade "$TCM_USER-<subid>" <chart> --install --namespace=$TCM_NAMESPACE --values=denv.values.yaml
+global: 
+  cp: 
+    dataplaneId: 
+    instanceId: 
+
+dp:
+  serviceAccount: provisioner-agent
+  # registry: "664529841144.dkr.ecr.us-west-2.amazonaws.com/"
+  # repo: "msg-platform-cicd/"
+  # pullSecret: 
+  pullSecret: "cic2-tcm-ghcr-secret"
+  registry: "ghcr.io/"
+  repo: "tibco/msg-platform-cicd/"
+
+ems:
+  stores: ftl
+  sizing: small
+  use: dev
+  msgData: 
+    storageType: emptyDir
+    storageName: none
+  logs: 
+    storageType: useMsgData
+    storageName: none
+
+watchdog_port: 12502
+monagent_port: 12503
+logger_port: 12506
+ftl_port: 443
+ems_port: 9010
+ems_http_port: 9011
