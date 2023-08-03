@@ -1,0 +1,262 @@
+#   ${hostname}-${replicaId}.${serviceName}.${namespace}.svc.${clusterDomain}
+#
+apiVersion: apps/v1
+#
+# HELPER VARIABLE DEFINITIONS
+{{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
+{{-  $emsNeedsVct := "no" -}}
+{{- if ne "ftl" $emsParams.ems.stores -}}
+  {{- fail "Unsupported Store type" -}}
+{{- end -}}
+{{- $stsname := printf "%s-ftl" $emsParams.ems.name -}}
+{{- $svcname := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
+{{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $dataPvc := $emsParams.ems.logs.storageName -}}
+#
+kind: StatefulSet
+metadata:
+    name: "{{ $stsname }}"
+    namespace: "{{ .Release.Namespace }}"
+    labels:
+      {{ include "msg.dp.labels" . | indent 6 }}
+      name: "{{ $stsname }}"
+      app: msg-ems-ftl
+      tib-dp-name: "{{ $emsParams.dp.name }}"
+      tib-dp-app: msg-ems-ftl
+      tib-dp-release: "{{ $emsParams.ems.name }}"
+      tib-msg-stsname: "{{ $stsname }}"
+      tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
+      tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
+      tib-msg-ems-use: "{{ $emsParams.ems.use }}"
+    annotations:
+      {{ include "msg.dp.mon.annotations" . | indent 6 }}
+      platform.tibco.com/leader-endpoint: "{{ $emsParams.ems.isLeader | default "none" }}"
+      platform.tibco.com/quorum-strategy: "{{ $emsParams.ems.quorumStrategy | default "none" }}"
+spec:
+    podManagementPolicy: Parallel
+    replicas: {{ int $emsParams.ems.replicas }}
+    selector:
+        matchLabels:
+          tib-msg-stsname: "{{ $stsname }}"
+          tib-dp-release: "{{ .Release.Name }}"
+    serviceName: "{{ $svcname }}"
+    template:
+        metadata:
+            labels:
+                tib-dp-name: "{{ $emsParams.dp.name }}"
+                {{ include "msg.dp.labels" . | indent 16 }}
+                tib-msg-stsname: "{{ $stsname }}"
+                name: ftl
+                app: msg-ems-ftl
+                tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
+                tib-msg-ems-use: "{{ $emsParams.ems.use }}"
+            name: ftl
+            annotations:
+              cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+        spec:
+            {{- if ne "none" $emsParams.dp.pullSecret }}
+            imagePullSecrets:
+            - name: {{ $emsParams.dp.pullSecret }}
+            {{- end }}
+            # NOTE: if hostname/subdomain do not agree with podname/service
+            # .. DNS pod resolution problems can occur
+            hostname: "{{ $stsname }}"
+            enableServiceLinks: false
+            subdomain: "{{ $svcname }}"
+            nodeSelector:
+              kubernetes.io/os: linux
+            topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              {{- if eq $emsParams.allowNodeSkew "false" }}
+              whenUnsatisfiable: DoNotSchedule
+              {{- else }}
+              whenUnsatisfiable: ScheduleAnyway
+              {{- end }}
+              labelSelector:
+                matchLabels:
+                  tib-msg-stsname: "{{ $stsname }}"
+                  tib-dp-release: "{{ .Release.Name }}"
+            {{- if eq $emsParams.dp.where "aws" }}
+            - maxSkew: 1
+              topologyKey: topology.kubernetes.io/zone
+              {{- if eq $emsParams.ems.allowZoneSkew "false" }}
+              whenUnsatisfiable: DoNotSchedule
+              {{- else }}
+              whenUnsatisfiable: ScheduleAnyway
+              {{- end }}
+              labelSelector:
+                matchLabels:
+                  tib-msg-stsname: "{{ $stsname }}"
+                  tib-dp-release: "{{ .Release.Name }}"
+            {{- end }}
+            containers:
+            - name: "{{ $stsname }}"
+              # image: "{{ $emsParams.dp.registry }}msg-ems-all:10.2.1-5"
+              image: "{{ $emsParams.ems.image }}"
+              imagePullPolicy: "{{ $emsParams.dp.pullPolicy }}"
+              resources:
+{{ $emsParams.ems.resources | toYaml | indent 16 }}
+              # exec /usr/local/watchdog/bin/wait-for-shutdown.sh  ; 
+              command: ['/compliance/check_eua', 'bash', '-c' ]
+              args:
+              - >
+                ( mkdir -p /logs/$MY_POD_NAME/boot ; cd /logs/$MY_POD_NAME/boot ;
+                    for x in /boot/mk-*.sh ; do bash < $x ; done | tee boot.out ) ;
+                exec /usr/local/watchdog/bin/watchdog  ; 
+              ports:
+              - name: ftl-port
+                containerPort: {{ int .Values.ftl_port | default 443 }}
+                protocol: TCP
+              - name: ems-port
+                containerPort: {{ int .Values.ems_port | default 9010 }}
+                protocol: TCP
+              - name: ems-http-port
+                containerPort: {{ int .Values.ems_http_port | default 9011 }}
+                protocol: TCP
+              - name: watchdog-port
+                containerPort: {{ int .Values.watchdog_port | default 12502 }}
+                protocol: TCP
+              - name: logger-port
+                containerPort: {{ int .Values.logger_port }}
+                protocol: TCP
+              volumeMounts:
+              - mountPath: /boot
+                name: scripts-vol
+              - mountPath: /data 
+              {{ if eq "storageClass" $emsParams.ems.msgData.storageType }}
+                {{ $emsNeedsVct = "yes" }}
+                name: ems-data
+              {{ else if eq "sharedPvc" $emsParams.ems.msgData.storageType }}
+                name: ems-data
+                subPathExpr: "$(MY_RELEASE)/data/$(MY_POD_NAME)"
+              {{ else if eq "emptyDir" $emsParams.ems.msgData.storageType }}
+                name: ems-data
+              {{ else }} 
+                {{ fail "Unsupported ems /data storageType" }}
+              {{ end }}
+              - mountPath: /logs
+              {{ if eq "storageClass" $emsParams.ems.logs.storageType }}
+                {{ $emsNeedsVct = "yes" }}
+                name: "ems-log"
+              {{ else if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+                {{ if eq  $emsParams.ems.logs.storageName $emsParams.ems.msgData.storageName }}
+                name: "ems-data"
+                {{ else }}
+                name: "ems-log"
+                {{ end }}
+                subPathExpr: "$(MY_RELEASE)/logs"
+              {{ else if eq "useMsgData" $emsParams.ems.logs.storageType }}
+                name: ems-data
+                subPathExpr: "$(MY_RELEASE)/logs"
+              {{ else }} 
+                {{ fail "Unsupported ems /data storageType" }}
+              {{ end }}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+              env:
+              {{ include "msg.envStdPodRefs" . | indent  14 }}
+              - name: ACCEPT_EUA
+                value: "y"
+              - name: GOTRACEBACK
+                value: "crash"
+              - name: TCM_WATCHDOG_TYPE
+                value: candidate
+              - name: TCM_WATCHDOG_LOG_FILE
+                value: /logs/$(MY_POD_NAME)/watchdog.log
+              - name: MY_RELEASE
+                value: "{{ .Release.Name }}"
+              - name: FTL_PORT
+                value: "{{ .Values.ftl_port | default "443" }}"
+              - name: EMS_PORT
+                value: "{{ .Values.ems_port | default "9010" }}"
+              - name: EMS_INIT_JSON
+                value: "/logs/$(MY_POD_NAME)/boot/tibemsd-ftl.json"
+              - name: EMS_HTTP_PORT
+                value: "{{ .Values.ems_http_port | default "9011" }}"
+              - name: MY_SVC_NAME
+                value: "{{ $svcname }}"
+              - name: MY_SVC_HOST
+                value: "$(MY_POD_NAME).{{ $svcname }}.{{ .Release.Namespace }}.svc"
+              - name: FTL_URL
+                # the service load-balanced REALM URL
+                value: http://{{ $svcFtl }}:$(FTL_PORT)
+              - name: TCM_WATCHDOG_CONFIG
+                value: "/logs/$(MY_POD_NAME)/boot/watchdog.yml"
+              - name: TCM_WD_PORT
+                value: "{{ .Values.watchdog_port }}"
+              - name: TCM_WATCHDOG_HOSTPORT
+                # note: $(MY_POD_NAME) will be one of {{ $stsname }}-[012]
+                value: "$(MY_POD_NAME):$(TCM_WD_PORT)"
+              #- name: TIB_RS_CURL_VERBOSE
+              #  value: "1"
+            volumes:
+            - name: scripts-vol
+              configMap:
+                name: "{{ $emsParams.ems.name }}-scripts"
+            - name: fluentbit-config
+              configMap:
+                name: "{{ $emsParams.ems.name }}-fluentbit-config"
+            {{ if eq "sharedPvc" $emsParams.ems.msgData.storageType }}
+            - name: "ems-data"
+              persistentVolumeClaim:
+                claimName: "{{ $emsParams.ems.msgData.storageName }}"
+            {{ else if eq "emptyDir" $emsParams.ems.msgData.storageType }}
+                {{ if ne "dev" $emsParams.ems.use }}
+                  {{ fail "storageType of emptyDir only supported for dev use"}}
+                {{ end}}
+            - name: "ems-data"
+              emptyDir: {}
+            {{ end }}
+            {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+                {{ if ne  $emsParams.ems.logs.storageName $emsParams.ems.msgData.storageName }}
+            - name: "ems-log"
+              persistentVolumeClaim:
+                claimName: "{{ $emsParams.ems.logs.storageName }}"
+                {{ end }}
+            {{ end }}
+            - name: ftl-config
+              configMap:
+                name: "{{ $svcname }}-ftl-config"
+            - name: wd-config
+              configMap:
+                name: "{{ $svcname }}-wd-config"
+            dnsPolicy: ClusterFirst
+            restartPolicy: Always
+            schedulerName: default-scheduler
+            securityContext:
+              # user=emsaqa, group=msgsrc
+              runAsUser: {{ int $emsParams.dp.uid }}
+              runAsGroup: {{ int $emsParams.dp.gid }}
+              fsGroup: {{ int $emsParams.dp.gid }}
+            # The service account allows access to helm/kubectl actions
+            serviceAccountName: "{{ $emsParams.serviceAccount }}"
+            terminationGracePeriodSeconds: 10
+    updateStrategy:
+        type: OnDelete
+    # NODE STORAGE
+    {{ if eq "yes" $emsNeedsVct }}
+    volumeClaimTemplates:
+      {{ if eq "storageClass" $emsParams.ems.msgData.storageType }}
+      - metadata:
+          name: ems-data
+        spec:
+          accessModes: [ "ReadWriteOnce" ]
+          storageClassName: "{{ $emsParams.ems.msgData.storageName }}"
+          resources:
+            requests:
+              storage: "{{ $emsParams.ems.msgData.storageSize }}"
+      {{ end }}
+      {{ if eq "storageClass" $emsParams.ems.logs.storageType }}
+      - metadata:
+          name: ems-log
+        spec:
+          accessModes: [ "ReadWriteOnce" ]
+          storageClassName: "{{ $emsParams.ems.logs.storageName }}"
+          resources:
+            requests:
+              storage: "{{ $emsParams.ems.logs.storageSize }}"
+      {{ end }}
+    {{ end }}
+...

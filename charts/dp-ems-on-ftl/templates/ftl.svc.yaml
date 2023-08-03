@@ -1,0 +1,49 @@
+# .......... FTL SERVICE ..........
+---
+#
+# HELPER VARIABLE DEFINITIONS
+{{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
+{{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
+{{- $stsname := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+#
+kind: Service
+apiVersion: v1
+metadata:
+  name: "{{ $svcFtl }}"
+  labels:
+    tib-dp-app: msg-ems-ftl
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
+    {{ include "msg.dp.labels" . | indent 4 }}
+spec:
+  ports:
+  - name: ftl-port
+    protocol: TCP
+    port: {{ int .Values.ftl_port | default 443 }}
+  - name: watchdog-port
+    protocol: TCP
+    port: {{ int .Values.watchdog_port | default 12502 }}
+  selector:
+    tib-msg-stsname: "{{ $stsname }}"
+...
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "{{ $svcEms }}"
+  labels:
+    tib-dp-app: msg-ems-ftl
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
+    {{ include "msg.dp.labels" . | indent 4 }}
+spec:
+  ports:
+  - name: ems-port
+    protocol: TCP
+    port: {{ int .Values.ems_port | default 9010 }}
+  - name: ems-http
+    protocol: TCP
+    port: {{ int .Values.ems_http_port | default 9011 }}
+  selector:
+    tib-msg-stsname: "{{ $stsname }}"
