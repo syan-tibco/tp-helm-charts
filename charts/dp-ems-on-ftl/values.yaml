@@ -1,5 +1,4 @@
-# Example helm deployment
-##helm upgrade "$TCM_USER-<subid>" <chart> --install --namespace=$TCM_NAMESPACE --values=denv.values.yaml
+# 
 global: 
   cp: 
     dataplaneId: 
