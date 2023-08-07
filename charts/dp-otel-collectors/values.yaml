@@ -7,7 +7,7 @@ createdBy: generator
 
 # this is for user app
 collector1:
-  name: otel-userapp-collector
+  name: otel-tibco-user-app
   mode: "deployment"
   apmEndpoint: ""
   apmToken: ""
