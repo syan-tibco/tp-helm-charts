@@ -1,0 +1,32 @@
+# name of chart
+name: dp-otel-collectors
+# label indicating which project this pipeline belongs to (Don't change)
+partOf: TIBCO-Platform
+# indicating which tools are used to generate this template (Don't change)
+createdBy: generator
+
+# this is for user app
+collector1:
+  name: otel-userapp-collector
+  mode: "deployment"
+  apmEndpoint: ""
+  apmToken: ""
+  esEndpoint: ""
+  esUserName: ""
+  esPassword: ""
+  esLogIndex: ""
+  esTraceIndex: ""
+  prometheusEndpoint: ""
+  prometheusToken: ""
+  ports:
+    fluentforward:
+      enabled: true
+      targetPort: 8006
+      port: 8006
+      protocol: TCP
+    metrics:
+      enabled: true
+      targetPort: 8888
+      port: 8888
+      protocol: TCP
+  config: ""
