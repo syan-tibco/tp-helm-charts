@@ -650,6 +650,20 @@ entries:
   dp-otel-collectors:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-08-07T21:14:57.35750482Z"
+    description: Collections of OpenTelemetry Collector CRs
+    digest: 1addd2a6571bf7638c5413f854b0f4b4c61b8e11651fa9bd56ecbc8ea1cb4a92
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-otel-collectors
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-otel-collectors-1.0.1/dp-otel-collectors-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-08-07T20:09:27.729575148Z"
     description: dp-otel-collectors
     digest: de49fc6193fe8fec002f75e80644db794cbab55b4b1012cc6dd436a79cadb5b9
@@ -827,4 +841,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-07T20:09:27.729654749Z"
+generated: "2023-08-07T21:14:57.35758162Z"
