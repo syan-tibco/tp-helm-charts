@@ -140,6 +140,33 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aks-1.0.0/dp-config-aks-1.0.0.tgz
     version: 1.0.0
   dp-config-aws:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "update traefik to 24.0.0"
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-10T20:29:53.340381306Z"
+    dependencies:
+    - condition: traefik.enabled
+      name: traefik
+      repository: https://traefik.github.io/charts
+      version: 24.0.0
+    - condition: citrix-cpx-with-ingress-controller.enabled
+      name: citrix-cpx-with-ingress-controller
+      repository: https://citrix.github.io/citrix-helm-charts/
+      version: 1.30.1
+    description: dp-config-aws is used to config CIC2 TIBCO Dataplane
+    digest: a7dfdc40e59a848df01c6c2a01fee4c0d6d9cbf97b308ee73f6f6a07289c00d5
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aws
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aws-1.0.9/dp-config-aws-1.0.9.tgz
+    version: 1.0.9
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-07-10T20:08:30.73041543Z"
@@ -305,6 +332,29 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aws-1.0.1/dp-config-aws-1.0.1.tgz
     version: 1.0.1
   dp-config-es:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "update default es version to 8.9.0"
+    apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-10T20:29:53.480954181Z"
+    dependencies:
+    - condition: eck-custom-resources-operator.enabled
+      name: eck-custom-resources-operator
+      repository: https://xco-sk.github.io/eck-custom-resources/
+      version: 0.5.6
+    description: dp-config-es
+    digest: d4513120a4908c3d440cbed2e352d7d4ec726878873ca261c0b43be61fd8d01d
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-es
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.9/dp-config-es-1.0.9.tgz
+    version: 1.0.9
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-07-10T20:51:16.49238769Z"
@@ -864,4 +914,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-10T19:49:47.979099612Z"
+generated: "2023-08-10T20:29:53.481078488Z"
