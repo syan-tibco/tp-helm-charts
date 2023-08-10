@@ -1,18 +1,19 @@
+{{- if .Values.k8sEventsCollector.enabled -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: {{ .Values.k8sEventsCollector.name }}
-  name: {{ .Values.k8sEventsCollector.name }}
+    app: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
+  name: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Values.k8sEventsCollector.name }}
+  name: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.k8sEventsCollector.name }}
+    app: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
 rules:
 - apiGroups:
   - ""
@@ -74,28 +75,28 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Values.k8sEventsCollector.name }}
+  name: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   labels:
-    app: {{ .Values.k8sEventsCollector.name }}
+    app: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Values.k8sEventsCollector.name }}
+  name: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   namespace: {{ .Release.Namespace }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.k8sEventsCollector.name }}
+  name: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: {{ .Values.k8sEventsCollector.name }}
+  name: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   namespace: {{ .Release.Namespace }}
 spec:
   mode: "{{ .Values.k8sEventsCollector.mode }}"
-  serviceAccount: {{ .Values.k8sEventsCollector.name }}
+  serviceAccount: {{ .Release.Name }}-{{ .Values.k8sEventsCollector.name }}
   ports:
   {{- range $key, $port := .Values.k8sEventsCollector.ports }}
   {{- if $port.enabled }}
@@ -110,5 +111,6 @@ spec:
 {{ .Values.k8sEventsCollector.config | indent 4 }}
 {{- else }}
 {{ tpl (.Files.Get "config/k8s-events-collector.yaml") . | indent 4 }}
+{{- end }}
 {{- end }}
 

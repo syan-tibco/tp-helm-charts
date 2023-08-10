@@ -1,3 +1,4 @@
+{{- if .Values.collector1.enabled -}}
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
@@ -19,4 +20,5 @@ spec:
 {{ .Values.collector1.config | indent 4 }}
 {{- else }}
 {{ tpl (.Files.Get "config/collector1.yaml") . | indent 4 }}
+{{- end }}
 {{- end }}
