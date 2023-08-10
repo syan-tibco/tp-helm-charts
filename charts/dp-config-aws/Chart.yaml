@@ -1,6 +1,6 @@
 apiVersion: v2
 name: dp-config-aws
-version: "1.0.8"
+version: "1.0.9"
 appVersion: "1.0.0"
 description: dp-config-aws is used to config CIC2 TIBCO Dataplane
 type: application
@@ -10,10 +10,14 @@ maintainers:
     email: cloud@tibco.com
 dependencies:
   - name: traefik
-    version: 21.1.0
+    version: 24.0.0
     repository: https://traefik.github.io/charts
     condition: traefik.enabled
   - name: citrix-cpx-with-ingress-controller
     version: 1.30.1
     repository: https://citrix.github.io/citrix-helm-charts/
     condition: citrix-cpx-with-ingress-controller.enabled
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "update traefik to 24.0.0"
