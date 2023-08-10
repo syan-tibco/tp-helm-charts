@@ -30,3 +30,27 @@ collector1:
       port: 8888
       protocol: TCP
   config: ""
+
+# metrics-collector
+metrics-collector:
+  name: otel-metric-collector
+  mode: "deployment"
+  prometheusEndpoint: ""
+  prometheusToken: ""
+  jaegerGRPCEndpoint: ""
+  jaegerThriftCompactEndpoint: ""
+  jaegerThriftHttpEndpoint: ""
+  zipkinEndpoint: ""
+  ports:
+    fluentforward:
+      enabled: true
+      targetPort: 8006
+      port: 8006
+      protocol: TCP
+    metrics:
+      enabled: true
+      targetPort: 8888
+      port: 8888
+      protocol: TCP
+  config: ""
+  
