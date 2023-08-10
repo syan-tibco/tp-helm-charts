@@ -43,57 +43,9 @@ spec:
                     {
                       "properties":
                         {
-                          "@timestamp":
-                            {
-                              "type": "date"
-                            },
-                          "app-id":
-                            {
-                              "type": "text",
-                              "fields":
-                                {
-                                  "keyword":
-                                    {
-                                      "type": "keyword",
-                                      "ignore_above": 256
-                                    }
-                                }
-                            },
-                          "app-type":
-                            {
-                              "type": "text",
-                              "fields":
-                                {
-                                  "keyword":
-                                    {
-                                      "type": "keyword",
-                                      "ignore_above": 256
-                                    }
-                                }
-                            },
-                          "dataplane-id":
-                            {
-                              "type": "text",
-                              "fields":
-                                {
-                                  "keyword":
-                                    {
-                                      "type": "keyword",
-                                      "ignore_above": 256
-                                    }
-                                }
-                            },
                           "log_time":
                             {
-                              "type": "text",
-                              "fields":
-                                {
-                                  "keyword":
-                                    {
-                                      "type": "keyword",
-                                      "ignore_above": 256
-                                    }
-                                }
+                              "type": "date"
                             },
                           "log_level":
                             {
@@ -118,8 +70,14 @@ spec:
                                       "ignore_above": 256
                                     }
                                 }
-                            },
-                          "namespace":
+                            }
+                        }
+                    },
+                  "Resource": 
+                    {
+                      "properties":
+                        {
+                          "app_id":
                             {
                               "type": "text",
                               "fields":
@@ -131,7 +89,7 @@ spec:
                                     }
                                 }
                             },
-                          "pod_id":
+                          "app_type":
                             {
                               "type": "text",
                               "fields":
@@ -143,7 +101,7 @@ spec:
                                     }
                                 }
                             },
-                          "pod_name":
+                          "dataplane_id":
                             {
                               "type": "text",
                               "fields":
@@ -155,7 +113,7 @@ spec:
                                     }
                                 }
                             },
-                          "workload-type":
+                          "workload_type":
                             {
                               "type": "text",
                               "fields":
@@ -164,6 +122,60 @@ spec:
                                     {
                                       "type": "keyword",
                                       "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "k8s":
+                            {
+                              "properties":
+                                {
+                                  "namespace":
+                                    {
+                                      "properties":
+                                        {
+                                          "name":
+                                            {
+                                              "type": "text",
+                                              "fields":
+                                                {
+                                                  "keyword":
+                                                    {
+                                                      "type": "keyword",
+                                                      "ignore_above": 256
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                  "pod":
+                                    {
+                                      "properties":
+                                        {
+                                          "name":
+                                            {
+                                              "type": "text",
+                                              "fields":
+                                                {
+                                                  "keyword":
+                                                    {
+                                                      "type": "keyword",
+                                                      "ignore_above": 256
+                                                    }
+                                                }
+                                            },
+                                          "uid":
+                                            {
+                                              "type": "text",
+                                              "fields":
+                                                {
+                                                  "keyword":
+                                                    {
+                                                      "type": "keyword",
+                                                      "ignore_above": 256
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
