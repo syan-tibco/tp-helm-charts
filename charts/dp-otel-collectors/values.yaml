@@ -30,3 +30,14 @@ collector1:
       port: 8888
       protocol: TCP
   config: ""
+
+# this is for k8s events
+k8sEventsCollector:
+  name: otel-k8s-event-collector
+  mode: "deployment"
+  namespacesList: ""
+  esEndpoint: ""
+  esUserName: ""
+  esPassword: ""
+  esLogIndex: ""
+  config: ""
