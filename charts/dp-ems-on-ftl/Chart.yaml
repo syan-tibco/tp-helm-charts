@@ -1,5 +1,23 @@
-apiVersion: v1
-appVersion: 0.1.1-1
-description: Ported TCM Helm chart for EMS-on-FTL group
+annotations:
+  artifacthub.io/category: streaming-messaging
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "Changed EMS service URL to tcp://${EMS_NAME}-ems.${NAMESPACE}.svc:9011"
+    - kind: added
+      description: "Added image support for python, java, prometheus endpoints"
+  artifacthub.io/images: |
+    - name: msg-ems-all
+       image: ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-6
+       platforms:
+         - linux/amd64
+  artifacthub.io/license: TIBCO
+  artifacthub.io/prerelease: "true"
+apiVersion: v2
+appVersion: 10.2.1-4
+description: Data-plane provisioning chart for EMS-on-FTL server group
+keywords:
+- data-plane
+- messaging
+- EMS
 name: dp-ems-on-ftl
-version: 1.0.0
+version: 1.0.2

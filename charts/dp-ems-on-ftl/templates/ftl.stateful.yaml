@@ -8,10 +8,12 @@ apiVersion: apps/v1
 {{- if ne "ftl" $emsParams.ems.stores -}}
   {{- fail "Unsupported Store type" -}}
 {{- end -}}
-{{- $stsname := printf "%s-ftl" $emsParams.ems.name -}}
-{{- $svcname := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $stsname := printf "%s-ems" $emsParams.ems.name -}}
+{{- $svcname := printf "%s-%s" $emsParams.ems.name "ems" -}}
 {{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
+{{- $svcEmsHost := printf "%s.%s.svc" $svcEms .Release.Namespace -}}
 {{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $svcFtlHost := printf "%s.%s.svc" $svcFtl .Release.Namespace -}}
 {{- $dataPvc := $emsParams.ems.logs.storageName -}}
 #
 kind: StatefulSet
@@ -27,6 +29,7 @@ metadata:
       tib-dp-release: "{{ $emsParams.ems.name }}"
       tib-msg-stsname: "{{ $stsname }}"
       tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
+      tib-msg-ems-name: "{{ $emsParams.ems.name }}"
       tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
       tib-msg-ems-use: "{{ $emsParams.ems.use }}"
     annotations:
@@ -47,11 +50,12 @@ spec:
                 tib-dp-name: "{{ $emsParams.dp.name }}"
                 {{ include "msg.dp.labels" . | indent 16 }}
                 tib-msg-stsname: "{{ $stsname }}"
-                name: ftl
+                name: ems
                 app: msg-ems-ftl
+                tib-msg-ems-name: "{{ $emsParams.ems.name }}"
                 tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
                 tib-msg-ems-use: "{{ $emsParams.ems.use }}"
-            name: ftl
+            name: ems
             annotations:
               cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
         spec:
@@ -93,7 +97,7 @@ spec:
             {{- end }}
             containers:
             - name: "{{ $stsname }}"
-              # image: "{{ $emsParams.dp.registry }}msg-ems-all:10.2.1-5"
+              # image: "{{ $emsParams.dp.registry }}msg-ems-all:10.2.1-6"
               image: "{{ $emsParams.ems.image }}"
               imagePullPolicy: "{{ $emsParams.dp.pullPolicy }}"
               resources:
@@ -106,20 +110,35 @@ spec:
                     for x in /boot/mk-*.sh ; do bash < $x ; done | tee boot.out ) ;
                 exec /usr/local/watchdog/bin/watchdog  ; 
               ports:
-              - name: ftl-port
-                containerPort: {{ int .Values.ftl_port | default 443 }}
+              - name: http-port
+                containerPort: {{ int $emsParams.ems.ports.httpPort }}
                 protocol: TCP
-              - name: ems-port
-                containerPort: {{ int .Values.ems_port | default 9010 }}
+              - name: tcp-port
+                containerPort: {{ int $emsParams.ems.ports.tcpPort }}
                 protocol: TCP
-              - name: ems-http-port
-                containerPort: {{ int .Values.ems_http_port | default 9011 }}
+              - name: ssl-port
+                containerPort: {{ int $emsParams.ems.ports.sslPort }}
+                protocol: TCP
+              - name: realm-port
+                containerPort: {{ int $emsParams.ems.ports.realmPort }}
+                protocol: TCP
+              - name: admin-port
+                containerPort: {{ int $emsParams.ems.ports.adminPort }}
+                protocol: TCP
+              - name: ep-server
+                containerPort: {{ int $emsParams.ems.ports.promServerEP }}
+                protocol: TCP
+              - name: ep-queues
+                containerPort: {{ int $emsParams.ems.ports.promQueuesEP }}
+                protocol: TCP
+              - name: ep-topics
+                containerPort: {{ int $emsParams.ems.ports.promTopicsEP }}
                 protocol: TCP
               - name: watchdog-port
-                containerPort: {{ int .Values.watchdog_port | default 12502 }}
+                containerPort: {{ int $emsParams.ems.ports.watchdogPort }}
                 protocol: TCP
               - name: logger-port
-                containerPort: {{ int .Values.logger_port }}
+                containerPort: {{ int $emsParams.ems.ports.loggerPort }}
                 protocol: TCP
               volumeMounts:
               - mountPath: /boot
@@ -138,6 +157,9 @@ spec:
               {{ end }}
               - mountPath: /logs
               {{ if eq "storageClass" $emsParams.ems.logs.storageType }}
+                {{ $emsNeedsVct = "yes" }}
+                name: "ems-log"
+              {{ else if eq "sharedStorageClass" $emsParams.ems.logs.storageType }}
                 {{ $emsNeedsVct = "yes" }}
                 name: "ems-log"
               {{ else if eq "sharedPvc" $emsParams.ems.logs.storageType }}
@@ -167,25 +189,40 @@ spec:
                 value: /logs/$(MY_POD_NAME)/watchdog.log
               - name: MY_RELEASE
                 value: "{{ .Release.Name }}"
-              - name: FTL_PORT
-                value: "{{ .Values.ftl_port | default "443" }}"
-              - name: EMS_PORT
-                value: "{{ .Values.ems_port | default "9010" }}"
+              - name: REALM_PORT
+                value: "{{ $emsParams.ems.ports.realmPort }}"
+              - name: EMS_TCP_PORT
+                value: "{{ $emsParams.ems.ports.tcpPort }}"
+              - name: EMS_SSL_PORT
+                value: "{{ $emsParams.ems.ports.sslPort }}"
+              - name: EMS_ADMIN_PORT
+                value: "{{ $emsParams.ems.ports.adminPort }}"
+              - name: EMS_PROM_PORT
+                value: "{{ $emsParams.ems.ports.promServerEP }}"
               - name: EMS_INIT_JSON
                 value: "/logs/$(MY_POD_NAME)/boot/tibemsd-ftl.json"
               - name: EMS_HTTP_PORT
-                value: "{{ .Values.ems_http_port | default "9011" }}"
+                value: "{{ $emsParams.ems.ports.httpPort }}"
               - name: MY_SVC_NAME
                 value: "{{ $svcname }}"
               - name: MY_SVC_HOST
                 value: "$(MY_POD_NAME).{{ $svcname }}.{{ .Release.Namespace }}.svc"
-              - name: FTL_URL
+              - name: FTL_REALM_URL
                 # the service load-balanced REALM URL
-                value: http://{{ $svcFtl }}:$(FTL_PORT)
+                value: "http://{{ $svcFtlHost }}:$(REALM_PORT)"
+              - name: EMS_LISTEN_URLS
+                value: "tcp://0.0.0.0:$(EMS_TCP_PORT),ssl://0.0.0.0:$(EMS_SSL_PORT)"
+              - name: EMS_TCP_URL
+                value: "tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT),tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT)"
+                # the service load-balanced EMS TCP URL
+                value: "tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT),tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT)"
+              - name: EMS_SSL_URL
+                # the service load-balanced EMS SSL URL
+                value: "ssl://{{ $svcEmsHost }}:$(EMS_SSL_PORT),ssl://{{ $svcEmsHost }}:$(EMS_SSL_PORT)"
               - name: TCM_WATCHDOG_CONFIG
                 value: "/logs/$(MY_POD_NAME)/boot/watchdog.yml"
               - name: TCM_WD_PORT
-                value: "{{ .Values.watchdog_port }}"
+                value: "{{ $emsParams.ems.ports.watchdogPort }}"
               - name: TCM_WATCHDOG_HOSTPORT
                 # note: $(MY_POD_NAME) will be one of {{ $stsname }}-[012]
                 value: "$(MY_POD_NAME):$(TCM_WD_PORT)"
@@ -203,10 +240,8 @@ spec:
               persistentVolumeClaim:
                 claimName: "{{ $emsParams.ems.msgData.storageName }}"
             {{ else if eq "emptyDir" $emsParams.ems.msgData.storageType }}
-                {{ if ne "dev" $emsParams.ems.use }}
-                  {{ fail "storageType of emptyDir only supported for dev use"}}
-                {{ end}}
             - name: "ems-data"
+              # FIXME: fail "storageType of emptyDir only supported for dev use" ##
               emptyDir: {}
             {{ end }}
             {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
@@ -216,12 +251,6 @@ spec:
                 claimName: "{{ $emsParams.ems.logs.storageName }}"
                 {{ end }}
             {{ end }}
-            - name: ftl-config
-              configMap:
-                name: "{{ $svcname }}-ftl-config"
-            - name: wd-config
-              configMap:
-                name: "{{ $svcname }}-wd-config"
             dnsPolicy: ClusterFirst
             restartPolicy: Always
             schedulerName: default-scheduler
@@ -235,7 +264,7 @@ spec:
             terminationGracePeriodSeconds: 10
     updateStrategy:
         type: OnDelete
-    # NODE STORAGE
+    # MSG DATA ALLOCATE NEW STORAGE
     {{ if eq "yes" $emsNeedsVct }}
     volumeClaimTemplates:
       {{ if eq "storageClass" $emsParams.ems.msgData.storageType }}

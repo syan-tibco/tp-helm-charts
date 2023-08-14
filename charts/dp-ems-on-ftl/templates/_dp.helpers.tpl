@@ -8,25 +8,40 @@ need.msg.dp.params
 */}}
 {{ define "need.msg.dp.params" }}
 dp:
+  # Use TCM testbed defaults for now
   uid: 0
   gid: 0
   where: "local"
-  {{ if .Values.dp }}
-  name: {{ ternary  "noname" .Values.dp.name ( not  .Values.dp.name ) }}
-  pullSecret: {{ ternary  "none" .Values.dp.pullSecret ( not  .Values.dp.pullSecret ) }}
-  registry: {{ ternary  "ghcr.io/" .Values.dp.registry ( not  .Values.dp.registry ) }}
-  repo: {{ ternary  "tibco/msg-platform-cicd/" .Values.dp.repo ( not  .Values.dp.repo ) }}
-  pullPolicy: {{ ternary  "IfNotPresent" .Values.dp.pullPolicy ( not  .Values.dp.pullPolicy ) }}
-  serviceAccount: {{ ternary  "provisioner" .Values.dp.serviceAccount ( not  .Values.dp.serviceAccount ) }}
-  {{ else }}
-  # Use TCM testbed defaults for now
-  name: "dp-noname"
-  pullSecret: "cic2-tcm-ghcr-secret"
-  registry: "ghcr.io/"
-  repo: "tibco/msg-platform-cicd/"
-  pullPolicy: "IfNotPresent"
-  serviceAccount: provisioner
+  {{- $name := "dp-noname" -}}
+  {{- $pullSecret := "cic2-tcm-ghcr-secret" -}}
+  {{- $registry := "ghcr.io/" -}}
+  {{- $repo := "tibco/msg-platform-cicd/" -}}
+  {{- $pullPolicy := "IfNotPresent" -}}
+  {{- $serviceAccount := "provisioner" -}}
+  {{ if .Values.global }}
+    {{ if .Values.global.cp }}
+      {{ $name = ternary  $name .Values.global.cp.name ( not  .Values.global.cp.name ) }}
+      {{ $pullSecret = ternary  $pullSecret  .Values.global.cp.pullSecret ( not  .Values.global.cp.pullSecret ) }}
+      {{ $registry = ternary  $registry  .Values.global.cp.registry ( not  .Values.global.cp.registry ) }}
+      {{ $repo = ternary  $repo  .Values.global.cp.repo ( not  .Values.global.cp.repo ) }}
+      {{ $pullPolicy = ternary  $pullPolicy  .Values.global.cp.pullPolicy ( not  .Values.global.cp.pullPolicy ) }}
+      {{ $serviceAccount = ternary  $serviceAccount  .Values.global.cp.serviceAccount ( not  .Values.global.cp.serviceAccount ) }}
+    {{ end }}
   {{ end }}
+  {{ if .Values.dp }}
+    {{ $name = ternary  $name  .Values.dp.name ( not  .Values.dp.name ) }}
+    {{ $pullSecret = ternary  $pullSecret  .Values.dp.pullSecret ( not  .Values.dp.pullSecret ) }}
+    {{ $registry = ternary  $registry  .Values.dp.registry ( not  .Values.dp.registry ) }}
+    {{ $repo = ternary  $repo  .Values.dp.repo ( not  .Values.dp.repo ) }}
+    {{ $pullPolicy = ternary  $pullPolicy  .Values.dp.pullPolicy ( not  .Values.dp.pullPolicy ) }}
+    {{ $serviceAccount = ternary  $serviceAccount  .Values.dp.serviceAccount ( not  .Values.dp.serviceAccount ) }}
+  {{ end }}
+  name: {{ $name }}
+  pullSecret: {{ $pullSecret }}
+  registry: {{ $registry }}
+  repo: {{ $repo }}
+  pullPolicy: {{ $pullPolicy }}
+  serviceAccount: {{ $serviceAccount }}
 {{ end }}
 
 {{/*

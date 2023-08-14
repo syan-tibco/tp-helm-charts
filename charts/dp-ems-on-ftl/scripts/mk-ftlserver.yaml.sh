@@ -6,7 +6,10 @@ outfile=${1:-ftlserver.yml}
 srvBase="${MY_POD_NAME%-*}"
 svcname="${MY_SVC_NAME:-$srvBase}"
 namespace=$MY_NAMESPACE
-ftlport="${FTL_PORT:-443}"
+ftlport="${FTL_REALM_PORT:-9013}"
+EMS_TCP_PORT="${EMS_TCP_PORT-9011}"
+# EMS_LISTEN_URLS="${EMS_LISTEN_URLS-tcp://0.0.0.0:${EMS_TCP_PORT}"
+EMS_LISTEN_URLS="tcp://0.0.0.0:${EMS_TCP_PORT}"
 podData="/data"
 podData="/data"
 # loglevel=${FTL_LOGLEVEL:-"info;quorum:debug"}
@@ -26,9 +29,9 @@ services:
 servers:
   ${srvBase}-0:
     - tibemsd:
-        exepath: /opt/tibco/ems/bin/tibemsd
-        -listens: tcp://0.0.0.0:9010
-        -health_check_listen: http://0.0.0.0:9011
+        exepath: /opt/tibco/ems/current-version/bin/tibemsd
+        -listens: ${EMS_LISTEN_URLS}
+        -health_check_listen: http://0.0.0.0:${EMS_HTTP_PORT}
         -store: "$podData/emsdata"
         -config_wait:
     - realm:
@@ -39,9 +42,9 @@ servers:
         swapdir: "$podData/swap"
   ${srvBase}-1:
     - tibemsd:
-        exepath: /opt/tibco/ems/bin/tibemsd
-        -listens: tcp://0.0.0.0:9010
-        -health_check_listen: http://0.0.0.0:9011
+        exepath: /opt/tibco/ems/current-version/bin/tibemsd
+        -listens: ${EMS_LISTEN_URLS}
+        -health_check_listen: http://0.0.0.0:${EMS_HTTP_PORT}
         -store: "$podData/emsdata"
         -config_wait:
     - realm:
@@ -52,9 +55,9 @@ servers:
         swapdir: "$podData/swap"
   ${srvBase}-2:
     - tibemsd:
-        exepath: /opt/tibco/ems/bin/tibemsd
-        -listens: tcp://0.0.0.0:9010
-        -health_check_listen: http://0.0.0.0:9011
+        exepath: /opt/tibco/ems/current-version/bin/tibemsd
+        -listens: ${EMS_LISTEN_URLS}
+        -health_check_listen: http://0.0.0.0:${EMS_HTTP_PORT}
         -store: "$podData/emsdata"
         -standby_only:
         -config_wait:

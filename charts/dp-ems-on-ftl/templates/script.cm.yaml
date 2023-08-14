@@ -10,7 +10,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     tib-dp-app: msg-ems-ftl
-    tib-msg-stsname: "{{ $emsParams.ems.name }}-ftl"
+    tib-msg-stsname: "{{ $emsParams.ems.name }}-ems"
     {{ include "msg.dp.labels" . | indent 4 }}
 data:
   {{- range $key, $val := $emsParams.dp }}
