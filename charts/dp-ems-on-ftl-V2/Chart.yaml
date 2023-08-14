@@ -19,5 +19,5 @@ keywords:
 - data-plane
 - messaging
 - EMS
-name: dp-ems-on-ftl
-version: 1.0.2
+name: dp-ems-on-ftl-V2
+version: 1.0.0
