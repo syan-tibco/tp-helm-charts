@@ -5,7 +5,7 @@
 {{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
 {{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
 {{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
-{{- $stsname := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $stsname := printf "%s-%s" $emsParams.ems.name "ems" -}}
 #
 kind: Service
 apiVersion: v1
@@ -14,16 +14,21 @@ metadata:
   labels:
     tib-dp-app: msg-ems-ftl
     tib-msg-stsname: "{{ $stsname }}"
-    tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
+    tib-msg-svcname: "{{ $svcFtl }}"
     {{ include "msg.dp.labels" . | indent 4 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ ($emsParams.ems.ports.promServerEP | default 9091) }}"
+    prometheus.io/scheme: "http"
+    prometheus.io/insecure_skip_verify: "true"
 spec:
   ports:
-  - name: ftl-port
+  - name: ems-realm-port
+    port: {{ int $emsParams.ems.ports.realmPort }}
     protocol: TCP
-    port: {{ int .Values.ftl_port | default 443 }}
   - name: watchdog-port
+    port: {{ int $emsParams.ems.ports.watchdogPort }}
     protocol: TCP
-    port: {{ int .Values.watchdog_port | default 12502 }}
   selector:
     tib-msg-stsname: "{{ $stsname }}"
 ...
@@ -35,15 +40,15 @@ metadata:
   labels:
     tib-dp-app: msg-ems-ftl
     tib-msg-stsname: "{{ $stsname }}"
-    tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
+    tib-msg-svcname: "{{ $svcEms }}"
     {{ include "msg.dp.labels" . | indent 4 }}
 spec:
   ports:
-  - name: ems-port
+  - name: ems-tcp-port
+    port: {{ int $emsParams.ems.ports.tcpPort }}
     protocol: TCP
-    port: {{ int .Values.ems_port | default 9010 }}
-  - name: ems-http
+  - name: ems-ssl-port
+    port: {{ int $emsParams.ems.ports.sslPort }}
     protocol: TCP
-    port: {{ int .Values.ems_http_port | default 9011 }}
   selector:
     tib-msg-stsname: "{{ $stsname }}"

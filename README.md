@@ -1,8 +1,8 @@
 # tp-helm-charts
 
-This is temporary repo for helm charts for TIBCO Platform (TP) data plane components.
+This is a temporary repo for helm charts for TIBCO Platform (TP) data plane components.
 
-All the charts are supposed to submit under (charts)[charts] folder. 
+All the charts are supposed to submit under [charts](charts) folder. 
 
 The charts are supposed to be used by helm repo hosted on github pages. There is a github action to update the helm repo index.yaml file and automatically release new charts if the chart version is updated.
 
@@ -15,26 +15,34 @@ helm repo update tibco-platform
 helm upgrade --install --create-namespace -n <namespace> <release name> tibco-platform/<your chart> -f <your values file>
 ```
 
-## Config helm charts
+## Chart release process
+* Update the chart version in Chart.yaml
+* Update release annotations in Chart.yaml. eg. [link](https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/Chart.yaml). detailed spec [link](https://artifacthub.io/docs/topics/annotations/helm/)
 
-`dp-config-ask` is used to create
-* ask ingress
-* ask certificate
+## Agent helm charts
 
-`dp-config-aws` is used to create
+[dp-core-infrastructure](charts/dp-core-infrastructure) is used to create
+* tp-tibtunnel
+* tp-provisioner-agent
+* tp-cp-proxy
+
+[tp-provisioner-agent](charts/tp-provisioner-agent) is used for testing DP without CP
+
+## helm charts
+
+[dp-config-aka](charts/dp-config-aks) is used to create
+* aks ingress
+* aks certificate
+
+[dp-config-aws](charts/dp-config-aws) is used to create
 * external ingress for DP cluster
 * internal ingress for DP cluster
 * usage: helm install -n citrix-system citrix .
 * usage: helm install -n traefik-system traefik .
 
-`dp-config-es` is used to create
+[dp-config-es](charts/dp-config-es) is used to create
 * kibana 
 * Elastic
 
-## Agent helm charts
-
-`dp-core-infrastructure` is used to deploy following to DP cluster
-* tibtunnel
-* provisioner-agent
-
-`tp-provisioner-agent` is used for testing DP without CP
+[dp-otel-collectors](charts/dp-otel-collectors) is used to create
+* OTel collectors

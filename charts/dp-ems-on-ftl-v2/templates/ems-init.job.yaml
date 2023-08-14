@@ -6,9 +6,10 @@
 #
 {{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
 {{- $dataPvc := $emsParams.ems.logs.storageName -}}
-{{- $stsname := printf "%s-ftl" $emsParams.ems.name -}}
+{{- $stsname := printf "%s-ems" $emsParams.ems.name -}}
 {{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
 {{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
+{{- $svcFtlHost := printf "%s.%s.svc" $svcFtl .Release.Namespace -}}
 # Additional HELPER VARIABLE DEFINITIONS
 #
 apiVersion: batch/v1
@@ -87,16 +88,16 @@ spec:
                   value: "{{ $emsParams.ems.name }}-ftl"
                 - name: EMS_SERVICE
                   value: "{{ $emsParams.ems.name }}-ems"
-                - name: FTL_PORT
-                  value: "{{ .Values.ftl_port | default "443" }}"
-                - name: EMS_PORT
-                  value: "{{ .Values.ems_port | default "9010" }}"
+                - name: REALM_PORT
+                  value: "{{ $emsParams.ems.ports.realmPort }}"
+                - name: EMS_TCP_PORT
+                  value: "{{ $emsParams.ems.ports.tcpPort }}"
                 - name: EMS_INIT_JSON
                   value: "/logs/$(MY_POD_NAME)/boot/tibemsd-ftl.json"
                 - name: EMS_HTTP_PORT
-                  value: "{{ .Values.ems_http_port | default "9011" }}"
-                - name: FTL_URL
+                  value: "{{ $emsParams.ems.ports.httpPort }}"
+                - name: FTL_REALM_URL
                   # the service load-balanced REALM URL
-                  value: http://{{ $svcFtl }}:$(FTL_PORT)
+                  value: "http://{{ $svcFtlHost }}:$(REALM_PORT)"
 
 {{- end }}
