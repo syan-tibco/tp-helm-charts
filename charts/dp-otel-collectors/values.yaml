@@ -7,6 +7,7 @@ createdBy: generator
 
 # this is for user app
 collector1:
+  enabled: true
   name: otel-tibco-user-app
   mode: "deployment"
   apmEndpoint: ""
@@ -29,4 +30,16 @@ collector1:
       targetPort: 8888
       port: 8888
       protocol: TCP
+  config: ""
+
+# this is for k8s events
+k8sEventsCollector:
+  enabled: true
+  name: otel-tibco-k8s-event
+  mode: "deployment"
+  namespacesList: ""
+  esEndpoint: ""
+  esUserName: ""
+  esPassword: ""
+  esLogIndex: ""
   config: ""
