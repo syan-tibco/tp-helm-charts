@@ -16,15 +16,15 @@ emsport="9010"
 initTibemsdJson="${EMS_INIT_JSON:-/logs/$MY_POD_NAME/boot/tibemsd-ftl.json}"
 
 # Expect
-# FTL_URL
+# FTL_REALM_URL
 echo "Waiting for FTL-Server Quorum ... "
-wait_for_url "$FTL_URL/api/v1/available"
+wait_for_url "$FTL_REALM_URL/api/v1/available"
 
 echo "Loading initial tibemsd.json ..."
 rtc=1
-export LD_LIBRARY_PATH="/opt/tibco/ftl/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="/opt/tibco/ftl/current-version/lib:$LD_LIBRARY_PATH"
 for try in $(seq 5) ; do
-    /opt/tibco/ems/bin/tibemsjson2ftl -url "$FTL_URL" -json $initTibemsdJson
+    tibemsjson2ftl -url "$FTL_REALM_URL" -json $initTibemsdJson
     rtc=$?
     [ $rtc -eq 0 ] && break
     echo -n "."

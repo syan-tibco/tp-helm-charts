@@ -17,16 +17,21 @@ ems:
   stores: ftl
   sizing: small
   use: dev
+  ports:
+    httpPort: 9010
+    tcpPort: 9011
+    sslPort: 9012
+    realmPort: 9013
+    adminPort: 9014
+    promServerEP: 9091
+    promQueuesEP: 9092
+    promTopicsEP: 9093
+    # FIXME: Are these 2 DP or EMS settings
+    watchdogPort: 12502
+    loggerPort: 12506
   msgData: 
     storageType: emptyDir
     storageName: none
   logs: 
     storageType: useMsgData
     storageName: none
-
-watchdog_port: 12502
-monagent_port: 12503
-logger_port: 12506
-ftl_port: 443
-ems_port: 9010
-ems_http_port: 9011

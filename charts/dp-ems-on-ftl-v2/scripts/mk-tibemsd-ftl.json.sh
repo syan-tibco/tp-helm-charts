@@ -6,16 +6,17 @@ outfile=${1:-tibemsd-ftl.json}
 srvBase="${MY_POD_NAME%-*}"
 svcname="${srvBase/-ftl/-ems/}"
 namespace=$MY_NAMESPACE
-ftlport="${FTL_PORT-443}"
-emsport="${EMS_PORT:-9010}"
+realmPort="${FTL_REALM_PORT-9013}"
+emsTcpPort="${EMS_TCP_PORT:-9011}"
+emsSslPort="${EMS_SSL_PORT:-9012}"
 subData="/data"
 pstoreData="/data"
 # loglevel=${FTL_LOGLEVEL:-"info;quorum:debug"}
 loglevel=${FTL_LOGLEVEL:-"info"}
 
 # export LD_LIBRARY_PATH=/opt/tibco/ftl/lib
-# /opt/tibco/ems/bin/tibemsjson2ftl -url "http://localhost:$ftlport" -json $initTibemsdJson
-export insideSvcHostPort="${svcname}.${namespace}.svc:${emsport}"
+# /opt/tibco/ems/current-version/bin/tibemsjson2ftl -url "http://localhost:$ftlport" -json $initTibemsdJson
+export insideSvcHostPort="${svcname}.${namespace}.svc:${emsTcpPort}"
 cat - <<EOF > $outfile
 {
   "acls":[],
@@ -31,7 +32,7 @@ cat - <<EOF > $outfile
         "ssl_trusted_list":[]
       },
       "type":"generic",
-      "url":"tcp:\/\/$emsport"
+      "url":"tcp:\/\/$emsTcpPort"
     },
     {
       "jndinames":[],
@@ -54,7 +55,7 @@ cat - <<EOF > $outfile
         "ssl_trusted_list":[]
       },
       "type":"generic",
-      "url":"tcp:\/\/$emsport"
+      "url":"tcp:\/\/$emsTcpPort"
     },
     {
       "jndinames":[],
@@ -64,7 +65,7 @@ cat - <<EOF > $outfile
         "ssl_trusted_list":[]
       },
       "type":"topic",
-      "url":"tcp:\/\/$emsport"
+      "url":"tcp:\/\/$emsTcpPort"
     },
     {
       "jndinames":[],
@@ -74,7 +75,7 @@ cat - <<EOF > $outfile
         "ssl_trusted_list":[]
       },
       "type":"queue",
-      "url":"tcp:\/\/$emsport"
+      "url":"tcp:\/\/$emsTcpPort"
     },
     {
       "jndinames":[],

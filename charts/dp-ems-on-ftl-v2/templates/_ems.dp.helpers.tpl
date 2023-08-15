@@ -8,12 +8,19 @@ need.msg.ems.params
 */}}
 {{ define "need.msg.ems.params" }}
 {{-  $dpParams := include "need.msg.dp.params" . | fromYaml -}}
-{{-  $emsDefaultFullImage := printf "%s%smsg-ems-all:10.2.1-5" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $emsDefaultFullImage := printf "%s%smsg-ems-all:10.2.1-6" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $opsDefaultFullImage := printf "%s%smsg-dp-ops:1.0.0-1" $dpParams.dp.registry $dpParams.dp.repo -}}
 {{ include "need.msg.dp.params" . }}
+ops:
+  image: {{ $opsDefaultFullImage }}
 ems:
   name: {{ ternary .Release.Name .Values.ems.name ( not .Values.ems.name ) }}
   replicas: 3
-  isLeader: "http://localhost:9011/isReady"
+  {{  $dpParams := include "need.msg.dp.params" . | fromYaml }}
+  ports:
+{{ .Values.ems.ports | toYaml | indent 4 }}
+
+  isLeader: "http://localhost:9010/isReady"
   allowNodeSkew: "true"
   allowZoneSkew: "true"
   {{- $sizing := "small" -}}

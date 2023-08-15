@@ -1,0 +1,35 @@
+receivers:
+  k8s_events:
+    auth_type: kubeConfig
+    namespaces: [{{ .Values.k8sEventsCollector.namespacesList }}]
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 2000
+  batch: {}
+
+exporters:
+  logging:
+    loglevel: warn
+  elasticsearch/log:
+    endpoints: [{{ .Values.k8sEventsCollector.esEndpoint }}]
+    logs_index: {{ .Values.k8sEventsCollector.esLogIndex }}
+    user: {{ .Values.k8sEventsCollector.esUserName }}
+    password: {{ .Values.k8sEventsCollector.esPassword }}
+    retry:
+      enabled: false
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+service:
+  pipelines:
+    logs:
+      exporters:
+        - logging
+        - elasticsearch/log
+      processors:
+        - memory_limiter
+        - batch
+      receivers:
+        - k8s_events

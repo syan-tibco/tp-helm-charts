@@ -6,13 +6,29 @@ cat - <<EOF > $outfile
 services:
   - name: ftl
     config:
-      cmd: /opt/tibco/ftl/bin/tibftlserver -n ${MY_POD_NAME} -c /logs/${MY_POD_NAME}/boot/ftlserver.yml
+      cmd: tibftlserver -n ${MY_POD_NAME} -c /logs/${MY_POD_NAME}/boot/ftlserver.yml
       # cmd: wait-for-shutdown.sh
       cwd: /logs/${MY_POD_NAME}
       log:
         size: 200
         num: 50
         # debugfile: /logs/${MY_POD_NAME}/ftlserver.log
+        rotateonfirststart: true
+  - name: statLogger
+    config:
+      cmd: /logs/${MY_POD_NAME}/boot/runLogger.sh
+      cwd: /logs/${MY_POD_NAME}/statLogger
+      log:
+        size: 10
+        num: 50
+        rotateonfirststart: true
+  - name: promEndpoint
+    config:
+      cmd: /logs/${MY_POD_NAME}/boot/runPromCollector.sh
+      cwd: /logs/${MY_POD_NAME}/promEndpoint
+      log:
+        size: 10
+        num: 50
         rotateonfirststart: true
   # - name: fluentbit
   #   config:

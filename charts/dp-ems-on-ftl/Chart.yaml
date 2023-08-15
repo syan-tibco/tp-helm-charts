@@ -1,5 +1,0 @@
-apiVersion: v1
-appVersion: 0.1.1-1
-description: Ported TCM Helm chart for EMS-on-FTL group
-name: dp-ems-on-ftl
-version: 1.0.0
