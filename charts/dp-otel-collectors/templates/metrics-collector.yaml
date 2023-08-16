@@ -1,7 +1,7 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: {{ .Values.metrics-collector.name }}
+  name: {{ .Release.Name }}-{{ .Values.metrics-collector.name }}
   namespace: {{ .Release.Namespace }}
 spec:
   mode: "{{ .Values.metrics-collector.mode }}"
