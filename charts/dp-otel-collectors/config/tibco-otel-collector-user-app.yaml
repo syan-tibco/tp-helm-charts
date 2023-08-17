@@ -1,0 +1,109 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        cors:
+          allowed_origins:
+            - http://*
+            - https://*
+        endpoint: 0.0.0.0:4318
+  fluentforward:
+    endpoint: 0.0.0.0:8006
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otel-collector'
+          scrape_interval: 10s
+          static_configs:
+            - targets: ['0.0.0.0:8888']
+  k8s_events:
+    auth_type: kubeConfig
+    namespaces: [{{ .Values.tibco-otel-collector.namespacesList }}]
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 2000
+  batch: {}
+exporters:
+  logging: {}
+  otlp/elastic:
+    endpoint: "{{ .Values.tibco-otel-collector-user-app.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
+    headers:
+      Authorization: "Bearer {{ .Values.tibco-otel-collector-user-app.apmToken }}"
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+  elasticsearch/log:
+    endpoints: [{{ .Values.tibco-otel-collector-user-app.esEndpoint }}]
+    logs_index: {{ .Values.tibco-otel-collector-user-app.esLogIndex }}
+    user: {{ .Values.tibco-otel-collector-user-app.esUserName }}
+    password: {{ .Values.tibco-otel-collector-user-app.esPassword }}
+    retry:
+      enabled: false
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+  elasticsearch/trace:
+    endpoints: [{{ .Values.tibco-otel-collector-user-app.esEndpoint }}]
+    logs_index: {{ .Values.tibco-otel-collector-user-app.esTraceIndex }}
+    user: {{ .Values.tibco-otel-collector-user-app.esUserName }}
+    password: {{ .Values.tibco-otel-collector-user-app.esPassword }}
+    retry:
+      enabled: false
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+  prometheus:
+    endpoint: 0.0.0.0:4319
+    enable_open_metrics: true
+    resource_to_telemetry_conversion:
+      enabled: true
+  prometheusremotewrite:
+    endpoint: "{{ .Values.tibco-otel-collector-user-app.prometheusEndpoint }}"
+    headers:
+      Authorization: "Bearer {{ .Values.tibco-otel-collector-user-app.prometheusToken}}"
+    external_labels:
+      server: otel-userapp-collector
+extensions:
+  health_check:
+  memory_ballast:
+service:
+  telemetry:
+    logs: {}
+    metrics:
+      address: :8888
+  extensions:
+    - health_check
+    - memory_ballast
+  pipelines:
+    logs:
+      exporters:
+        - logging
+        - elasticsearch/log
+      processors:
+        - memory_limiter
+        - batch
+      receivers:
+        - fluentforward
+        - otlp
+    metrics:
+      exporters:
+        - logging
+        - prometheusremotewrite
+      processors:
+        - memory_limiter
+        - batch
+      receivers:
+        - otlp
+        - prometheus
+    traces:
+      exporters:
+        - logging
+        - otlp/elastic
+      processors:
+        - memory_limiter
+        - batch
+      receivers:
+        - otlp

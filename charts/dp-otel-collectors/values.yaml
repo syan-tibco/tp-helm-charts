@@ -43,3 +43,54 @@ k8sEventsCollector:
   esPassword: ""
   esLogIndex: ""
   config: ""
+
+tibco-otel-collector:
+  enabled: true
+  name: tibco-otel-collector
+  mode: "deployment"
+  esEndpoint: ""
+  esUserName: ""
+  esPassword: ""
+  esLogIndex: ""
+  esTraceIndex: ""
+  config: ""
+
+tibco-otel-collector-user-app:
+  enabled: true
+  name: tibco-otel-collector-user-app
+  mode: "deployment"
+  namespacesList: ""
+  apmEndpoint: ""
+  apmToken: ""
+  esEndpoint: ""
+  esUserName: ""
+  esPassword: ""
+  esLogIndex: ""
+  esTraceIndex: ""
+  prometheusEndpoint: ""
+  prometheusToken: ""
+  ports:
+    fluentforward:
+      enabled: true
+      targetPort: 8006
+      port: 8006
+      protocol: TCP
+    metrics:
+      enabled: true
+      targetPort: 8888
+      port: 8888
+      protocol: TCP
+  config: ""
+tibco-otel-collector-finops:
+  enabled: true
+  name: tibco-otel-collector-finops
+  mode: "deployment"
+  apmEndpoint: ""
+  apmToken: ""
+  ports:
+    metrics:
+      enabled: true
+      targetPort: 8888
+      port: 8888
+      protocol: TCP
+  config: ""

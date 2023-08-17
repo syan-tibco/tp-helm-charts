@@ -1,0 +1,70 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        cors:
+          allowed_origins:
+            - http://*
+            - https://*
+        endpoint: 0.0.0.0:4318
+processors:
+  k8sattributes:
+    filter:
+      namespace: {{ .Values.global.cp.namespace }}
+exporters:
+  logging: {}
+  otlp/elastic:
+    endpoint: "{{ .Values.tibco-otel-collector.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
+    headers:
+      Authorization: "Bearer {{ .Values.tibco-otel-collector.apmToken }}"
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+  elasticsearch/log:
+    endpoints: [{{ .Values.tibco-otel-collector.esEndpoint }}]
+    logs_index: {{ .Values.tibco-otel-collector.esLogIndex }}
+    user: {{ .Values.tibco-otel-collector.esUserName }}
+    password: {{ .Values.tibco-otel-collector.esPassword }}
+    retry:
+      enabled: false
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+  elasticsearch/trace:
+    endpoints: [{{ .Values.tibco-otel-collector.esEndpoint }}]
+    logs_index: {{ .Values.tibco-otel-collector.esTraceIndex }}
+    user: {{ .Values.tibco-otel-collector.esUserName }}
+    password: {{ .Values.tibco-otel-collector.esPassword }}
+    retry:
+      enabled: false
+    tls:
+      insecure: false
+      insecure_skip_verify: true
+extensions:
+  health_check:
+  memory_ballast:
+service:
+  telemetry:
+    logs: {}
+  extensions:
+    - health_check
+    - memory_ballast
+  pipelines:
+    logs:
+      exporters:
+        - logging
+        - elasticsearch/log
+      processors:
+        - k8sattributes
+      receivers:
+        - otlp
+    traces:
+      exporters:
+        - logging
+        - otlp/elastic
+      processors:
+        - k8sattributes
+      receivers:
+        - otlp
