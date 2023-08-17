@@ -44,6 +44,31 @@ k8sEventsCollector:
   esLogIndex: ""
   config: ""
 
+# metrics-collector
+metrics-collector:
+  enabled: true
+  name: otel-metric-collector
+  mode: "deployment"
+  prometheusEndpoint: ""
+  prometheusToken: ""
+  jaegerGRPCEndpoint: ""
+  jaegerThriftCompactEndpoint: ""
+  jaegerThriftHttpEndpoint: ""
+  zipkinEndpoint: ""
+  ports:
+    fluentforward:
+      enabled: true
+      targetPort: 8006
+      port: 8006
+      protocol: TCP
+    metrics:
+      enabled: true
+      targetPort: 8888
+      port: 8888
+      protocol: TCP
+  config: "" 
+
+# tibco-otel-collector-services
 tibco-otel-collector:
   enabled: true
   name: tibco-otel-collector
@@ -55,6 +80,7 @@ tibco-otel-collector:
   esTraceIndex: ""
   config: ""
 
+# tibco-service-collector-user-app
 tibco-otel-collector-user-app:
   enabled: true
   name: tibco-otel-collector-user-app
@@ -81,6 +107,8 @@ tibco-otel-collector-user-app:
       port: 8888
       protocol: TCP
   config: ""
+
+# tibco-service-collector-finops
 tibco-otel-collector-finops:
   enabled: true
   name: tibco-otel-collector-finops

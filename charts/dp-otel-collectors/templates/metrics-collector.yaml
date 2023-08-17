@@ -1,0 +1,22 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.metrics-collector.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  mode: "{{ .Values.metrics-collector.mode }}"
+  ports:
+  {{- range $key, $port := .Values.metrics-collector.ports }}
+  {{- if $port.enabled }}
+    - name: {{ $key }}
+      targetPort: {{ $port.targetPort }}
+      port: {{ $port.port }}
+      protocol: {{ $port.protocol }}
+  {{- end }}
+  {{- end }}
+  config: |
+{{- if .Values.metrics-collector.config }}
+{{ .Values.metrics-collector.config | indent 4 }}
+{{- else }}
+{{ tpl (.Files.Get "config/metrics-collector.yaml") . | indent 4 }}
+{{- end }}
