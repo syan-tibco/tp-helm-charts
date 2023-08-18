@@ -1,6 +1,6 @@
 apiVersion: v2
 name: dp-otel-collectors
-version: "1.0.9"
+version: "1.0.10"
 appVersion: "1.0.0"
 description: Collections of OpenTelemetry Collector CRs
 type: application

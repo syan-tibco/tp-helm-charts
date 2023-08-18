@@ -18,10 +18,10 @@ receivers:
           scrape_interval: 10s
           static_configs:
             - targets: ['0.0.0.0:8888']
-  k8s_events:
-    auth_type: kubeConfig
-#   namespaces: ["otel-system, elastic-system"]
-    namespaces: [{{ .Values.tibotelcollectornops.namespacesList }}]
+#  k8s_events:
+#    auth_type: kubeConfig
+##   namespaces: ["otel-system, elastic-system"]
+#    namespaces: [{{ .Values.tibotelcollectornops.namespacesList }}]
 processors:
   memory_limiter:
     check_interval: 1s
@@ -48,7 +48,6 @@ service:
         - memory_limiter
         - batch
       receivers:
-        - fluentforward
         - otlp
     metrics:
       exporters:
