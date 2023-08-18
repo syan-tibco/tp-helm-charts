@@ -1,19 +1,19 @@
-{{- if .Values.tibotelcollectoruserapp.enabled -}}
+{{- if .Values.tibotelcollectoruserappnops.enabled -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   labels:
-    app: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
-  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+    app: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
+  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+    app: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
 rules:
   - apiGroups:
       - ""
@@ -75,29 +75,29 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
   labels:
-    app: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+    app: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+  name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
   namespace: {{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
-    name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserapp.name }}
+    name: {{ .Release.Name }}-{{ .Values.tibotelcollectoruserappnops.name }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: {{ .Values.tibotelcollectoruserapp.name }}
+  name: {{ .Values.tibotelcollectoruserappnops.name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  mode: "{{ .Values.tibotelcollectoruserapp.mode }}"
+  mode: "{{ .Values.tibotelcollectoruserappnops.mode }}"
   ports:
-  {{- range $key, $port := .Values.tibotelcollectoruserapp.ports }}
+  {{- range $key, $port := .Values.tibotelcollectoruserappnops.ports }}
   {{- if $port.enabled }}
     - name: {{ $key }}
       targetPort: {{ $port.targetPort }}
@@ -106,8 +106,8 @@ spec:
   {{- end }}
   {{- end }}
   config: |
-{{- if .Values.tibotelcollectoruserapp.config }}
-{{ .Values.tibotelcollectoruserapp.config | indent 4 }}
+{{- if .Values.tibotelcollectoruserappnops.config }}
+{{ .Values.tibotelcollectoruserappnops.config | indent 4 }}
 {{- else }}
 {{ tpl (.Files.Get "config/tibco-otel-collector-user-app.yaml") . | indent 4 }}
 {{- end }}

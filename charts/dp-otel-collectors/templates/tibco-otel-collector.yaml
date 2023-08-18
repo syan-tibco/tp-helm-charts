@@ -1,13 +1,13 @@
-{{- if .Values.tibco-otel-collector.enabled -}}
+{{- if .Values.tibotelcollectorsvc.enabled -}}
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: {{ .Values.tibco-otel-collector.name }}
+  name: {{ .Values.tibotelcollectorsvc.name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  mode: "{{ .Values.tibco-otel-collector.mode }}"
+  mode: "{{ .Values.tibotelcollectorsvc.mode }}"
   ports:
-  {{- range $key, $port := .Values.tibco-otel-collector.ports }}
+  {{- range $key, $port := .Values.tibotelcollectorsvc.ports }}
   {{- if $port.enabled }}
     - name: {{ $key }}
       targetPort: {{ $port.targetPort }}
@@ -16,9 +16,9 @@ spec:
   {{- end }}
   {{- end }}
   config: |
-{{- if .Values.tibco-otel-collector.config }}
-{{ .Values.tibco-otel-collector.config | indent 4 }}
+{{- if .Values.tibotelcollectorsvc.config }}
+{{ .Values.tibotelcollectorsvc.config | indent 4 }}
 {{- else }}
-{{ tpl (.Files.Get "config/tibco-otel-collector.yaml") . | indent 4 }}
+{{ tpl (.Files.Get "config/tibco-otel-collector-svc.yaml") . | indent 4 }}
 {{- end }}
 {{- end }}

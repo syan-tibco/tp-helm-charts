@@ -16,27 +16,27 @@ processors:
 exporters:
   logging: {}
   otlp/elastic:
-    endpoint: "{{ .Values.tibco-otel-collector.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
+    endpoint: "{{ .Values.tibotelcollectorsvc.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
     headers:
-      Authorization: "Bearer {{ .Values.tibco-otel-collector.apmToken }}"
+      Authorization: "Bearer {{ .Values.tibotelcollectorsvc.apmToken }}"
     tls:
       insecure: false
       insecure_skip_verify: true
   elasticsearch/log:
-    endpoints: [{{ .Values.tibco-otel-collector.esEndpoint }}]
-    logs_index: {{ .Values.tibco-otel-collector.esLogIndex }}
-    user: {{ .Values.tibco-otel-collector.esUserName }}
-    password: {{ .Values.tibco-otel-collector.esPassword }}
+    endpoints: [{{ .Values.tibotelcollectorsvc.esEndpoint }}]
+    logs_index: {{ .Values.tibotelcollectorsvc.esLogIndex }}
+    user: {{ .Values.tibotelcollectorsvc.esUserName }}
+    password: {{ .Values.tibotelcollectorsvc.esPassword }}
     retry:
       enabled: false
     tls:
       insecure: false
       insecure_skip_verify: true
   elasticsearch/trace:
-    endpoints: [{{ .Values.tibco-otel-collector.esEndpoint }}]
-    logs_index: {{ .Values.tibco-otel-collector.esTraceIndex }}
-    user: {{ .Values.tibco-otel-collector.esUserName }}
-    password: {{ .Values.tibco-otel-collector.esPassword }}
+    endpoints: [{{ .Values.tibotelcollectorsvc.esEndpoint }}]
+    logs_index: {{ .Values.tibotelcollectorsvc.esTraceIndex }}
+    user: {{ .Values.tibotelcollectorsvc.esUserName }}
+    password: {{ .Values.tibotelcollectorsvc.esPassword }}
     retry:
       enabled: false
     tls:

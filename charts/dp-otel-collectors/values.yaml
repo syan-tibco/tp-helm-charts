@@ -69,7 +69,7 @@ metrics-collector:
   config: "" 
 
 # tibco-otel-collector-services
-tibco-otel-collector:
+tibotelcollectorsvc:
   enabled: true
   name: tibco-otel-collector
   mode: "deployment"
@@ -81,7 +81,7 @@ tibco-otel-collector:
   config: ""
 
 # tibco-service-collector-user-app
-tibco-otel-collector-user-app:
+tibotelcollectoruserapp:
   enabled: true
   name: tibco-otel-collector-user-app
   mode: "deployment"
@@ -109,13 +109,31 @@ tibco-otel-collector-user-app:
   config: ""
 
 # tibco-service-collector-finops
-tibco-otel-collector-finops:
+tibotelcollectorfinops:
   enabled: true
   name: tibco-otel-collector-finops
   mode: "deployment"
   apmEndpoint: ""
   apmToken: ""
   ports:
+    metrics:
+      enabled: true
+      targetPort: 8888
+      port: 8888
+      protocol: TCP
+  config: ""
+
+tibotelcollectoruserappnops:
+  enabled: true
+  name: tibco-otel-collector-user-app-nops
+  mode: "deployment"
+  namespacesList: ""
+  ports:
+    fluentforward:
+      enabled: true
+      targetPort: 8006
+      port: 8006
+      protocol: TCP
     metrics:
       enabled: true
       targetPort: 8888

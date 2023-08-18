@@ -1,13 +1,13 @@
-{{- if .Values.tibco-otel-collector-finops.enabled -}}
+{{- if .Values.tibotelcollectorfinops.enabled -}}
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: {{ .Values.tibco-otel-collector-finops.name }}
+  name: {{ .Values.tibotelcollectorfinops.name }}
   namespace: {{ .Release.Namespace }}
 spec:
-  mode: "{{ .Values.tibco-otel-collector-finops.mode }}"
+  mode: "{{ .Values.tibotelcollectorfinops.mode }}"
   ports:
-  {{- range $key, $port := .Values.tibco-otel-collector-finops.ports }}
+  {{- range $key, $port := .Values.tibotelcollectorfinops.ports }}
   {{- if $port.enabled }}
     - name: {{ $key }}
       targetPort: {{ $port.targetPort }}
@@ -16,8 +16,8 @@ spec:
   {{- end }}
   {{- end }}
   config: |
-{{- if .Values.tibco-otel-collector-finops.config }}
-{{ .Values.tibco-otel-collector-finops.config | indent 4 }}
+{{- if .Values.tibotelcollectorfinops.config }}
+{{ .Values.tibotelcollectorfinops.config | indent 4 }}
 {{- else }}
 {{ tpl (.Files.Get "config/tibco-otel-collector-finops.yaml") . | indent 4 }}
 {{- end }}

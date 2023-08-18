@@ -12,9 +12,9 @@ processors:
       namespace: {{ .Values.global.cp.namespace }}
 exporters:
   otlp/elastic:
-    endpoint: "{{ .Values.tibco-otel-collector-finops.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
+    endpoint: "{{ .Values.tibotelcollectorfinops.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
     headers:
-      Authorization: "Bearer {{ .Values.tibco-otel-collector-finops.apmToken }}"
+      Authorization: "Bearer {{ .Values.tibotelcollectorfinops.apmToken }}"
     tls:
       insecure: false
       insecure_skip_verify: true

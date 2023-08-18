@@ -20,7 +20,7 @@ receivers:
             - targets: ['0.0.0.0:8888']
   k8s_events:
     auth_type: kubeConfig
-    namespaces: [{{ .Values.tibco-otel-collector.namespacesList }}]
+    namespaces: [{{ .Values.tibotelcollectoruserapp.namespacesList }}]
 processors:
   memory_limiter:
     check_interval: 1s
@@ -29,27 +29,27 @@ processors:
 exporters:
   logging: {}
   otlp/elastic:
-    endpoint: "{{ .Values.tibco-otel-collector-user-app.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
+    endpoint: "{{ .Values.tibotelcollectoruserapp.apmEndpoint }}" # ELASTIC_APM_ENDPOINT
     headers:
-      Authorization: "Bearer {{ .Values.tibco-otel-collector-user-app.apmToken }}"
+      Authorization: "Bearer {{ .Values.tibotelcollectoruserapp.apmToken }}"
     tls:
       insecure: false
       insecure_skip_verify: true
   elasticsearch/log:
-    endpoints: [{{ .Values.tibco-otel-collector-user-app.esEndpoint }}]
-    logs_index: {{ .Values.tibco-otel-collector-user-app.esLogIndex }}
-    user: {{ .Values.tibco-otel-collector-user-app.esUserName }}
-    password: {{ .Values.tibco-otel-collector-user-app.esPassword }}
+    endpoints: [{{ .Values.tibotelcollectoruserapp.esEndpoint }}]
+    logs_index: {{ .Values.tibotelcollectoruserapp.esLogIndex }}
+    user: {{ .Values.tibotelcollectoruserapp.esUserName }}
+    password: {{ .Values.tibotelcollectoruserapp.esPassword }}
     retry:
       enabled: false
     tls:
       insecure: false
       insecure_skip_verify: true
   elasticsearch/trace:
-    endpoints: [{{ .Values.tibco-otel-collector-user-app.esEndpoint }}]
-    logs_index: {{ .Values.tibco-otel-collector-user-app.esTraceIndex }}
-    user: {{ .Values.tibco-otel-collector-user-app.esUserName }}
-    password: {{ .Values.tibco-otel-collector-user-app.esPassword }}
+    endpoints: [{{ .Values.tibotelcollectoruserapp.esEndpoint }}]
+    logs_index: {{ .Values.tibotelcollectoruserapp.esTraceIndex }}
+    user: {{ .Values.tibotelcollectoruserapp.esUserName }}
+    password: {{ .Values.tibotelcollectoruserapp.esPassword }}
     retry:
       enabled: false
     tls:
@@ -61,9 +61,9 @@ exporters:
     resource_to_telemetry_conversion:
       enabled: true
   prometheusremotewrite:
-    endpoint: "{{ .Values.tibco-otel-collector-user-app.prometheusEndpoint }}"
+    endpoint: "{{ .Values.tibotelcollectoruserapp.prometheusEndpoint }}"
     headers:
-      Authorization: "Bearer {{ .Values.tibco-otel-collector-user-app.prometheusToken}}"
+      Authorization: "Bearer {{ .Values.tibotelcollectoruserapp.prometheusToken}}"
     external_labels:
       server: otel-userapp-collector
 extensions:
