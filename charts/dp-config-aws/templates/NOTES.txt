@@ -1,2 +1,3 @@
-This chart is used for config TIBCO Platform
+{{- include "dpConfigAws.validateValues.fileSystemId" . }}
 
+This chart is used for config TIBCO Platform

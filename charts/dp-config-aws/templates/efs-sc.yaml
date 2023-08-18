@@ -1,0 +1,14 @@
+{{- if .Values.storageClass.efs.enabled -}}
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: {{ .Values.storageClass.efs.name }}
+  namespace: {{ .Release.Namespace }}
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "{{ .Values.storageClass.efs.default }}"
+provisioner: efs.csi.aws.com
+parameters:
+{{- range $key, $value := .Values.storageClass.efs.parameters }}
+  {{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end -}}
