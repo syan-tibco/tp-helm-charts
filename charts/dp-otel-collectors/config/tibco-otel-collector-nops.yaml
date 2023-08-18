@@ -9,8 +9,8 @@ receivers:
             - http://*
             - https://*
         endpoint: 0.0.0.0:4318
-  fluentforward:
-    endpoint: 0.0.0.0:8006
+#  fluentforward:
+#    endpoint: 0.0.0.0:8006
   prometheus:
     config:
       scrape_configs:
@@ -42,7 +42,6 @@ service:
     - memory_ballast
   pipelines:
     logs:
-      exporters:
       processors:
         - memory_limiter
         - batch
@@ -50,7 +49,6 @@ service:
         - fluentforward
         - otlp
     metrics:
-      exporters:
       processors:
         - memory_limiter
         - batch
@@ -58,7 +56,6 @@ service:
         - otlp
         - prometheus
     traces:
-      exporters:
       processors:
         - memory_limiter
         - batch
