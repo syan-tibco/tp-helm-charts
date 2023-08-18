@@ -45,7 +45,7 @@ k8sEventsCollector:
   config: ""
 
 # metrics-collector
-metrics-collector:
+metricscollector:
   enabled: true
   name: otel-metric-collector
   mode: "deployment"

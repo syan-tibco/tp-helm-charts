@@ -6,9 +6,9 @@ exporters:
     resource_to_telemetry_conversion:
       enabled: true
   prometheusremotewrite:
-    endpoint: "{{ .Values.metrics-collector.prometheusEndpoint }}"
+    endpoint: "{{ .Values.metricscollector.prometheusEndpoint }}"
     headers:
-      Authorization: "Bearer {{ .Values.metrics-collector.prometheusToken}}"
+      Authorization: "Bearer {{ .Values.metricscollector.prometheusToken}}"
     external_labels:
       server: otel-metric-collector
 extensions:
@@ -25,11 +25,11 @@ receivers:
   jaeger:
     protocols:
       grpc:
-        endpoint: "{{ .Values.metrics-collector.jaegerGRPCEndpoint }}"
+        endpoint: "{{ .Values.metricscollector.jaegerGRPCEndpoint }}"
       thrift_compact:
-        endpoint: "{{ .Values.metrics-collector.jaegerThriftCompactEndpoint }}"
+        endpoint: "{{ .Values.metricscollector.jaegerThriftCompactEndpoint }}"
       thrift_http:
-        endpoint: "{{ .Values.metrics-collector.jaegerThriftHttpEndpoint }}"
+        endpoint: "{{ .Values.metricscollector.jaegerThriftHttpEndpoint }}"
   otlp:
     protocols:
       grpc:
@@ -61,7 +61,7 @@ receivers:
             source_labels:
             - __meta_kubernetes_pod_annotation_prometheus_io_scrape
   zipkin:
-    endpoint: "{{ .Values.metrics-collector.zipkinEndpoint }}"
+    endpoint: "{{ .Values.metricscollector.zipkinEndpoint }}"
 service:
   telemetry:
     logs: {}
