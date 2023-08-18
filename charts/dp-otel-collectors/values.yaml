@@ -71,7 +71,7 @@ metricscollector:
 # tibco-otel-collector-services
 tibotelcollectorsvc:
   enabled: true
-  name: tibco-otel-collector
+  name: tibco-otel-svc
   mode: "deployment"
   esEndpoint: ""
   esUserName: ""
@@ -83,7 +83,7 @@ tibotelcollectorsvc:
 # tibco-service-collector-user-app
 tibotelcollectoruserapp:
   enabled: true
-  name: tibco-otel-collector-user-app
+  name: tibco-otel-user-app
   mode: "deployment"
   namespacesList: ""
   apmEndpoint: ""
@@ -111,7 +111,7 @@ tibotelcollectoruserapp:
 # tibco-service-collector-finops
 tibotelcollectorfinops:
   enabled: true
-  name: tibco-otel-collector-finops
+  name: tibco-otel-finops
   mode: "deployment"
   apmEndpoint: ""
   apmToken: ""
@@ -125,7 +125,7 @@ tibotelcollectorfinops:
 
 tibotelcollectornops:
   enabled: true
-  name: tibco-otel-collector-nops
+  name: tibco-otel-nops
   mode: "deployment"
   namespacesList: ""
   ports:
