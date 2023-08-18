@@ -21,7 +21,7 @@ receivers:
   k8s_events:
     auth_type: kubeConfig
 #   namespaces: ["otel-system, elastic-system"]
-    namespaces: [{{ .Values.tibotelcollectoruserappnops.namespacesList }}]
+    namespaces: [{{ .Values.tibotelcollectornops.namespacesList }}]
 processors:
   memory_limiter:
     check_interval: 1s

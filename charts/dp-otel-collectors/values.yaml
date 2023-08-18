@@ -123,9 +123,9 @@ tibotelcollectorfinops:
       protocol: TCP
   config: ""
 
-tibotelcollectoruserappnops:
+tibotelcollectornops:
   enabled: true
-  name: tibco-otel-collector-user-app-nops
+  name: tibco-otel-collector-nops
   mode: "deployment"
   namespacesList: ""
   ports:
