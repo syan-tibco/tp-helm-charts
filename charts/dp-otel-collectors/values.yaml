@@ -84,7 +84,7 @@ tibotelcollectorsvc:
 tibotelcollectoruserapp:
   enabled: true
   hpa:
-    enabled: true
+    enabled: false
     minReplicas: 1
     maxReplicas: 3
     autoscaler:
