@@ -4,67 +4,58 @@ name: dp-config-aws
 partOf: TIBCO-Platform
 # indicating which tools are used to generate this template (Don't change)
 createdBy: generator
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: false
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
 
-# this will create IAM role for fluent-bit to send logging message to opensearch or pipeline
-awsRole1:
-  enable: true
-  name: fluent-bit-service-role
-  namespace: tibco-system
-  saName: fluent-bit # service account name
-  saNamespace: fluent-system # service namespace
-  tags:
-    tibco-platform: fluent
-  inlinePolicies:
-    - |
-      Version: '2012-10-17'
-      Statement:
-      - Action: osis:Ingest
-        Effect: Allow
-        Resource: arn:aws:osis:us-west-2:679789275507:pipeline/observability
+dns:
+  domain: "abc.dataplanes.pro"
+  vanity: "*"
 
-# this will create IAM role for ADOT (AWS Distro for OpenTelemetry) Collector
-# see: https://docs.aws.amazon.com/eks/latest/userguide/adot-iam.html
-awsRole2:
-  enable: false
-  name: adot-collector
-  namespace: tibco-system
-  saName: adot # service account name
-  saNamespace: opentelemetry-operator-system # service namespace
-  clusterRoleName: otel-prometheus-role # cluster role name
-  tags:
-    tibco-platform: adot
-  attachedPolicies:
-    - "arn:aws:iam::aws:policy/AmazonPrometheusRemoteWriteAccess"
-    - "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
-    - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+# this ingress object is used for AWS Load Balancer Controller to create ALB
+httpIngress:
+  enabled: true
+  name: traefik
+  ingressClassName: alb
+  backend:
+    serviceName: traefik
+    servicePort: 443
+  # more AWS annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/
+  annotations:
+    alb.ingress.kubernetes.io/group.name: "abc.dataplanes.pro"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    external-dns.alpha.kubernetes.io/hostname: "*.abc.dataplanes.pro"
 
-adot:
-  writeEndpoint: https://aps-workspaces.us-west-2.amazonaws.com/workspaces/ws-1467d8ae-0d95-4f01-a004-c98abf459a8c/api/v1/remote_write
-
-# the top level domain
-domain:
-  external: dp-platform.tcie.pro
-  internal: dp-platform.tcie.pro
-
-# internal domain list
-internalDomain:
-  enable: true
-  list:
-  - name: es-internal
-  - name: harbor-internal
-
-ingressProvider: 
-  name: traefik #citrix
-  serviceName: #-cpx-service
-  port: 8443 #443
+storageClass:
+  # see: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
+  ebs:
+    enabled: true
+    name: ebs-gp3
+    default: false
+    parameters:
+      type: gp3
+      fsType: ext4
+      #iopsPerGB: 10
+      encrypted: true
+    reclaimPolicy: Retain
+    allowVolumeExpansion: true
+    volumeBindingMode: WaitForFirstConsumer
+  # see: https://docs.aws.amazon.com/eks/latest/userguide/efs-csi.html
+  # and: https://github.com/kubernetes-sigs/aws-efs-csi-driver/blob/master/examples/kubernetes/dynamic_provisioning/README.md
+  # follow this to create EFS: GUI: https://docs.aws.amazon.com/efs/latest/ug/gs-step-two-create-efs-resources.html
+  # script: https://github.com/kubernetes-sigs/aws-efs-csi-driver/blob/master/docs/efs-create-filesystem.md
+  efs:
+    enabled: false
+    name: efs-sc
+    default: false
+    parameters:
+      fileSystemId: ""
+      directoryPerms: "700"
+      # basePath: "/dynamic_provisioning"
+      # subPathPattern: "${.PVC.namespace}/${.PVC.name}" # optional
+      # gidRangeStart: "1000" # optional
+      # gidRangeEnd: "2000" # optional
+      # ensureUniqueDirectory: "true" # optional
 
 traefik:
   enabled: true
@@ -86,12 +77,3 @@ traefik:
     kubernetes.io/os: linux
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
-
-citrix-cpx-with-ingress-controller:
-  enabled: false
-  license:
-    accept: yes
-  crds:
-    install: true
-  ingressClass:
-    - citrix-adc
