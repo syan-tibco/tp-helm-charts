@@ -5,13 +5,16 @@ global:
     instanceId: 
 
 dp:
-  serviceAccount: provisioner-agent
-  # registry: "664529841144.dkr.ecr.us-west-2.amazonaws.com/"
-  # repo: "msg-platform-cicd/"
-  # pullSecret: 
-  pullSecret: "cic2-tcm-ghcr-secret"
-  registry: "ghcr.io/"
-  repo: "tibco/msg-platform-cicd/"
+  # CAUTION: Values set here will override .global.cp.*
+  # See _dp.helpers.tpl to set defaults
+  #
+  # serviceAccount: provisioner-agent
+  # # registry: "664529841144.dkr.ecr.us-west-2.amazonaws.com/"
+  # # repo: "msg-platform-cicd/"
+  # # pullSecret: 
+  # pullSecret: "cic2-tcm-ghcr-secret"
+  # registry: "ghcr.io/"
+  # repo: "tibco/msg-platform-cicd/"
 
 ems:
   stores: ftl

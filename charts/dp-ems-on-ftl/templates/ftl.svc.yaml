@@ -14,6 +14,7 @@ metadata:
   labels:
     tib-dp-app: msg-ems-ftl
     tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-ems-name: "{{ $emsParams.ems.name }}"
     tib-msg-svcname: "{{ $svcFtl }}"
     {{ include "msg.dp.labels" . | indent 4 }}
   annotations:
@@ -40,6 +41,7 @@ metadata:
   labels:
     tib-dp-app: msg-ems-ftl
     tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-ems-name: "{{ $emsParams.ems.name }}"
     tib-msg-svcname: "{{ $svcEms }}"
     {{ include "msg.dp.labels" . | indent 4 }}
 spec:
@@ -49,6 +51,9 @@ spec:
     protocol: TCP
   - name: ems-ssl-port
     port: {{ int $emsParams.ems.ports.sslPort }}
+    protocol: TCP
+  - name: prom-port
+    port: {{ int $emsParams.ems.ports.promServerEP }}
     protocol: TCP
   selector:
     tib-msg-stsname: "{{ $stsname }}"

@@ -7,7 +7,11 @@ annotations:
       description: "Added image support for python, java, prometheus endpoints"
   artifacthub.io/images: |
     - name: msg-ems-all
-       image: ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-6
+       image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-6"
+       platforms:
+         - linux/amd64
+    - name: msg-dp-ops
+       image: "ghcr.io/tibco/msg-platform-cicd/msg-dp-ops:"
        platforms:
          - linux/amd64
   artifacthub.io/license: TIBCO
@@ -19,5 +23,5 @@ keywords:
 - data-plane
 - messaging
 - EMS
-name: dp-ems-on-ftl-v2
-version: 1.0.0
+name: dp-ems-on-ftl
+version: 1.0.3

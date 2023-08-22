@@ -24,7 +24,6 @@ metadata:
       {{ include "msg.dp.labels" . | indent 6 }}
       name: "{{ $stsname }}"
       app: msg-ems-ftl
-      tib-dp-name: "{{ $emsParams.dp.name }}"
       tib-dp-app: msg-ems-ftl
       tib-dp-release: "{{ $emsParams.ems.name }}"
       tib-msg-stsname: "{{ $stsname }}"
@@ -57,6 +56,8 @@ spec:
                 tib-msg-ems-use: "{{ $emsParams.ems.use }}"
             name: ems
             annotations:
+              prometheus.io/scrape: "true"
+              prometheus.io/port: "{{ $emsParams.ems.ports.promServerEP }}"
               cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
         spec:
             {{- if ne "none" $emsParams.dp.pullSecret }}
@@ -73,7 +74,7 @@ spec:
             topologySpreadConstraints:
             - maxSkew: 1
               topologyKey: kubernetes.io/hostname
-              {{- if eq $emsParams.allowNodeSkew "false" }}
+              {{- if eq $emsParams.ems.allowNodeSkew "false" }}
               whenUnsatisfiable: DoNotSchedule
               {{- else }}
               whenUnsatisfiable: ScheduleAnyway
@@ -213,7 +214,6 @@ spec:
               - name: EMS_LISTEN_URLS
                 value: "tcp://0.0.0.0:$(EMS_TCP_PORT),ssl://0.0.0.0:$(EMS_SSL_PORT)"
               - name: EMS_TCP_URL
-                value: "tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT),tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT)"
                 # the service load-balanced EMS TCP URL
                 value: "tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT),tcp://{{ $svcEmsHost }}:$(EMS_TCP_PORT)"
               - name: EMS_SSL_URL

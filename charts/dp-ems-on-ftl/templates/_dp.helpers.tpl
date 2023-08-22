@@ -8,24 +8,37 @@ need.msg.dp.params
 */}}
 {{ define "need.msg.dp.params" }}
 dp:
+  # Reference for global.cp attributes : 
+  #   https://confluence.tibco.com/x/uoBUEQ
   # Use TCM testbed defaults for now
-  uid: 0
-  gid: 0
-  where: "local"
+  {{- $where := "local" -}}
   {{- $name := "dp-noname" -}}
   {{- $pullSecret := "cic2-tcm-ghcr-secret" -}}
   {{- $registry := "ghcr.io/" -}}
   {{- $repo := "tibco/msg-platform-cicd/" -}}
   {{- $pullPolicy := "IfNotPresent" -}}
   {{- $serviceAccount := "provisioner" -}}
+  # These 4 are currently unused!
+  {{- $cpHostname := "no-cpHostname" -}}
+  {{- $instanceId := "no-instanceId" -}}
+  {{- $environmentType := "no-environmentType" -}}
+  {{- $subscriptionId := "no-subscriptionId" -}}
   {{ if .Values.global }}
     {{ if .Values.global.cp }}
-      {{ $name = ternary  $name .Values.global.cp.name ( not  .Values.global.cp.name ) }}
-      {{ $pullSecret = ternary  $pullSecret  .Values.global.cp.pullSecret ( not  .Values.global.cp.pullSecret ) }}
-      {{ $registry = ternary  $registry  .Values.global.cp.registry ( not  .Values.global.cp.registry ) }}
-      {{ $repo = ternary  $repo  .Values.global.cp.repo ( not  .Values.global.cp.repo ) }}
-      {{ $pullPolicy = ternary  $pullPolicy  .Values.global.cp.pullPolicy ( not  .Values.global.cp.pullPolicy ) }}
+      {{ $name = ternary  $name .Values.global.cp.dataplaneId ( not  .Values.global.cp.dataplaneId ) }}
       {{ $serviceAccount = ternary  $serviceAccount  .Values.global.cp.serviceAccount ( not  .Values.global.cp.serviceAccount ) }}
+      {{ $pullPolicy = ternary  $pullPolicy  .Values.global.cp.pullPolicy ( not  .Values.global.cp.pullPolicy ) }}
+        {{ if .Values.global.cp.containerRegistry }}
+            {{ if ne "none" ( .Values.global.cp.containerRegistry.url | default "none" ) }}
+              {{ $pullSecret = .Values.global.cp.containerRegistry.secret | default "none" }}
+            {{ end }}
+          {{ $registry = ternary  $registry  .Values.global.cp.containerRegistry.url ( not  .Values.global.cp.containerRegistry.url ) }}
+          {{ $repo = ternary  $repo  .Values.global.cp.containerRegistry.repo ( not  .Values.global.cp.containerRegistry.repo ) }}
+        {{ end }}
+      {{ $cpHostname = ternary  $cpHostname .Values.global.cp.cpHostname ( not  .Values.global.cp.cpHostname ) }}
+      {{ $instanceId = ternary  $instanceId .Values.global.cp.instanceId ( not  .Values.global.cp.instanceId ) }}
+      {{ $environmentType = ternary  $environmentType .Values.global.cp.environmentType ( not  .Values.global.cp.environmentType ) }}
+      {{ $subscriptionId = ternary  $subscriptionId .Values.global.cp.subscriptionId ( not  .Values.global.cp.subscriptionId ) }}
     {{ end }}
   {{ end }}
   {{ if .Values.dp }}
@@ -36,12 +49,19 @@ dp:
     {{ $pullPolicy = ternary  $pullPolicy  .Values.dp.pullPolicy ( not  .Values.dp.pullPolicy ) }}
     {{ $serviceAccount = ternary  $serviceAccount  .Values.dp.serviceAccount ( not  .Values.dp.serviceAccount ) }}
   {{ end }}
+  uid: 0
+  gid: 0
+  where: {{ $where }}
   name: {{ $name }}
   pullSecret: {{ $pullSecret }}
   registry: {{ $registry }}
   repo: {{ $repo }}
   pullPolicy: {{ $pullPolicy }}
   serviceAccount: {{ $serviceAccount }}
+  cpHostname: {{ $cpHostname }}
+  instanceId: {{ $instanceId }}
+  environmentType: {{ $environmentType }}
+  subscriptionId: {{ $subscriptionId }}
 {{ end }}
 
 {{/*
