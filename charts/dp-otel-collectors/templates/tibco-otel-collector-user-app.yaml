@@ -100,17 +100,17 @@ metadata:
     platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 spec:
   mode: "{{ .Values.tibotelcollectoruserapp.mode }}"
-  {{- if .Values.tibotelcollectoruserapp.enabled -}}
-  minReplicas: {{ .Values.tibotelcollectoruserapp.minReplicas }}
-  maxReplicas: {{ .Values.tibotelcollectoruserapp.maxReplicas }}
+  {{- if .Values.tibotelcollectoruserapp.hpa.enabled }}
+  minReplicas: {{ .Values.tibotelcollectoruserapp.hpa.minReplicas }}
+  maxReplicas: {{ .Values.tibotelcollectoruserapp.hpa.maxReplicas }}
   autoscaler:
     behavior:
       scaleUp:
-        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.autoscaler.behavior.scaleUp.stabilizationWindowSeconds.minReplicas }}
+        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.behavior.scaleUp.stabilizationWindowSeconds.minReplicas }}
       scaleDown:
-        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.autoscaler.behavior.scaleDown.stabilizationWindowSeconds.minReplicas }}
-    targetCPUUtilization: {{ .Values.tibotelcollectoruserapp.autoscaler.targetCPUUtilization }}
-    targetMemoryUtilization: {{ .Values.tibotelcollectoruserapp.autoscaler.targetMemoryUtilization }}
+        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.behavior.scaleDown.stabilizationWindowSeconds.minReplicas }}
+    targetCPUUtilization: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.targetCPUUtilization }}
+    targetMemoryUtilization: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.targetMemoryUtilization }}
   {{- end }}
   ports:
   {{- range $key, $port := .Values.tibotelcollectoruserapp.ports }}

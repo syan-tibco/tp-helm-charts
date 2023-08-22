@@ -83,17 +83,18 @@ tibotelcollectorsvc:
 # tibco-service-collector-user-app
 tibotelcollectoruserapp:
   enabled: true
-  hpa: false
-  minReplicas: 1
-  maxReplicas: 3
-  autoscaler:
-    behavior:
-      scaleUp:
-        stabilizationWindowSeconds: 10
-      scaleDown:
-        stabilizationWindowSeconds: 15
-    targetCPUUtilization: 70
-    targetMemoryUtilization: 80
+  hpa:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    autoscaler:
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 10
+        scaleDown:
+          stabilizationWindowSeconds: 15
+      targetCPUUtilization: 70
+      targetMemoryUtilization: 80
   name: tibco-otel-user-app
   mode: "deployment"
   namespacesList: ""
