@@ -757,6 +757,37 @@ entries:
           description: "Added image support for python, java, prometheus endpoints"
       artifacthub.io/images: |
         - name: msg-ems-all
+           image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-6"
+           platforms:
+             - linux/amd64
+        - name: msg-dp-ops
+           image: "ghcr.io/tibco/msg-platform-cicd/msg-dp-ops:"
+           platforms:
+             - linux/amd64
+      artifacthub.io/license: TIBCO
+      artifacthub.io/prerelease: "true"
+    apiVersion: v2
+    appVersion: 10.2.1-4
+    created: "2023-08-22T22:05:17.159513897Z"
+    description: Data-plane provisioning chart for EMS-on-FTL server group
+    digest: d8f7bbd4a436f0c1c0d13eef3dee6f2502aaab22573f9044a5c249283115ca69
+    keywords:
+    - data-plane
+    - messaging
+    - EMS
+    name: dp-ems-on-ftl
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-ems-on-ftl-1.0.3/dp-ems-on-ftl-1.0.3.tgz
+    version: 1.0.3
+  - annotations:
+      artifacthub.io/category: streaming-messaging
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Changed EMS service URL to tcp://${EMS_NAME}-ems.${NAMESPACE}.svc:9011"
+        - kind: added
+          description: "Added image support for python, java, prometheus endpoints"
+      artifacthub.io/images: |
+        - name: msg-ems-all
            image: ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-6
            platforms:
              - linux/amd64
@@ -1211,4 +1242,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-22T16:51:47.180875455Z"
+generated: "2023-08-22T22:05:17.159695Z"
