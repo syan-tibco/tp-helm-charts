@@ -140,3 +140,12 @@ tibotelcollectornops:
       port: 8888
       protocol: TCP
   config: ""
+
+# this is for kubeletstats pod metrics [cpu/memory] only
+kubeletstats:
+  enabled: true
+  name: otel-tibco-kubeletstats
+  prometheusEndpoint: ""
+  prometheusToken: ""
+  kubeletEndpoint: ""
+  config: ""
