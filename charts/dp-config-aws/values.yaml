@@ -15,7 +15,7 @@ httpIngress:
   name: traefik
   ingressClassName: alb
   backend:
-    serviceName: traefik
+    serviceName: dp-config-aws-traefik
     servicePort: 443
   # more AWS annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/
   annotations:
@@ -23,6 +23,7 @@ httpIngress:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
     alb.ingress.kubernetes.io/backend-protocol: HTTPS
     alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/success-codes: 200-499
     alb.ingress.kubernetes.io/target-type: ip
     external-dns.alpha.kubernetes.io/hostname: "*.abc.dataplanes.pro"
 
