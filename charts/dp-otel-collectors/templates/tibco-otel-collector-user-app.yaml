@@ -94,8 +94,24 @@ kind: OpenTelemetryCollector
 metadata:
   name: {{ .Values.tibotelcollectoruserapp.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    platform.tibco.com/workload-type: "infra"
+    platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+    platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 spec:
   mode: "{{ .Values.tibotelcollectoruserapp.mode }}"
+  {{- if .Values.tibotelcollectoruserapp.hpa.enabled }}
+  minReplicas: {{ .Values.tibotelcollectoruserapp.hpa.minReplicas }}
+  maxReplicas: {{ .Values.tibotelcollectoruserapp.hpa.maxReplicas }}
+  autoscaler:
+    behavior:
+      scaleUp:
+        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.behavior.scaleUp.stabilizationWindowSeconds.minReplicas }}
+      scaleDown:
+        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.behavior.scaleDown.stabilizationWindowSeconds.minReplicas }}
+    targetCPUUtilization: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.targetCPUUtilization }}
+    targetMemoryUtilization: {{ .Values.tibotelcollectoruserapp.hpa.autoscaler.targetMemoryUtilization }}
+  {{- end }}
   ports:
   {{- range $key, $port := .Values.tibotelcollectoruserapp.ports }}
   {{- if $port.enabled }}
