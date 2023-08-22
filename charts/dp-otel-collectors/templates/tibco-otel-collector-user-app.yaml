@@ -100,6 +100,18 @@ metadata:
     platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 spec:
   mode: "{{ .Values.tibotelcollectoruserapp.mode }}"
+  {{- if .Values.tibotelcollectoruserapp.enabled -}}
+  minReplicas: {{ .Values.tibotelcollectoruserapp.minReplicas }}
+  maxReplicas: {{ .Values.tibotelcollectoruserapp.maxReplicas }}
+  autoscaler:
+    behavior:
+      scaleUp:
+        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.autoscaler.behavior.scaleUp.stabilizationWindowSeconds.minReplicas }}
+      scaleDown:
+        stabilizationWindowSeconds: {{ .Values.tibotelcollectoruserapp.autoscaler.behavior.scaleDown.stabilizationWindowSeconds.minReplicas }}
+    targetCPUUtilization: {{ .Values.tibotelcollectoruserapp.autoscaler.targetCPUUtilization }}
+    targetMemoryUtilization: {{ .Values.tibotelcollectoruserapp.autoscaler.targetMemoryUtilization }}
+  {{- end }}
   ports:
   {{- range $key, $port := .Values.tibotelcollectoruserapp.ports }}
   {{- if $port.enabled }}
