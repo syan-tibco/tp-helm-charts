@@ -3,7 +3,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: {{ .Values.storageClass.ebs.name }}
-  namespace: {{ .Release.Namespace }}
   annotations:
     storageclass.kubernetes.io/is-default-class: "{{ .Values.storageClass.ebs.default }}"
 parameters:

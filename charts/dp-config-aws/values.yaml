@@ -27,10 +27,11 @@ httpIngress:
     alb.ingress.kubernetes.io/target-type: ip
     external-dns.alpha.kubernetes.io/hostname: "*.abc.dataplanes.pro"
 
+# storageClass can not be updated: parameters: Forbidden: updates to parameters are forbidden
 storageClass:
   # see: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
   ebs:
-    enabled: true
+    enabled: false
     name: ebs-gp3
     default: false
     parameters:
@@ -50,9 +51,10 @@ storageClass:
     name: efs-sc
     default: false
     parameters:
+      provisioningMode: efs-ap
       fileSystemId: ""
+      basePath: "/"
       directoryPerms: "700"
-      # basePath: "/dynamic_provisioning"
       # subPathPattern: "${.PVC.namespace}/${.PVC.name}" # optional
       # gidRangeStart: "1000" # optional
       # gidRangeEnd: "2000" # optional
