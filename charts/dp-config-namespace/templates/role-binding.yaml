@@ -1,0 +1,23 @@
+{{- $root := . }}
+{{- if .Values.namespaces }}
+{{- range .Values.namespaces }}
+{{- if .createBinding }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "dp-config-namespace.roleBindingNamePrefix" $root }}-1
+  namespace: {{ .name }}
+  labels:
+    {{- include "dp-config-namespace.labels" $root | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "dp-config-namespace.clusterRoleNamePrefix" $root }}-2
+subjects:
+- kind: ServiceAccount
+  name: {{ $root.Values.global.tibco.serviceAccount }}
+  namespace: {{ $root.Release.Namespace }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,9 @@
+{{- if ne .Values.global.tibco.serviceAccount "" }}
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ .Values.global.tibco.serviceAccount }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-config-namespace.labels" . | nindent 4 }}
+{{- end }}
