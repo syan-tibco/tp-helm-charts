@@ -53,8 +53,8 @@ storageClass:
     parameters:
       provisioningMode: efs-ap
       fileSystemId: ""
-      basePath: "/"
       directoryPerms: "700"
+      # basePath: "/data"
       # subPathPattern: "${.PVC.namespace}/${.PVC.name}" # optional
       # gidRangeStart: "1000" # optional
       # gidRangeEnd: "2000" # optional
