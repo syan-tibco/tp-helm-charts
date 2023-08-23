@@ -1,6 +1,7 @@
 global:
   tibco:
     serviceAccount: "service-account" # customer provided service account
+    dataPlaneId: "abcd"
 
 ## this creates cluster roles which are not namespaced
 clusterRole:
