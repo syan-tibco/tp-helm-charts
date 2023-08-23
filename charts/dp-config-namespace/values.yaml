@@ -1,14 +1,6 @@
 global:
   tibco:
-    dataPlaneId: "abcd"
-    subscriptionId: "sub1"
-    controlPlaneUrl: "https://account.local.cic2.pro" # Control Plane DNS domain
-    serviceAccount: "service-account"                                # customer provided service account
-    containerRegistry:
-      url: "reldocker.tibco.com"
-      # username: "test" # [optional] Create a imagePullSecret named <dpId> for private container registry.
-      # password: "test"
-      # email: "tibco-plt@tibco.com"
+    serviceAccount: "service-account" # customer provided service account
 
 ## this creates cluster roles which are not namespaced
 clusterRole:
@@ -17,10 +9,10 @@ clusterRole:
 
 ## this creates namespaces and role-bindings in those namespaces
 namespaces:
-  - name: ""
+  - name: "namespacea"
     createBinding: true
-  - name: ""
+  - name: "namespaceb"
     createBinding: true
-  - name: ""
+  - name: "namespacec"
     createBinding: true
 

@@ -31,6 +31,10 @@ clusterRole:
 
 ## this creates role-binding in the specific namespace
 namespaces:
+  - name: "namespacea"
+    createBinding: true
+  - name: "namespaceb"
+    createBinding: true
   - name: "namespacec"
     createBinding: true
 
