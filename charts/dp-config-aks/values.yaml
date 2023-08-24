@@ -13,15 +13,15 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-ingressProvider:
-  name: traefik #citrix
-  serviceName: #-cpx-service
-  port: 8443 #443
+# ingressProvider:
+#   name: traefik #citrix
+#   serviceName: #-cpx-service
+#   port: 8443 #443
 
-tls:
-  setup: production
-  certificateNamespace: traefik-system
-  certificateSecretName: cic-certificate-production
+# tls:
+#   setup: production
+#   certificateNamespace: traefik-system
+#   certificateSecretName: cic-certificate-production
 
 # the dns value is actually use pattern:
 # {{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}
@@ -31,9 +31,9 @@ traefik:
   hub: # for hub
     enabled: false
   service: # for external-dns
-    type: LoadBalancer
-    annotations: # for external dns to register domain
-      external-dns.alpha.kubernetes.io/hostname: "" # "*.az-dp-<ldap>.azrtroposdev.azure.tcie.pro"
+    type: ClusterIP
+    # annotations: # for external dns to register domain
+    #   external-dns.alpha.kubernetes.io/hostname: "" # "*.az-dp-<ldap>.azrtroposdev.azure.tcie.pro"
   ingressRoute: # for dashboard
     dashboard:
       matchRule: "" # Host(`traefik.az-dp-<ldap>.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik.az-dp-<ldap>.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/api`)
@@ -46,18 +46,18 @@ traefik:
       allowExternalNameServices: true
   nodeSelector: # for cic2
     kubernetes.io/os: linux
-  tlsStore: # for certificate
-    default:
-      defaultCertificate:
-        secretName: cic-certificate-production
+  # tlsStore: # for certificate
+  #   default:
+  #     defaultCertificate:
+  #       secretName: cic-certificate-production
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
 
-citrix-cpx-with-ingress-controller:
-  enabled: false
-  license:
-    accept: yes
-  crds:
-    install: true
-  ingressClass:
-    - citrix-adc
+# citrix-cpx-with-ingress-controller:
+#   enabled: false
+#   license:
+#     accept: yes
+#   crds:
+#     install: true
+#   ingressClass:
+#     - citrix-adc
