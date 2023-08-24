@@ -1,0 +1,1 @@
+This chart is used to configure namespaces for TIBCO Platform Data Plane

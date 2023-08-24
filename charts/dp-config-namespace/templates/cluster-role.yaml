@@ -1,0 +1,118 @@
+{{- if .Values.clusterRole.create }}
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "dp-config-namespace.clusterRoleNamePrefix" . }}-1
+  labels:
+    {{- include "dp-config-namespace.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["list", "watch"]
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["get", "list", "watch"]
+# question: required for monitoring agent
+# question: can BW list namespaces first by label and then get deployment?
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses", "ingressclasses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["gateway.networking.k8s.io", "networking.x-k8s.io"]
+  resources: ["gateways", "gatewayclasses", "httproutes", "tlsroutes", "tcproutes", "udproutes", "backendpolicies"]
+  verbs: ["get", "list", "watch"]
+# write permissions are required for following
+# distributed lock operator will need CRD create permission
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+# resourceNames: ["tibcodistributedlocks.cloud.tibco.com"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["validatingwebhookconfigurations"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses/status"]
+  verbs: ["update"]
+
+--- 
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "dp-config-namespace.clusterRoleNamePrefix" . }}-2
+  labels:
+    {{- include "dp-config-namespace.labels" . | nindent 4 }}
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create", "delete", "patch", "update"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create", "delete", "patch", "update"]
+# required for getting pod logs for user-apps
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get", "list", "watch"]
+# required for getting replicasets of user-apps
+- apiGroups: ["apps"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create", "delete", "patch", "update"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["create", "delete", "patch", "update"]
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+- apiGroups: [""]
+  resources: ["services"]
+  verbs: ["create", "delete", "patch", "update"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+# following rules are specific to HPA, distributed lock operators, pvc & ingresses
+# for now, it is required for namespaceA, but adding it here avoids the need to add role changes multiple times
+- apiGroups: ["coordination.k8s.io"]
+  resources: ["leases"]
+  verbs: ["get", "create", "update"]
+- apiGroups: [""]
+  resources: ["endpoints"]
+  verbs: ["get", "create", "update"]
+- apiGroups: ["policy"]
+  resources: ["podsecuritypolicies"]
+  resourceNames: ["dp-core-infrastructure-haproxy-ingress"]
+  verbs: ["use"]
+- apiGroups: ["cloud.tibco.com"]
+  resources: ["tibcodistributedlocks", "tibcodistributedlocks/status"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims"]
+  verbs: ["create", "get", "list", "update"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["create", "get", "list", "delete", "update"]
+- apiGroups: ["cert-manager.io"]
+  resources: ["certificates","issuers"]
+  verbs: ["create", "get"]
+{{- end }}
