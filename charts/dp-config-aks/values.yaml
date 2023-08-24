@@ -32,7 +32,7 @@ httpIngress:
   annotations:
     kubernetes.io/ingress.class: azure/application-gateway                          #This will configure the AppGw with this ingressObject
     appgw.ingress.kubernetes.io/appgw-ssl-certificate: "star_certificate"
-  #  cert-manager.io/cluster-issuer: letsencrypt-staging
+  #  cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
     external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
 
 # the dns value is actually use pattern:
@@ -42,7 +42,7 @@ httpIngress:
 storageClass:
   # see: https://learn.microsoft.com/en-us/azure/aks/concepts-storage
   azuredisk:
-    enabled: false
+    enabled: true
     name: azure-disk-sc
     default: false
     parameters:
@@ -53,7 +53,7 @@ storageClass:
 
   # https://learn.microsoft.com/en-us/azure/aks/azure-files-csi
   azurefile:
-    enabled: false
+    enabled: true
     name: azure-files-sc
     default: false
     parameters:
