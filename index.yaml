@@ -588,6 +588,18 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.0/dp-config-es-1.0.0.tgz
     version: 1.0.0
+  dp-config-namespace:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2023-08-24T04:14:41.60452996Z"
+    description: A Helm chart for creating service accounts and required RBACs in
+      the namespace
+    digest: 10746b1b98a3e43413a3b081ac6d060c132984d014305c5a0a2b432bceb6de28
+    name: dp-config-namespace
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-namespace-1.0.0/dp-config-namespace-1.0.0.tgz
+    version: 1.0.0
   dp-core-infrastructure:
   - apiVersion: v2
     appVersion: 1.0.208
@@ -1288,4 +1300,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-23T16:54:28.033653269Z"
+generated: "2023-08-24T04:14:41.724338695Z"
