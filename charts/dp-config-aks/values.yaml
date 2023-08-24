@@ -31,7 +31,6 @@ httpIngress:
   # more AGIC annotations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/#appgw-ssl-certificate
   annotations:
     kubernetes.io/ingress.class: azure/application-gateway                          #This will configure the AppGw with this ingressObject
-    appgw.ingress.kubernetes.io/appgw-ssl-certificate: "star_certificate"
   #  cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
     external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
 
@@ -42,7 +41,7 @@ httpIngress:
 storageClass:
   # see: https://learn.microsoft.com/en-us/azure/aks/concepts-storage
   azuredisk:
-    enabled: true
+    enabled: false
     name: azure-disk-sc
     default: false
     parameters:
@@ -53,7 +52,7 @@ storageClass:
 
   # https://learn.microsoft.com/en-us/azure/aks/azure-files-csi
   azurefile:
-    enabled: true
+    enabled: false
     name: azure-files-sc
     default: false
     parameters:
@@ -90,9 +89,9 @@ traefik:
       allowExternalNameServices: true
   nodeSelector: # for cic2
     kubernetes.io/os: linux
-  # tlsStore: # for certificate
-  #   default:
-  #     defaultCertificate:
-  #       secretName: cic-certificate-production
+  tlsStore: # for certificate
+    default:
+      defaultCertificate:
+        secretName: cic-certificate-production
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
