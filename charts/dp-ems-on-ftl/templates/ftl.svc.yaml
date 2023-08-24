@@ -17,11 +17,6 @@ metadata:
     tib-msg-ems-name: "{{ $emsParams.ems.name }}"
     tib-msg-svcname: "{{ $svcFtl }}"
     {{ include "msg.dp.labels" . | indent 4 }}
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "{{ ($emsParams.ems.ports.promServerEP | default 9091) }}"
-    prometheus.io/scheme: "http"
-    prometheus.io/insecure_skip_verify: "true"
 spec:
   ports:
   - name: ems-realm-port
@@ -44,6 +39,14 @@ metadata:
     tib-msg-ems-name: "{{ $emsParams.ems.name }}"
     tib-msg-svcname: "{{ $svcEms }}"
     {{ include "msg.dp.labels" . | indent 4 }}
+    prometheus.io/scrape: "true"
+    platform.tibco.com/scrape_finops: "true"
+    prometheus.io/port: "{{ ($emsParams.ems.ports.promServerEP | default 9091) }}"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ ($emsParams.ems.ports.promServerEP | default 9091) }}"
+    prometheus.io/scheme: "http"
+    prometheus.io/insecure_skip_verify: "true"
 spec:
   ports:
   - name: ems-tcp-port
