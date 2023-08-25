@@ -8,8 +8,8 @@ need.msg.ems.params
 */}}
 {{ define "need.msg.ems.params" }}
 {{-  $dpParams := include "need.msg.dp.params" . | fromYaml -}}
-{{-  $emsDefaultFullImage := printf "%s%smsg-ems-all:10.2.1-6" $dpParams.dp.registry $dpParams.dp.repo -}}
-{{-  $opsDefaultFullImage := printf "%s%smsg-dp-ops:1.0.0-1" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $emsDefaultFullImage := printf "%s/%s/msg-ems-all:10.2.1-6" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $opsDefaultFullImage := printf "%s/%s/msg-dp-ops:1.0.0-1" $dpParams.dp.registry $dpParams.dp.repo -}}
 {{ include "need.msg.dp.params" . }}
 ops:
   image: {{ $opsDefaultFullImage }}

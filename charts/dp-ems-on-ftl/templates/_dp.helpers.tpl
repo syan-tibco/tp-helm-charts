@@ -14,8 +14,8 @@ dp:
   {{- $where := "local" -}}
   {{- $name := "dp-noname" -}}
   {{- $pullSecret := "cic2-tcm-ghcr-secret" -}}
-  {{- $registry := "ghcr.io/" -}}
-  {{- $repo := "tibco/msg-platform-cicd/" -}}
+  {{- $registry := "ghcr.io" -}}
+  {{- $repo := "tibco/msg-platform-cicd" -}}
   {{- $pullPolicy := "IfNotPresent" -}}
   {{- $serviceAccount := "provisioner" -}}
   # These 4 are currently unused!
@@ -29,11 +29,8 @@ dp:
       {{ $serviceAccount = ternary  $serviceAccount  .Values.global.cp.serviceAccount ( not  .Values.global.cp.serviceAccount ) }}
       {{ $pullPolicy = ternary  $pullPolicy  .Values.global.cp.pullPolicy ( not  .Values.global.cp.pullPolicy ) }}
         {{ if .Values.global.cp.containerRegistry }}
-            {{ if ne "none" ( .Values.global.cp.containerRegistry.url | default "none" ) }}
-              {{ $pullSecret = .Values.global.cp.containerRegistry.secret | default "none" }}
-            {{ end }}
           {{ $registry = ternary  $registry  .Values.global.cp.containerRegistry.url ( not  .Values.global.cp.containerRegistry.url ) }}
-          {{ $repo = ternary  $repo  .Values.global.cp.containerRegistry.repo ( not  .Values.global.cp.containerRegistry.repo ) }}
+          {{ $repo = ternary  "msg-platform-cicd"  .Values.global.cp.containerRegistry.repo ( not  .Values.global.cp.containerRegistry.repo ) }}
         {{ end }}
       {{ $cpHostname = ternary  $cpHostname .Values.global.cp.cpHostname ( not  .Values.global.cp.cpHostname ) }}
       {{ $instanceId = ternary  $instanceId .Values.global.cp.instanceId ( not  .Values.global.cp.instanceId ) }}
