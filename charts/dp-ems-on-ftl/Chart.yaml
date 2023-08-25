@@ -11,7 +11,7 @@ annotations:
        platforms:
          - linux/amd64
     - name: msg-dp-ops
-       image: "ghcr.io/tibco/msg-platform-cicd/msg-dp-ops:"
+       image: "ghcr.io/tibco/msg-platform-cicd/msg-dp-ops:1.0.0-1"
        platforms:
          - linux/amd64
   artifacthub.io/license: TIBCO
@@ -24,4 +24,4 @@ keywords:
 - messaging
 - EMS
 name: dp-ems-on-ftl
-version: 1.0.3
+version: 1.0.4

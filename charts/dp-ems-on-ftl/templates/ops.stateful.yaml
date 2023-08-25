@@ -69,7 +69,6 @@ spec:
               kubernetes.io/os: linux
             containers:
             - name: "{{ $stsname }}"
-              # image: "{{ $emsParams.dp.registry }}msg-ems-all:10.2.1-6"
               image: "{{ $emsParams.ops.image }}"
               imagePullPolicy: "{{ $emsParams.dp.pullPolicy }}"
               resources:
