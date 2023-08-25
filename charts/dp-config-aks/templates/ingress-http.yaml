@@ -1,0 +1,23 @@
+{{- if .Values.httpIngress.enabled  -}}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.httpIngress.name }}
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.httpIngress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  rules:
+    - host: "{{ .Values.dns.vanity }}.{{ .Values.dns.domain }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.httpIngress.backend.serviceName }}
+                port:
+                  number: {{ .Values.httpIngress.backend.servicePort }}
+{{- end -}}

@@ -13,27 +13,70 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-ingressProvider:
-  name: traefik #citrix
-  serviceName: #-cpx-service
-  port: 8443 #443
+dns:
+  domain: "cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
+  vanity: "*"
 
 tls:
   setup: production
   certificateNamespace: traefik-system
   certificateSecretName: cic-certificate-production
 
+httpIngress:
+  enabled: true
+  name: traefik
+  backend:
+    serviceName: dp-config-aks-traefik
+    servicePort: 443
+  # more AGIC annotations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/#appgw-ssl-certificate
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway                          #This will configure the AppGw with this ingressObject
+  #  cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
+    external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
+
 # the dns value is actually use pattern:
 # {{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}
 # as helm does not support templating values.yaml; we have to manually replace dns values for traefik
+
+storageClass:
+  # see: https://learn.microsoft.com/en-us/azure/aks/concepts-storage
+  azuredisk:
+    enabled: false
+    name: azure-disk-sc
+    default: false
+    parameters:
+      skuname: StandardSSD_LRS
+    reclaimPolicy: delete
+    allowVolumeExpansion: true
+    volumeBindingMode: WaitForFirstConsumer
+
+  # https://learn.microsoft.com/en-us/azure/aks/azure-files-csi
+  azurefile:
+    enabled: false
+    name: azure-files-sc
+    default: false
+    parameters:
+      skuName: Standard_LRS
+    reclaimPolicy: delete
+    allowVolumeExpansion: true
+    volumeBindingMode: WaitForFirstConsumer
+    # mountOptions:
+    #   - dir_mode=0640
+    #   - file_mode=0640
+    #   - uid=0
+    #   - gid=0
+    #   - mfsymlinks
+    #   - cache=strict # https://linux.die.net/man/8/mount.cifs
+    #   - nosharesock
+
 traefik:
   enabled: true
   hub: # for hub
     enabled: false
   service: # for external-dns
-    type: LoadBalancer
-    annotations: # for external dns to register domain
-      external-dns.alpha.kubernetes.io/hostname: "" # "*.az-dp-<ldap>.azrtroposdev.azure.tcie.pro"
+    type: ClusterIP
+    # annotations: # for external dns to register domain
+    #   external-dns.alpha.kubernetes.io/hostname: "" # "*.az-dp-<ldap>.azrtroposdev.azure.tcie.pro"
   ingressRoute: # for dashboard
     dashboard:
       matchRule: "" # Host(`traefik.az-dp-<ldap>.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik.az-dp-<ldap>.azrtroposdev.azure.tcie.pro`) && PathPrefix(`/api`)
@@ -52,12 +95,3 @@ traefik:
         secretName: cic-certificate-production
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
-
-citrix-cpx-with-ingress-controller:
-  enabled: false
-  license:
-    accept: yes
-  crds:
-    install: true
-  ingressClass:
-    - citrix-adc
