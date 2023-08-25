@@ -1,0 +1,1 @@
+This chart is used to configure network policies for TIBCO Platform Data Plane

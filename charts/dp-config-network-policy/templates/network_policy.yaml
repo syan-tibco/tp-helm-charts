@@ -1,0 +1,221 @@
+{{- $root := . }}
+{{- if .Values.namespaces }}
+{{- range .Values.namespaces }}
+{{- if .networkPolicy.create }}
+{{- if eq .networkPolicy.type "minimal" }}
+
+---
+
+# Label-based egress network policy access to cp-proxy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+# Description: Inbound access to cp-proxy (label-based)
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-egress-cp-proxy
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:  
+      egress.networking.platform.tibco.com/cp-proxy: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: cp-proxy
+    ports:
+    - protocol: TCP
+      port: 3125
+
+
+
+
+
+{{- end }}
+{{- end }}
+
+---
+
+{{- if .networkPolicy.create }}
+{{- if eq .networkPolicy.type "granular" }}
+
+# Label-based egress network policy access to kube-apiserver
+# This is required for
+# 1. monitoring-agent
+# 2. cp-proxy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-kubernetes-api
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/kubernetes-api: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          component: kube-apiserver
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 6443
+
+---
+
+# Label-based egress network policy access to kube-dns
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-kube-dns
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/kube-dns: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+
+---
+
+# Label-based egress network policy access to internet
+# This is required for
+# 1. tibtunnel
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-internet-all
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/internet-all: enable
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+
+---
+
+# Label-based egress network policy access to cp-proxy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+# Description: Inbound access to cp-proxy (label-based)
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-egress-cp-proxy
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:  
+      egress.networking.platform.tibco.com/cp-proxy: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: cp-proxy
+    ports:
+    - protocol: TCP
+      port: 3125
+
+---
+
+# Label-based egress network policy access to o11y-service
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+# Description: Inbound access to o11y-service (label-based)
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-egress-o11y-service
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:  
+      egress.networking.platform.tibco.com/o11y-service: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: o11y-service
+    ports:
+    - protocol: TCP
+      port: 8003
+
+---
+
+# Label-based egress network policy access to otel-collector
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+# Description: Inbound access to o11y-service (label-based)
+metadata:
+  name: {{ include "dp-config-network-policy.name" . }}-egress-otel-collector
+  namespace: {{ .Release.Namespace}}
+  labels:
+    {{- include "dp-config-network-policy.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:  
+      egress.networking.platform.tibco.com/otel-collector: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: opentelemetry-operator
+    ports:
+    - protocol: TCP
+      port: 8443
+
+{{- end }}
+{{- end }}
+
+{{- end }}
+{{- end }}

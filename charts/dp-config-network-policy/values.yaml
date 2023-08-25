@@ -1,0 +1,15 @@
+global:
+  tibco:
+    serviceAccount: "service-account" # customer provided service account
+    dataPlaneId: "abcd"
+
+## this creates namespaces and role-bindings in those namespaces
+namespaces:
+  - name: "namespacea"
+    networkPolicy:
+      create: true
+      type: minimal
+  - name: "namespaceb"
+    networkPolicy:
+      create: true
+      type: granular
