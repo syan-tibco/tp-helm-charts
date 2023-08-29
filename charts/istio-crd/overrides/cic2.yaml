@@ -1,0 +1,5 @@
+global:
+  istioNamespace: istio-system
+  istiod:
+    enableAnalysis: true
+
