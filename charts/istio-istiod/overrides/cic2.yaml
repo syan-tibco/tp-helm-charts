@@ -1,0 +1,48 @@
+pilot:
+  autoscaleEnabled: true
+  autoscaleMin: 1
+  autoscaleMax: 5
+  replicaCount: 1
+  traceSampling: 100.0
+
+global:
+  istioNamespace: istio-system
+  security:
+     peerAuthentication: STRICT
+  defaultResources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  proxy:
+    tracer: "zipkin"
+  tracer:
+    zipkin:
+      address: "zipkin.apim-observability.svc.cluster.local:9411"
+
+meshConfig:
+  accessLogFile: /dev/stdout
+
+  #defaultProviders:
+  #  tracing: ["traceCollector"]
+  #  accessLogging: ["logCollector"]
+
+  #extensionProviders:
+  #- name: logCollector
+  #  envoyOtelAls:
+  #    service: elasticsearch.istio-obvervability.svc.cluster.local
+  #    port: 9200
+  #    logName: "istio_envoy_accesslog"
+  #- name: traceCollector
+  #  opentelemetry:
+  #    service: opentelemetry-collector.istio-obvervability.svc.cluster.local
+  #    port: 4317
+  #- name: zipkin
+  #  zipkin:
+  #    service: opentelemetry-collector.istio-obvervability.svc.cluster.local
+  #    port: 4211
+
+#members: ["apim-observability","apim-playground"]
+

@@ -1,0 +1,58 @@
+{{- range .Values.members }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: label-ns-{{ . }}
+rules:
+- apiGroups: [""]
+  resources: ["namespaces"]
+  resourceNames: [{{ . }}]
+  verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ . }}:label-ns-{{ . }}
+subjects:
+  - kind: ServiceAccount
+    name: istiod{{- if not (eq $.Values.revision "") }}-{{ $.Values.revision }}{{- end }}
+    namespace: {{ . }}
+roleRef:
+  kind: Role
+  name: label-ns-{{ . }}
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: label-ns-{{ . }}
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/version: {{ $.Chart.AppVersion }}
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: istiod{{- if not (eq $.Values.revision "") }}-{{ $.Values.revision }}{{- end }}
+      containers:
+      - name: label-ns-{{ . }}
+        image: "bitnami/kubectl:latest"
+        command:
+          - kubectl
+          - label
+          - ns
+          - {{ . }}
+          - istio-injection=enabled
+{{- end }}
+---

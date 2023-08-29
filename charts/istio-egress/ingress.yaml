@@ -1,0 +1,9 @@
+name: "istio-gateway"
+
+replicaCount: 1
+
+global:
+  istioNamespace: istio-system
+
+service:
+  type: LoadBalancer

@@ -1,0 +1,27 @@
+replicaCount: 1
+
+global:
+  istioNamespace: istio-system
+
+service:
+  type: ClusterIP
+  ports:
+  - name: http2
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+
+tolerations:
+  - key: dedicated
+    operator: Equal
+    value: apim
+    effect: NoSchedule
+
+#nodeSelector:
+#  scope: istio
+
+
