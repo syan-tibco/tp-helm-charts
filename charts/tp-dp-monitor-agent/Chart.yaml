@@ -1,10 +1,10 @@
 apiVersion: v2
-name: tp-dp-monitor-agent
-version: 1.0.0
-appVersion: "1.0.0"
+appVersion: 1.0.48
 description: TIBCO Platform Finops -- Monitoring
 home: https://github.com/tibco/tp-dp-monitor-agent
 icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
 maintainers:
-  - name: TIBCO FINOPS Dev Team
-    email: cdash-dev@tibco.com
+- email: cdash-dev@tibco.com
+  name: TIBCO FINOPS Dev Team
+name: tp-dp-monitor-agent
+version: 1.0.48

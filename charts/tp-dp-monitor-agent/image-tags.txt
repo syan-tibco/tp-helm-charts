@@ -1,0 +1,2 @@
+pdp/tp-dp-monitor-agent:latest
+stratosphere/fluentbit:1.9.4
