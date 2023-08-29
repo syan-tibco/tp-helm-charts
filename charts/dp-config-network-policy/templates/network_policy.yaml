@@ -2,17 +2,16 @@
 {{- if .Values.namespaces }}
 {{- range .Values.namespaces }}
 {{- if .networkPolicy.create }}
-{{ if or (eq .networkPolicy.type "minimal") (eq .networkPolicy.type "granular") }}
+{{- if or (eq .networkPolicy.type "minimal") (eq .networkPolicy.type "granular") }}
 
 --- 
 
 # Label-based egress & ingress network policy to & from all Tibco namespaces
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
-# Description: Inbound access to cp-proxy (label-based)
 metadata:
-  name: {{ include "dp-config-network-policy.name" . }}-all-tibco-namespaces
-  namespace: {{ .Release.Namespace}}
+  name: {{ include "dp-config-network-policy.name" . }}-cross-tibco-namespaces
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -41,7 +40,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "dp-config-network-policy.name" . }}-kubernetes-api
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -71,7 +70,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "dp-config-network-policy.name" . }}-kube-dns
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -101,7 +100,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "dp-config-network-policy.name" . }}-internet-all
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -119,7 +118,7 @@ spec:
 
 ---
 
-{{ if and (eq .networkPolicy.type "granular") (ne .networkPolicy.type "minimal") }}
+{{- if and (eq .networkPolicy.type "granular") (ne .networkPolicy.type "minimal") }}
 
 ---
 
@@ -129,7 +128,7 @@ kind: NetworkPolicy
 # Description: Inbound access to cp-proxy (label-based)
 metadata:
   name: {{ include "dp-config-network-policy.name" . }}-egress-cp-proxy
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -158,7 +157,7 @@ kind: NetworkPolicy
 # Description: Inbound access to o11y-service (label-based)
 metadata:
   name: {{ include "dp-config-network-policy.name" . }}-egress-o11y-service
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -187,7 +186,7 @@ kind: NetworkPolicy
 # Description: Inbound access to o11y-service (label-based)
 metadata:
   name: {{ include "dp-config-network-policy.name" . }}-egress-otel-collector
-  namespace: {{ .Release.Namespace}}
+  namespace: {{ .name }}
   labels:
     {{- include "dp-config-network-policy.labels" . | nindent 4 }}
 spec:
@@ -204,11 +203,12 @@ spec:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: opentelemetry-operator
-    ports:
-    - protocol: TCP
-      port: 8443
+    # ports:
+    # - protocol: TCP
+    #   port: 8443
 
 {{- end }}
 
+{{- end }}
 {{- end }}
 {{- end }}
