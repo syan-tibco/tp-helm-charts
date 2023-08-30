@@ -9,8 +9,6 @@ clusterRole:
   createBinding: true
 
 ## this creates namespaces and role-bindings in those namespaces
-namespaces:
-  nsa:
-    createBinding: true
-  # nsb:
+namespaces: {}
+  # nsa:
   #   createBinding: true
