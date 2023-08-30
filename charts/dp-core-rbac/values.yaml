@@ -10,15 +10,7 @@ clusterRole:
 
 ## this creates namespaces and role-bindings in those namespaces
 namespaces:
-  # namespacea:
-  #   createBinding: true
-  #   createNetworkPolicy: true
-  # namespaceb:
-  #   createBinding: true
-  #   createNetworkPolicy: true
-  # nsc:
-  #   createBinding: true
-  #   createNetworkPolicy: true
-  nsd:
+  nsa:
     createBinding: true
-    createNetworkPolicy: true
+  # nsb:
+  #   createBinding: true
