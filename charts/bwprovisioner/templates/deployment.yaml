@@ -71,7 +71,7 @@ spec:
             - name: INSTANCE_ID
               value: {{ .Values.global.cp.instanceId }}
             - name: BW_PROVISIONER_BUILD
-              value: { { .Values.global.bwprovisioner.image.tag } }
+              value: "{{ .Values.global.bwprovisioner.image.tag }}"
             - name: SERVER_PORT
               value: "{{ .Values.service.port }}"
             - name: CP_DOMAIN
