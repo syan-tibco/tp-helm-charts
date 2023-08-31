@@ -1,5 +1,50 @@
 apiVersion: v1
 entries:
+  artifactmanager:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-31T12:31:58.092999692Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: 92f4e861f33dedca7627fa6bb8307db1d95201bae90fdd8f1ed2117333b96600
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.0/artifactmanager-1.0.0.tgz
+    version: 1.0.0
+  bwprovisioner:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-31T12:31:58.258428529Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: 2efc84c95370484015360ba682a3505dd1797e5ff012fe7834a0d4312c63c1bf
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.0/bwprovisioner-1.0.0.tgz
+    version: 1.0.0
+  distributed-lock-operator:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2023-08-31T12:31:58.411599544Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: 00f48401d4d69c615a0d6f22cb70e26be04c5fa3da527f91b79b3ce650e218d6
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.0/distributed-lock-operator-1.0.0.tgz
+    version: 1.0.0
   dp-config-aks:
   - annotations:
       artifacthub.io/changes: |-
@@ -1201,6 +1246,21 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-otel-collectors-1.0.0/dp-otel-collectors-1.0.0.tgz
     version: 1.0.0
+  flogoprovisioner:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-31T12:31:58.561581076Z"
+    description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
+    digest: b3b645b14fb32c2494ecafb10272713d51a621656b99070b28c07133a8d2381a
+    home: https://github.com/tibco/tp-iapp-flogo-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: flogoprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/flogoprovisioner-1.0.0/flogoprovisioner-1.0.0.tgz
+    version: 1.0.0
   istio-crd:
   - apiVersion: v1
     appVersion: 1.16.1
@@ -1299,6 +1359,21 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-istiod-1.16.1/istio-istiod-1.16.1.tgz
     version: 1.16.1
+  o11yservice:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-08-31T12:31:58.73260926Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
+    digest: 7971620b3089239be7e1c985ffbbfef1290ac07d062adb726fbdc3ce18acef47
+    home: https://github.com/tibco/tp-o11y-service.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: o11yservice
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/o11yservice-1.0.0/o11yservice-1.0.0.tgz
+    version: 1.0.0
   tp-cp-proxy:
   - apiVersion: v2
     appVersion: 1.0.67
@@ -1492,4 +1567,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-31T05:50:08.702098615Z"
+generated: "2023-08-31T12:31:58.732836866Z"
