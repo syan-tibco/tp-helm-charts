@@ -1,0 +1,203 @@
+# Default values for artifactmanager.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  cp:
+    dataplaneId: dp-dp1
+    instanceId: defaultinstid
+    namespace: tp-dp-dp1
+    containerRegistry:
+      secret: ""
+      url: reldocker.tibco.com
+    environmentType: ""
+    resources:
+      serviceaccount:
+        namespace: ""
+        serviceAccountName: ""
+  o11yservice:
+    serviceAccount: ""
+    data:
+      namespace: dp-integration-default
+    image:
+      registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
+      tag: 99
+
+replicaCount: 1
+
+imagePullSecrets: []
+
+serviceAccount:
+  enabled: false
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8113
+  targetPort: 8113
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+#resources:
+#  requests:
+#    cpu: 50m
+#    memory: 128Mi
+#  limits:
+#    cpu: "2"
+#    memory: 2048Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+probes:
+  liveness:
+    initialDelaySeconds: 3
+    failureThreshold: 5
+    periodSeconds: 5
+    timeoutSeconds: 5
+
+# -- Additional environment variables.
+extraEnvVars: []
+#  - name: NAME
+#    value: value
+
+# The name of ConfigMap containing additional environment variables.
+extraEnvVarsCM: ""
+
+# The name of Secret containing extra additional environment variables.
+extraEnvVarsSecret: ""
+
+# -- Extra volumeMounts for the integration services container.
+# More info: `kubectl explain deployment.spec.template.spec.containers.volumeMounts`.
+extraVolumeMounts: []
+  # - name: example
+  #   mountPath: /opt/tibco/example.txt
+#   subPath: example.txt
+
+# -- Extra volumes for the integration services container.
+# More info: `kubectl explain deployment.spec.template.spec.volumes`.
+extraVolumes: []
+  # - name: example
+  #   persistentVolumeClaim:
+#     claimName: exampleClaim
+
+# -- Additional init containers to add to the automationservices pod.
+extraInitContainers: []
+  # - name: dummy-init
+  #   image: busybox
+#   command: ['echo', "hey"]
+
+image:
+  pullPolicy: IfNotPresent
+
+ingress:
+  # -- Enables configuration of ingress to expose o11y-service. Requires ingress support in the Kubernetes cluster.
+  enabled: false
+  hostsOverride: false
+  className: haproxy
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+  # -- Annotations for the ingress object. See documentation for your ingress controller for valid annotations.
+  annotations: {}
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+config:
+  otel:
+    receiver:
+      service:
+        name: "otel-userapp"
+        port: 4319
+  logserver:
+    userapp:
+      logindex: ""
+      traceindex: ""
+    services:
+      logindex: ""
+    proxy:
+      userapp:
+        logindex:
+          endpoint: ""
+          username: ""
+    exporter:
+      userapp:
+        logindex:
+          endpoint: ""
+          username: ""
+      services:
+        logindex:
+          endpoint: ""
+          username: ""
+  promserver:
+    proxy:
+      endpoint: ""
+      username: ""
+    exporter:
+      endpoint: ""
+  jaeger:
+    es:
+     host: ""
+     port: 8080
+     username: ""
+secret:
+  logserver:
+    userapp:
+      proxy:
+        password: "logserver_userapp_proxy_dummy"
+      exporter:
+        password: "logserver_userapp_exporter_dummy"
+    services:
+      exporter:
+        password: "logserver_services_exporter_dummy"
+  promserver:
+    proxy:
+      password: "promserver_proxy_dummy"
+    exporter:
+      token: "promserver_exporter_dummy"
+  jaeger:
+    es:
+     password: "jaeger_es_dummy"
+

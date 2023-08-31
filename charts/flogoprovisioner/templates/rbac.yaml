@@ -1,0 +1,48 @@
+{{- if .Values.rbac.create -}}
+{{- if eq .Values.global.cp.resources.serviceaccount.serviceAccountName "" }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "flogoprovisioner.sa" . }}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "flogoprovisioner.role" . }}
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get","list","watch","create","delete","patch","update"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get","list","watch","create","delete","patch","update"]
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get","list","watch","create","delete","patch","update"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get","list","watch","create","delete","patch","update"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get","list","watch","create","delete","patch","update"]
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get","list","watch","create","delete","patch","update"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "flogoprovisioner.role-bind" . }}
+subjects:
+  - kind: ServiceAccount
+    {{- if eq .Values.global.flogoprovisioner.serviceAccount "" }}
+    name: {{ include "flogoprovisioner.sa" . }}
+    {{- else }}
+    name: {{ .Values.global.flogoprovisioner.serviceAccount }}
+    {{- end }}
+roleRef:
+  kind: Role
+  name: {{ include "flogoprovisioner.role" . }}
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

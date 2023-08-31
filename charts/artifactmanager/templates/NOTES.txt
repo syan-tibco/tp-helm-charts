@@ -1,0 +1,1 @@
+TIBCO Platform Integration Application: Artifact Manager chart serves the capabilities for commom functionalties for different Application types.
