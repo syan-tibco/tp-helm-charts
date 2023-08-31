@@ -2,13 +2,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ include "dp-config-namespace.clusterRoleBindingNamePrefix" . }}-1
+  name: {{ include "dp-core-rbac.clusterRoleBindingNamePrefix" . }}-1
   labels:
-    {{- include "dp-config-namespace.labels" . | nindent 4 }}
+    {{- include "dp-core-rbac.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "dp-config-namespace.clusterRoleNamePrefix" . }}-1
+  name: {{ include "dp-core-rbac.clusterRoleNamePrefix" . }}-1
 subjects:
   - kind: ServiceAccount
     name: {{ .Values.global.tibco.serviceAccount }}

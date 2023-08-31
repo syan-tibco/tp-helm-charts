@@ -4,9 +4,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "dp-config-namespace.clusterRoleNamePrefix" . }}-1
+  name: {{ include "dp-core-rbac.clusterRoleNamePrefix" . }}-1
   labels:
-    {{- include "dp-config-namespace.labels" . | nindent 4 }}
+    {{- include "dp-core-rbac.labels" . | nindent 4 }}
 rules:
 - apiGroups: [""]
   resources: ["configmaps"]
@@ -58,9 +58,9 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "dp-config-namespace.clusterRoleNamePrefix" . }}-2
+  name: {{ include "dp-core-rbac.clusterRoleNamePrefix" . }}-2
   labels:
-    {{- include "dp-config-namespace.labels" . | nindent 4 }}
+    {{- include "dp-core-rbac.labels" . | nindent 4 }}
 rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
