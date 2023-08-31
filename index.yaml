@@ -828,6 +828,18 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.38/dp-core-infrastructure-1.0.38.tgz
     version: 1.0.38
+  dp-core-rbac:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2023-08-31T05:50:08.701969706Z"
+    description: A Helm chart for creating service accounts and required RBACs in
+      the namespace
+    digest: 493f0bd2de761208cc8dc547c958899a497270beee097d5295034689518102e0
+    name: dp-core-rbac
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-rbac-1.0.0/dp-core-rbac-1.0.0.tgz
+    version: 1.0.0
   dp-ems-on-ftl:
   - annotations:
       artifacthub.io/category: streaming-messaging
@@ -1480,4 +1492,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-30T11:55:36.556702902Z"
+generated: "2023-08-31T05:50:08.702098615Z"
