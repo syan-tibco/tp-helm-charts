@@ -52,8 +52,8 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8113
-  targetPort: 8113
+  port: 7820
+  targetPort: 7820
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -150,7 +150,7 @@ config:
     receiver:
       service:
         name: "otel-userapp"
-        port: 4319
+        port: 4317
   logserver:
     userapp:
       logindex: ""

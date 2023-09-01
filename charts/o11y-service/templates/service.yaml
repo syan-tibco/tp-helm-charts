@@ -7,8 +7,8 @@ metadata:
 spec:
   ports:
     - name: server
-      port: 8113
+      port: 7820
       protocol: TCP
-      targetPort: 8113
+      targetPort: 7820
   selector:
     {{- include "o11y-service.shared.labels.selector" . | nindent 4 }}
