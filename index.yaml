@@ -1408,6 +1408,20 @@ entries:
     version: 1.0.67
   tp-dp-monitor-agent:
   - apiVersion: v2
+    appVersion: 1.0.54
+    created: "2023-09-01T10:58:59.559070037Z"
+    description: TIBCO Platform Finops -- Monitoring
+    digest: 4e7ba4e772d4f2ae6dff7e79d11949724b4e98ecc405102ee7b933a7325183e1
+    home: https://github.com/tibco/tp-dp-monitor-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: cdash-dev@tibco.com
+      name: TIBCO FINOPS Dev Team
+    name: tp-dp-monitor-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-monitor-agent-1.0.54/tp-dp-monitor-agent-1.0.54.tgz
+    version: 1.0.54
+  - apiVersion: v2
     appVersion: 1.0.53
     created: "2023-08-30T11:55:36.556451099Z"
     description: TIBCO Platform Finops -- Monitoring
@@ -1581,4 +1595,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-08-31T15:36:53.985076866Z"
+generated: "2023-09-01T10:58:59.559243438Z"
