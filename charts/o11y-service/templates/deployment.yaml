@@ -20,10 +20,8 @@ spec:
         {{- include "o11y-service.shared.labels.standard" . | nindent 8 }}
     spec:
       terminationGracePeriodSeconds: 30
-      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      - name: {{ .Values.global.cp.containerRegistry.secret }}
       {{- if .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       {{- else }}
@@ -33,7 +31,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: tp-o11y-service
-          image: {{ .Values.global.o11yservice.image.registry }}/piap/o11y-service:{{ .Values.global.o11yservice.image.tag }}
+          image: {{ .Values.global.cp.containerRegistry.url }}/piap/o11y-service:{{ .Values.global.o11yservice.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             requests:
