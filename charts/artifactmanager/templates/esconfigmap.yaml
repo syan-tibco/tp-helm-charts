@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    {{- include "artifactmanager.labels" . | nindent 4 }}
+  name: fluentbit-config-es
+data:
+{{ (.Files.Glob "config/es/*.conf").AsConfig | indent 2 }}

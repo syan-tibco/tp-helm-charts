@@ -1,0 +1,12 @@
+# settings properties configmap which needs to be registered with file adapter
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "dp-core-distributed-lock-operator.consts.appName" . }}-settings
+  labels:
+  {{- include "dp-core-distributed-lock-operator.shared.labels.standard" . | nindent 4 }}
+data:
+  settings.properties: |
+  {{- range .Values.settingsConfigmap  }}
+    {{ .key }}={{ .value }}
+  {{- end }}

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  annotations:
+    use-subpath: "true"
+  labels:
+    {{- include "artifactmanager.labels" . | nindent 4 }}
+  name: fluentbit-config-otel
+data:
+{{ (.Files.Glob "config/otel/*.conf").AsConfig | indent 2 }}

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "dp-core-distributed-lock-operator.consts.appName" . }}
+  labels:
+    {{- include "dp-core-distributed-lock-operator.shared.labels.standard" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "dp-core-distributed-lock-operator.shared.labels.selector" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "dp-core-distributed-lock-operator.shared.labels.standard" . | nindent 8 }}
+    spec:
+      {{- if .Values.global.distlockoperator.serviceAccount }}
+      serviceAccountName: {{ .Values.global.distlockoperator.serviceAccount }}
+      {{- else }}
+      serviceAccountName: {{ include "dp-core-distributed-lock-operator.consts.appName" . }}
+      {{- end }}
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+      - name: distributed-lock-operator
+        image: {{ .Values.global.image.registry }}/stratosphere/distributed-lock-operator:{{ .Values.global.image.tag }}
+        ports:
+          - containerPort: 8080
+            name: metrics
+          - containerPort: 9443
+            name: webhook
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: WATCH_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: WATCH_NAMESPACE_PREFIX
+            value: ""
+          - name: ENABLE_WEBHOOKS
+            value: "{{ .Values.enableWebHooks }}"
+          - name: SETTINGS_PROPERTIES_VOLUME_PATH
+            value: "/etc/config/settings.properties"
+        volumeMounts:
+{{- if .Values.enableWebHooks }}
+          - mountPath: /tmp/k8s-webhook-server/serving-certs
+            name: cert
+            readOnly: true
+{{- end }}
+          - name: settings-config-volume
+            mountPath: "/etc/config"
+      volumes:
+{{- if .Values.enableWebHooks }}
+        - name: cert
+          secret:
+            defaultMode: 420
+            secretName: {{ include "dp-core-distributed-lock-operator.consts.webhook" . }}-tls
+{{- end }}
+        - name: settings-config-volume
+          configMap:
+            name: {{ include "dp-core-distributed-lock-operator.consts.appName" . }}-settings

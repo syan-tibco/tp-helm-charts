@@ -1,0 +1,193 @@
+{{- $fullName := include "flogoprovisioner.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "flogoprovisioner.fullname" . }}
+  labels:
+    {{- include "flogoprovisioner.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "flogoprovisioner.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "flogoprovisioner.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.global.flogoprovisioner.serviceAccount }}
+      serviceAccountName: {{ .Values.global.flogoprovisioner.serviceAccount }}
+      {{- else }}
+      serviceAccountName: {{ include "flogoprovisioner.sa" . }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              name: server
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.global.flogoprovisioner.image.registry }}/piap/flogo-provisioner:26
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{- range $filename, $content :=  .Values.config }}
+            {{- if $content }}
+            - name: {{ $filename }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $fullName }}-serviceconfig
+                  key: {{ $filename }}
+            {{- end }}
+            {{- end }}
+            - name: DATAPLANE_ID
+              value: {{ .Values.global.cp.dataplaneId }}
+            - name: INSTANCE_ID
+              value: {{ .Values.global.cp.instanceId }}
+            - name: SERVER_PORT
+              value: "{{ .Values.service.port }}"
+            - name: APP_INIT_IMAGE_TAG
+              value: "10-flogo-m1"
+            - name: CP_DOMAIN
+              value: {{ include "flogoprovisioner.cp.domain" . }}
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+        {{- if .Values.global.flogoprovisioner.deploymanager.enabled }}
+        - name: deploymanager
+          image: {{ .Values.global.cic.data.SYSTEM_DOCKER_REGISTRY }}/tci/tci-app-proxy:{{ .Values.global.flogoprovisioner.deploymanager.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.global.flogoprovisioner.deploymanager.resources | nindent 12 }}
+          volumeMounts:
+            - name: configs
+              mountPath: /configs
+          env:
+            - name: DEPLOY_MANAGER_SERVICE
+              value: "true"
+            - name: APPS_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: APPS_NAMESPACE
+          ports:
+            - containerPort: 7830
+              protocol: TCP
+              name: deploymanager
+        {{- end }}
+        {{- if .Values.global.flogoprovisioner.logging.enabled }}
+        - name: fluent-bit
+          image: {{ .Values.global.flogoprovisioner.logging.image.registry }}/tci/fluent-bit:{{ .Values.global.flogoprovisioner.logging.image.registry.tag }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          resources:
+            {{- toYaml .Values.global.flogoprovisioner.deploymanager.resources | nindent 12 }}
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 2020
+          env:
+            - name: ACCOUNT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: SERVICE_LOGSERVER_HOST
+            - name: SERVICE_LOGSERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: SERVICE_LOGSERVER_HOST
+
+            - name: SERVICE_LOGSERVER_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: SERVICE_LOGSERVER_USER
+
+            - name: LOGSERVER_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: LOGSERVER_PASSWORD
+
+            - name: SERVICE_LOGSERVER_INDEX
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: SERVICE_LOGSERVER_INDEX
+
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: TIBCO_INTERNAL_INTERCOM_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
+                  key: TIBCO_INTERNAL_INTERCOM_URL
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: CONTAINER_NAME
+              value: {{ .Chart.Name }}
+
+          volumeMounts:
+            - name: dockercontainerlogs
+              mountPath: /var/lib/docker/containers/
+            - name: podlogs
+              mountPath: /var/log/pods
+            - name: fluent-bit-config
+              mountPath: /fluent-bit/etc/
+        terminationGracePeriodSeconds: 10
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.global.flogoprovisioner.logging.enabled }}
+      volumes:
+        - name: dockercontainerlogs
+            hostPath:
+              path: /var/lib/docker/containers/
+        - name: podlogs
+          hostPath:
+            path: /var/log/pods
+        - name: fluent-bit-config
+          configMap:
+            name: {{ include "flogoprovisioner.fluentConf" . }}
+      {{- end }}
