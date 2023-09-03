@@ -30,7 +30,7 @@
 {{- define "dp-core-distributed-lock-operator.consts.workloadType" }}infra{{ end -}}
 
 {{/* Namespace we're going into. */}}
-{{- define "dp-core-distributed-lock-operator.consts.namespace" }}{{ .Values.global.cp.resources.serviceaccount.namespace }}{{ end -}}
+{{- define "dp-core-distributed-lock-operator.consts.namespace" }}{{ .Values.global.cp.resources.serviceaccount.nameSpace }}{{ end -}}
 
 {{/*
     ===========================================================================

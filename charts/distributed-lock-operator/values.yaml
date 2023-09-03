@@ -1,9 +1,10 @@
 global:
   enableLogging: true
   serviceAccount: "" #user provided service account.
-  image:
-    registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
-    tag: 58
+  distlockop:
+    image:
+      registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
+      tag: 58
   cp:
     dataplaneId: ""
     containerRegistry:
@@ -12,7 +13,7 @@ global:
     environmentType: ""
     resources:
       serviceaccount:
-        namespace: ""
+        nameSpace: ""
         serviceAccountName: ""
   distlockoperator:
     serviceAccount: "" #user provided service account.

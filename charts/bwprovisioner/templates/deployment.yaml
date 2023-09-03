@@ -43,7 +43,7 @@ spec:
               name: server
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.global.bwprovisioner.image.registry }}/piap/bw-provisioner:{{ .Values.global.bwprovisioner.image.tag }}
+          image: {{ .Values.global.cp.containerRegistry.url }}/piap/bw-provisioner:{{ .Values.global.bwprovisioner.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
             httpGet:
@@ -87,12 +87,12 @@ spec:
 #            - name: OTEL_SERVICE_NAME
 #              valueFrom:
 #                configMapKeyRef:
-#                  name: { { include "bwprovisioner.o11yservice.configmap" . } }
+#                  name: {{ include "bwprovisioner.o11yservice.configmap" . }}
 #                  key: otel-recvservice-name
 #            - name: OTEL_SERVICE_PORT
 #              valueFrom:
 #                configMapKeyRef:
-#                  name: { { include "bwprovisioner.o11yservice.configmap" . } }
+#                  name: {{ include "bwprovisioner.o11yservice.configmap" . }}
 #                  key: otel-recvservice-port
         {{- if .Values.global.bwprovisioner.deploymanager.enabled }}
         - name: deploymanager

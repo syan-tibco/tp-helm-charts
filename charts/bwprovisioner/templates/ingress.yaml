@@ -20,8 +20,8 @@ metadata:
     app.kubernetes.io/component: load-balancer
     {{- include "bwprovisioner.labels" . | nindent 4 }}
   annotations:
-    ingress.kubernetes.io/rewrite-target: /
-    meta.helm.sh/release-namespace: {{ .Values.global.cp.namespace }}
+    meta.helm.sh/release-namespace: {{ .Values.global.cp.resources.serviceaccount.nameSpace }}
+    meta.helm.sh/release-name: {{ $fullName }}
     {{- with .Values.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
     {{- end }}

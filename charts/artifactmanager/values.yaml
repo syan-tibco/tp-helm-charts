@@ -20,7 +20,7 @@ global:
       storage:
         storageClassName: "gp2"
       serviceaccount:
-        namespace: ""
+        nameSpace: ""
         serviceAccountName: ""
   artifactmanager:
     serviceAccount: ""
@@ -112,7 +112,13 @@ ingress:
 #        - path: /tibco/agent/integration/artifactmanager/
 #          pathType: Prefix
   # -- Annotations for the ingress object. See documentation for your ingress controller for valid annotations.
-  annotations: {}
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+    haproxy.org/cors-enable: "true"
+    haproxy.org/load-balance: leastconn
+    haproxy.org/src-ip-header: X-Real-IP
+    haproxy.org/timeout-http-request: 600s
+
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

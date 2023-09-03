@@ -43,7 +43,7 @@ spec:
               name: server
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.global.artifactmanager.image.registry }}/piap/artifactmanager:{{ .Values.global.artifactmanager.image.tag }}
+          image: {{ .Values.global.cp.containerRegistry.url }}/piap/artifactmanager:{{ .Values.global.artifactmanager.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
             - name: data

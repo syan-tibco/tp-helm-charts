@@ -16,8 +16,8 @@ spec:
       labels:
         {{- include "dp-core-distributed-lock-operator.shared.labels.standard" . | nindent 8 }}
     spec:
-      {{- if .Values.global.distlockoperator.serviceAccount }}
-      serviceAccountName: {{ .Values.global.distlockoperator.serviceAccount }}
+      {{- if .Values.global.cp.resources.serviceaccount.serviceAccountName }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       {{- else }}
       serviceAccountName: {{ include "dp-core-distributed-lock-operator.consts.appName" . }}
       {{- end }}
@@ -25,7 +25,7 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: distributed-lock-operator
-        image: {{ .Values.global.image.registry }}/stratosphere/distributed-lock-operator:{{ .Values.global.image.tag }}
+        image: {{ .Values.global.cp.containerRegistry.url }}/stratosphere/distributed-lock-operator:{{ .Values.global.distlockop.image.tag }}
         ports:
           - containerPort: 8080
             name: metrics

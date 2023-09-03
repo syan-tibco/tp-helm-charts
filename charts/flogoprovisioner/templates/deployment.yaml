@@ -29,8 +29,8 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.flogoprovisioner.serviceAccount }}
-      serviceAccountName: {{ .Values.global.flogoprovisioner.serviceAccount }}
+      {{- if .Values.global.cp.resources.serviceaccount.serviceAccountName }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       {{- else }}
       serviceAccountName: {{ include "flogoprovisioner.sa" . }}
       {{- end }}
@@ -43,7 +43,7 @@ spec:
               name: server
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.global.flogoprovisioner.image.registry }}/piap/flogo-provisioner:26
+          image: {{ .Values.global.cp.containerRegistry.url }}/piap/flogo-provisioner:26
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
