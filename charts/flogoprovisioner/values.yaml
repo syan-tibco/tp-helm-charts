@@ -17,7 +17,7 @@ global:
       url: reldocker.tibco.com
     environmentType: ""
     resources:
-      serviceAccount:
+      serviceaccount:
         nameSpace: ""
         serviceAccountName: ""
   flogoprovisioner:
