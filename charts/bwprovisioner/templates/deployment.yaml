@@ -82,6 +82,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: SOURCE_REGISTRY
+              value: {{ .Values.global.cp.containerRegistry.url }}
 #            - name: OTEL_SERVICE_NAME
 #              valueFrom:
 #                configMapKeyRef:

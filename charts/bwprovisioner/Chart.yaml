@@ -1,6 +1,6 @@
 apiVersion: v2
 name: bwprovisioner
-version: 1.0.3
+version: 1.0.4
 appVersion: "1.0.0"
 description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
 home: https://github.com/tibco/tp-iapp-bw-provisioner.git

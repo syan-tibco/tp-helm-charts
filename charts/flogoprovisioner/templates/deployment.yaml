@@ -73,6 +73,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: SOURCE_REGISTRY
+              value: {{ .Values.global.cp.containerRegistry.url }}
         {{- if .Values.global.flogoprovisioner.deploymanager.enabled }}
         - name: deploymanager
           image: {{ .Values.global.cic.data.SYSTEM_DOCKER_REGISTRY }}/tci/tci-app-proxy:{{ .Values.global.flogoprovisioner.deploymanager.image.tag }}
