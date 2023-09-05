@@ -6,18 +6,22 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "dp-core-rbac.roleBindingNamePrefix" $root }}-1
+  name: {{ include "dp-core-rbac.roleBindingName" $root }}
   namespace: {{ $ns_name }}
   labels:
     {{- include "dp-core-rbac.labels" $root | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "dp-core-rbac.clusterRoleNamePrefix" $root }}-2
+  name: {{ include "dp-core-rbac.clusterRoleName" $root }}-ns-scope
 subjects:
 - kind: ServiceAccount
   name: {{ $root.Values.global.tibco.serviceAccount }}
+  {{- if eq $root.Values.bootstrappingNamespace.enable "true" }}
+  namespace: {{ $root.Values.bootstrappingNamespace.name }}
+  {{- else }}
   namespace: {{ $root.Release.Namespace }}
+  {{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

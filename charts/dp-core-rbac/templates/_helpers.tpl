@@ -49,13 +49,13 @@ Create chart name and version as used by the chart label.
 {{- define "dp-core-rbac.workloadType" }}infra{{ end -}}
 
 {{/* Cluster Role Name Prefix */}}
-{{- define "dp-core-rbac.clusterRoleNamePrefix" }}cluster-role{{ end -}}
+{{- define "dp-core-rbac.clusterRoleName" }}{{ .Values.global.tibco.dataPlaneId}}-cluster-role{{ end -}}
 
 {{/* Cluster Role Binding Name Prefix */}}
-{{- define "dp-core-rbac.clusterRoleBindingNamePrefix" }}cluster-role-binding{{ end -}}
+{{- define "dp-core-rbac.clusterRoleBindingName" }}{{ .Values.global.tibco.dataPlaneId}}-cluster-role-binding{{ end -}}
 
 {{/* Role Binding Name Prefix */}}
-{{- define "dp-core-rbac.roleBindingNamePrefix" }}role-binding{{ end -}}
+{{- define "dp-core-rbac.roleBindingName" }}{{ .Values.global.tibco.dataPlaneId}}-role-binding{{ end -}}
 
 
 {{/*

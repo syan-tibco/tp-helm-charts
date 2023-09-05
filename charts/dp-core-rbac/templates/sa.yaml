@@ -1,3 +1,4 @@
+{{- if eq .Values.bootstrappingNamespace.enabled "false" }}
 {{- if ne .Values.global.tibco.serviceAccount "" }}
 kind: ServiceAccount
 apiVersion: v1
@@ -6,4 +7,5 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-core-rbac.labels" . | nindent 4 }}
+{{- end }}
 {{- end }}

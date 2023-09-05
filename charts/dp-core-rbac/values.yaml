@@ -1,14 +1,16 @@
 global:
   tibco:
     serviceAccount: "service-account" # customer provided service account
-    dataPlaneId: "abcd"
+    dataPlaneId: "abcd" # data plane id
 
-## this creates cluster roles which are not namespaced
-clusterRole:
-  create: true
-  createBinding: true
+# details of the bootstrapping namespace
+bootstrappingNamespace:
+  # bootstrapping namespace is enabled for apps namespace
+  enabled: "false"
+  # pass the name of the bootstrapping namespace where Tibco Code is deployed
+  name: ""
 
-## this creates namespaces and role-bindings in those namespaces
+# details of namespaces
 namespaces: {}
-  # nsa:
+  # dpNamespace:
   #   createBinding: true

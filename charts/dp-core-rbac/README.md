@@ -8,24 +8,36 @@ global:
     serviceAccount: "service-account" # customer provided service account
     dataPlaneId: "abcd"
 
-## this creates cluster roles which are not namespaced
-clusterRole:
-  create: true
-  createBinding: true
+# details of the bootstrapping namespace
+bootstrappingNamespace:
+  # bootstrapping namespace is enabled for apps namespace
+  enabled: "false"
+  # pass the name of the bootstrapping namespace where Tibco Code is deployed
+  name: ""
 
-## this creates service account, role-binding
-## Note, there is a restriction for namespace name to NOT inclue '-'
+# details of namespaces
 namespaces:
-  namespacea:
-    createBinding: true
-  namespaceb:
+  nsa:
     createBinding: true
 
 Use-case 2:
 
-Customer has created new namespaces but the service-account, cluster-roles, cluster-role-binidng are already present, and new role-binding has to be created for the new namespace.
+Customer has created new namespaces but the service-account, cluster-roles, cluster-role-binidng are already present in bootstrapping namespace, and new role-binding has to be created for the new namespace.
 
 ## this creates role-binding in the specific namespace
+global:
+  tibco:
+    serviceAccount: "service-account" # customer provided service account
+    dataPlaneId: "abcd" # data plane id
+
+# details of the bootstrapping namespace
+bootstrappingNamespace:
+  # bootstrapping namespace is enabled for apps namespace
+  enabled: "true"
+  # pass the name of the bootstrapping namespace where Tibco Code is deployed
+  name: "namespacea"
+
+# details of namespaces
 namespaces:
-  namespacec:
+  namespaceb:
     createBinding: true
