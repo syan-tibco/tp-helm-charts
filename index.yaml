@@ -46,6 +46,20 @@ entries:
   bwprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-05T06:10:15.491401456Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: a0cb04e9800126b557809889f5ef3b61e02d0c94eb961f6798565fb17fb64c6b
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.4/bwprovisioner-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-05T05:09:58.522493Z"
     description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
     digest: c7177ffaf0ac88293649b8c7e1b4001230d370ef437f5fab001b832db1eb496d
@@ -1347,6 +1361,20 @@ entries:
   flogoprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-05T06:10:15.688580689Z"
+    description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
+    digest: efbb6f9a14c3acdcda91aea0cc5c1341a61399291db7c2a5d8849ed9a1d5266f
+    home: https://github.com/tibco/tp-iapp-flogo-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: flogoprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/flogoprovisioner-1.0.5/flogoprovisioner-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-05T05:09:58.756584891Z"
     description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
     digest: 78cdc3e50610a4a9ebc5e5dea4e19842ea82c4ebcaf480b82a664988f7541ef8
@@ -1777,4 +1805,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-05T05:09:58.756840595Z"
+generated: "2023-09-05T06:10:15.688850393Z"
