@@ -17,7 +17,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ $root.Values.global.tibco.serviceAccount }}
-  {{- if eq $root.Values.bootstrappingNamespace.enable "true" }}
+  {{- if eq $root.Values.bootstrappingNamespace.enabled "true" }}
   namespace: {{ $root.Values.bootstrappingNamespace.name }}
   {{- else }}
   namespace: {{ $root.Release.Namespace }}

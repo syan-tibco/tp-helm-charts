@@ -12,5 +12,5 @@ bootstrappingNamespace:
 
 # details of namespaces
 namespaces: {}
-  # dpNamespace:
+  # dp-namespace:
   #   createBinding: true

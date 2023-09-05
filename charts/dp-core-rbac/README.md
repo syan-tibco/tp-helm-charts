@@ -17,7 +17,7 @@ bootstrappingNamespace:
 
 # details of namespaces
 namespaces:
-  nsa:
+  dp-namespace:
     createBinding: true
 
 Use-case 2:
@@ -35,9 +35,9 @@ bootstrappingNamespace:
   # bootstrapping namespace is enabled for apps namespace
   enabled: "true"
   # pass the name of the bootstrapping namespace where Tibco Code is deployed
-  name: "namespacea"
+  name: "dp-namespace"
 
 # details of namespaces
 namespaces:
-  namespaceb:
+  app-namespace:
     createBinding: true
