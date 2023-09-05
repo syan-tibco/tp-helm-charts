@@ -3,6 +3,20 @@ entries:
   artifactmanager:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-05T05:09:58.406661672Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: 73fa303ff7bdce7c3e0821aaeaec71621603c05f5b597563b9180b0b1b369963
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.3/artifactmanager-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-03T15:29:12.159562469Z"
     description: TIBCO Platform Dataplane Core -- Artifact Manager
     digest: 9b35a40796b55a86d759dc6d11444fa6cfcd23ca88e8fa489f74f01f0535e7c5
@@ -30,6 +44,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.0/artifactmanager-1.0.0.tgz
     version: 1.0.0
   bwprovisioner:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-09-05T05:09:58.522493Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: c7177ffaf0ac88293649b8c7e1b4001230d370ef437f5fab001b832db1eb496d
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.3/bwprovisioner-1.0.3.tgz
+    version: 1.0.3
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-09-03T15:29:12.328320576Z"
@@ -73,6 +101,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.0/bwprovisioner-1.0.0.tgz
     version: 1.0.0
   distributed-lock-operator:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2023-09-05T05:09:58.62772488Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: c08e198fdd0942ae79dae4ef1fcb8f626bc892e8a621023c384d0e7121bdb2d3
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.2/distributed-lock-operator-1.0.2.tgz
+    version: 1.0.2
   - apiVersion: v1
     appVersion: 1.0.0
     created: "2023-09-03T15:29:12.51306229Z"
@@ -1305,6 +1347,20 @@ entries:
   flogoprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-05T05:09:58.756584891Z"
+    description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
+    digest: 78cdc3e50610a4a9ebc5e5dea4e19842ea82c4ebcaf480b82a664988f7541ef8
+    home: https://github.com/tibco/tp-iapp-flogo-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: flogoprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/flogoprovisioner-1.0.4/flogoprovisioner-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-04T04:55:33.448787184Z"
     description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
     digest: 9d12fd3067a244b024bcfad655d7268baacc6a67e75459097467f5ee56bf7ad0
@@ -1721,4 +1777,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-04T04:55:33.448959382Z"
+generated: "2023-09-05T05:09:58.756840595Z"
