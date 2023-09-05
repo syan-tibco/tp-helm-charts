@@ -17,10 +17,10 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ $root.Values.global.tibco.serviceAccount }}
-  {{- if eq $root.Values.bootstrappingNamespace.enabled "true" }}
-  namespace: {{ $root.Values.bootstrappingNamespace.name }}
-  {{- else }}
+  {{- if eq $root.Values.dataplaneNamespaceName "" }}
   namespace: {{ $root.Release.Namespace }}
+  {{- else }}
+  namespace: {{ $root.Values.dataplaneNamespaceName }}
   {{- end }}
 {{- end }}
 {{- end }}

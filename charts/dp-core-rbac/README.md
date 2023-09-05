@@ -8,12 +8,8 @@ global:
     serviceAccount: "service-account" # customer provided service account
     dataPlaneId: "abcd"
 
-# details of the bootstrapping namespace
-bootstrappingNamespace:
-  # bootstrapping namespace is enabled for apps namespace
-  enabled: "false"
-  # pass the name of the bootstrapping namespace where Tibco Code is deployed
-  name: ""
+# details of the dataplane namespace
+dataplaneNamespaceName: ""
 
 # details of namespaces
 namespaces:
@@ -30,12 +26,8 @@ global:
     serviceAccount: "service-account" # customer provided service account
     dataPlaneId: "abcd" # data plane id
 
-# details of the bootstrapping namespace
-bootstrappingNamespace:
-  # bootstrapping namespace is enabled for apps namespace
-  enabled: "true"
-  # pass the name of the bootstrapping namespace where Tibco Code is deployed
-  name: "dp-namespace"
+# details of the dataplane namespace
+dataplaneNamespaceName: "dp-namespace"
 
 # details of namespaces
 namespaces:
