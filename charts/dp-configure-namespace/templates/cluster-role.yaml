@@ -1,10 +1,10 @@
-{{- if eq .Values.dataplaneNamespaceName "" }}
+{{- if eq .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "dp-core-rbac.clusterRoleName" . }}-cluster-scope
+  name: {{ required "global.tibco.dataplaneId is required" .Values.global.tibco.dataplaneId }}-cluster-scope
   labels:
-    {{- include "dp-core-rbac.labels" . | nindent 4 }}
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
 rules:
 - apiGroups: [""]
   resources: ["configmaps"]
@@ -56,9 +56,9 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "dp-core-rbac.clusterRoleName" . }}-ns-scope
+  name: {{ required "global.tibco.dataplaneId is required" .Values.global.tibco.dataplaneId }}-ns-scope
   labels:
-    {{- include "dp-core-rbac.labels" . | nindent 4 }}
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
 rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
@@ -113,4 +113,4 @@ rules:
 - apiGroups: ["cert-manager.io"]
   resources: ["certificates","issuers"]
   verbs: ["create", "get"]
-{{- end }}
+{{- end -}}

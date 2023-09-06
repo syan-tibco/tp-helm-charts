@@ -1,0 +1,11 @@
+{{- if eq .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
+{{- if .Values.createServiceAccount -}}
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: {{ required "global.tibco.serviceAccount is required" .Values.global.tibco.serviceAccount }}
+  namespace: {{ required "global.tibco.primaryNamespaceName is required" .Values.global.tibco.primaryNamespaceName }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+{{- end -}}
+{{- end -}}
