@@ -3,8 +3,8 @@
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: {{ required "global.tibco.serviceAccount is required" .Values.global.tibco.serviceAccount }}
-  namespace: {{ required "global.tibco.primaryNamespaceName is required" .Values.global.tibco.primaryNamespaceName }}
+  name: {{ include "dp-configure-namespace.serviceAccount" . }}
+  namespace: {{ include "dp-configure-namespace.primaryNamespaceName" . }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
 {{- end -}}

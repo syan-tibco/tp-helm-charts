@@ -48,6 +48,14 @@ Create chart name and version as used by the chart label.
 {{/* Data plane workload type */}}
 {{- define "dp-configure-namespace.workloadType" }}infra{{ end -}}
 
+{{/* Data plane primary namespace name */}}
+{{- define "dp-configure-namespace.primaryNamespaceName" }}{{ required "global.tibco.primaryNamespaceName is required" .Values.global.tibco.primaryNamespaceName }}{{ end -}}
+
+{{/* Data plane service account */}}
+{{- define "dp-configure-namespace.serviceAccount" }}{{ required "global.tibco.serviceAccount is required" .Values.global.tibco.serviceAccount }}{{ end -}}
+
+{{/* Data plane dataplane id */}}
+{{- define "dp-configure-namespace.dataplaneId" }}{{ required "global.tibco.dataplaneId is required" .Values.global.tibco.dataplaneId }}{{ end -}}
 
 {{/*
 ================================================================
