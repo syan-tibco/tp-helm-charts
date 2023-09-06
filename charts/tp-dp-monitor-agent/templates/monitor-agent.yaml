@@ -53,7 +53,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: {{ include "tp-dp-monitor-agent.consts.appName" . }}
-        image: {{ .Values.global.dockerRegistry }}/pdp/tp-dp-monitor-agent:{{ include "tp-dp-monitor-agent.generated.buildNumber" . }}
+        image: {{ .Values.global.cp.containerRegistry.url }}/pdp/tp-dp-monitor-agent:{{ include "tp-dp-monitor-agent.generated.buildNumber" . }}
         resources:
           requests:
             cpu: 125m
@@ -99,7 +99,7 @@ spec:
           value: {{ .Values.global.cp.subscriptionId }}
 {{- if .Values.global.enableLogging }}
       - name: fluentbit
-        image: {{ .Values.global.dockerRegistry }}/stratosphere/fluentbit:{{ include "tp-dp-monitor-agent.consts.fluentbit.buildNumber" . }}
+        image: {{ .Values.global.cp.containerRegistry.url }}/stratosphere/fluentbit:{{ include "tp-dp-monitor-agent.consts.fluentbit.buildNumber" . }}
         env:
           - name: POD_NAMESPACE
             valueFrom:

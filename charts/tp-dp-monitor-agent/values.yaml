@@ -3,12 +3,13 @@
 replicaCount: "1"
 global:
   LOG_LEVEL: debug
-  dockerRegistry: "reldocker.tibco.com"
   serviceAccountName: "monitor-agent-sa"
   cp: 
     dataplaneId: "abcd"
     subscriptionId: "sub1"
     instanceId: "qwerty"
+    containerRegistry:
+      url: "reldocker.tibco.com"
   # .Values.global.enableLogging variable can be set to false to disable starting fluentbit side-car containers
   enableLogging: true
 enableIngress: true
