@@ -16,6 +16,8 @@ spec:
       labels:
         {{- include "dp-core-distributed-lock-operator.shared.labels.standard" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+      - name: {{ .Values.global.cp.containerRegistry.secret }}
       {{- if .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       {{- else }}
