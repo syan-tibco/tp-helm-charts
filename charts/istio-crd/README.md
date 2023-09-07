@@ -11,7 +11,7 @@ helm repo update
 
 _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation._
 
-## Installation
+## Installing the Chart
 
 To install the chart with the release name `istio-base`:
 

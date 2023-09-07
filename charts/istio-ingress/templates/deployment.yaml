@@ -30,7 +30,7 @@ spec:
         {{- with .Values.revision }}
         istio.io/rev: {{ . }}
         {{- end }}
-        {{- include "gateway.selectorLabels" . | nindent 8 }}
+        {{- include "gateway.podLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -49,7 +49,10 @@ spec:
       containers:
         - name: istio-proxy
           # "auto" will be populated at runtime by the mutating webhook. See https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/#customizing-injection
-          image: docker.io/istio/proxyv2:1.16.1
+          image: docker.io/istio/proxyv2:1.18.2
+          {{- with .Values.imagePullPolicy }}
+          imagePullPolicy: {{ . }}
+          {{- end }}
           securityContext:
           {{- if .Values.containerSecurityContext }}
             {{- toYaml .Values.containerSecurityContext | nindent 12 }}

@@ -20,7 +20,7 @@ global:
     tracer: "zipkin"
   tracer:
     zipkin:
-      address: "zipkin.apim-observability.svc.cluster.local:9411"
+      address: "opentelemetry-collector.apim-observability.svc.cluster.local:9411"
 
 meshConfig:
   accessLogFile: /dev/stdout

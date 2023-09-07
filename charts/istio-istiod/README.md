@@ -97,6 +97,8 @@ meshConfig:
   
 ### Configuration for namespace
 ```yaml
+```
+
 ### Configuration for tracer
 ```yaml
 global:
@@ -107,6 +109,13 @@ global:
       address: ""
 ```
     
+
+### Configuration for revision
+Control plane revisions allow deploying multiple versions of the control plane in the same cluster.
+This allows safe [canary upgrades](https://istio.io/latest/docs/setup/upgrade/canary/)
+```yaml
+revision: my-revision-name
+```
 
 ### Configuration for multi cluster
 ```yaml
