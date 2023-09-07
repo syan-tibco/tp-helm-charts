@@ -21,7 +21,7 @@ pilot:
   resources:
     requests:
       cpu: 500m
-      memory: 1048Mi
+      memory: 2048Mi
 
   # Set to `type: RuntimeDefault` to use the default profile if available.
   seccompProfile: {}
@@ -185,13 +185,17 @@ revisionTags: []
 ownerName: ""
 
 # meshConfig defines runtime configuration of components, including Istiod and istio-agent behavior
-# See https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/ for all available options
+# See https://istio.io/docs/reference/config/istio.mesh.v1alpha1/ for all available options
 meshConfig:
   accessLogFile: /dev/stdout
 
-  # defaultProviders:
-  #   tracing: ["traceCollector"]
-  #   accessLogging: ["logCollector"]
+  # Controls if sidecar is injected at the front of the container list and blocks the start of the other containers until the proxy is ready
+  holdApplicationUntilProxyStarts: false
+
+  defaultProviders:
+      metrics: ["prometheus"]
+  #    tracing: ["traceCollector"]
+  #    accessLogging: ["logCollector"]
 
   #extensionProviders:
   #- name: logCollector
@@ -241,6 +245,12 @@ global:
   # Used to locate istiod.
   istioNamespace: istio-system
 
+  # List of cert-signers to allow "approve" action in the istio cluster role
+  #
+  # certSigners:
+  #   - clusterissuers.cert-manager.io/istio-ca
+  certSigners: []
+
   # Specifies peer authentication mode between services.
   security:
      peerAuthentication: STRICT
@@ -269,7 +279,7 @@ global:
   # Dev builds from prow are on gcr.io
   hub: docker.io/istio
   # Default tag for Istio images.
-  tag: 1.16.1
+  tag: 1.18.2
   # Variant of the image to use.
   # Currently supported are: [debug, distroless]
   variant: ""
@@ -396,9 +406,6 @@ global:
     # If using stackdriver tracer outside GCP, set env GOOGLE_APPLICATION_CREDENTIALS to the GCP credential file.
     tracer: "zipkin"
 
-    # Controls if sidecar is injected at the front of the container list and blocks the start of the other containers until the proxy is ready
-    holdApplicationUntilProxyStarts: false
-
   proxy_init:
     # Base name for the proxy_init container, used to configure iptables.
     image: proxyv2
@@ -515,33 +522,6 @@ global:
     # Setting this port to a non-zero value enables STS server.
     servicePort: 0
 
-  # Configuration for each of the supported tracers
-  tracer:
-    # Configuration for envoy to send trace data to LightStep.
-    # Disabled by default.
-    # address: the <host>:<port> of the satellite pool
-    # accessToken: required for sending data to the pool
-    #
-    datadog:
-      # Host:Port for submitting traces to the Datadog agent.
-      address: "$(HOST_IP):8126"
-    lightstep:
-      address: "" # example: lightstep-satellite:443
-      accessToken: "" # example: abcdefg1234567
-    stackdriver:
-      # enables trace output to stdout.
-      debug: false
-      # The global default max number of message events per span.
-      maxNumberOfMessageEvents: 200
-      # The global default max number of annotation events per span.
-      maxNumberOfAnnotations: 200
-      # The global default max number of attributes per span.
-      maxNumberOfAttributes: 200
-    zipkin:
-      # Host:Port for reporting trace data in zipkin format. If not specified, will default to
-      # zipkin service (port 9411) in the same namespace as the other istio components.
-      address: ""
-
   # Use the Mesh Control Protocol (MCP) for configuring Istiod. Requires an MCP source.
   useMCP: false
 
@@ -559,5 +539,12 @@ global:
 base:
   # For istioctl usage to disable istio config crds in base
   enableIstioConfigCRDs: true
+
+  # If enabled, gateway-api types will be validated using the standard upstream validation logic.
+  # This is an alternative to deploying the standalone validation server the project provides.
+  # This is disabled by default, as the cluster may already have a validation server; while technically
+  # it works to have multiple redundant validations, this adds complexity and operational risks.
+  # Users should consider enabling this if they want full gateway-api validation but don't have other validation servers.
+  validateGateway: false
 
 members: []
