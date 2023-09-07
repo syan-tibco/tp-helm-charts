@@ -184,6 +184,8 @@ config:
     exporter:
       endpoint: ""
   jaeger:
+    collector:
+      endpoint: ""
     es:
      host: ""
      port: 8080
