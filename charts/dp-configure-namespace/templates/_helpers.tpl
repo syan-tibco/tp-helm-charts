@@ -54,8 +54,8 @@ Create chart name and version as used by the chart label.
 {{/* Data plane service account */}}
 {{- define "dp-configure-namespace.serviceAccount" }}{{ required "global.tibco.serviceAccount is required" .Values.global.tibco.serviceAccount }}{{ end -}}
 
-{{/* Data plane dataplane id */}}
-{{- define "dp-configure-namespace.dataplaneId" }}{{ required "global.tibco.dataplaneId is required" .Values.global.tibco.dataplaneId }}{{ end -}}
+{{/* Data plane dataPlane id */}}
+{{- define "dp-configure-namespace.dataPlaneId" }}{{ required "global.tibco.dataPlaneId is required" .Values.global.tibco.dataPlaneId }}{{ end -}}
 
 {{/*
 ================================================================
@@ -89,5 +89,5 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 
 {{/* Platform labels to be added in all the resources created by this chart.*/}}
 {{- define "dp-configure-namespace.platformLabels" -}}
-platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataplaneId }}
+platform.tibco.com/dataPlane-id: {{ .Values.global.tibco.dataPlaneId }}
 {{- end -}}

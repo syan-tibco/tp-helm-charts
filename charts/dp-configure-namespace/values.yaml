@@ -1,6 +1,6 @@
 global:
   tibco:
-    dataplaneId: "abcd"
+    dataPlaneId: "abcd"
     # Provide the name of primary namespace where dp-core-infrastrcuture is to be deployed
     # This namespace has the service account for which the role-bindig will be created for primary namespace and additional namespaces
     primaryNamespaceName: "dp-namespace"
