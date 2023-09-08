@@ -1,6 +1,6 @@
 ## Use-case 1:
 
-Customer has created new namespace and applied the Tibco platform dataplane labels.
+Customer has created new namespace and applied the Tibco platform dataPlane labels.
 Customer now wants to create new service-account, cluster-role, cluster-role-binding and role-binding
 
 #  Release Namespace and Primary Namespace
@@ -10,7 +10,7 @@ So, service-account is created in this namespace, which will be referred in the 
 # sample payload
 global:
   tibco:
-    dataplaneId: "abcd" # Mandatory
+    dataPlaneId: "abcd" # Mandatory
     primaryNamespaceName: "dp-namespace" # Mandatory
     serviceAccount: "sa" # Mandatory
 
@@ -21,7 +21,7 @@ additionalNetworkPolicy: {}
 
 ## Use-case 2:
 
-Customer has created new application namespace and applied the Tibco platform dataplane labels.
+Customer has created new application namespace and applied the Tibco platform dataPlane labels.
 The cluster-roles, cluster-role-binidng are present and service-account in primary namespace is to be used.
 To enable application deployment Customer needs to create role-binding in the new namespace.
 
@@ -30,10 +30,10 @@ To enable application deployment Customer needs to create role-binding in the ne
 So, only role-binding is created in this namespace.
 Service Account is used from the primaryNamespaceName.
 
-# set of global values to obtain the details of service account, dataplane id and primary namespace
+# set of global values to obtain the details of service account, dataPlane id and primary namespace
 global:
   tibco:
-    dataplaneId: "abcd" # Mandatory
+    dataPlaneId: "abcd" # Mandatory
     primaryNamespaceName: "dp-namespace" # Mandatory
     serviceAccount: "sa" # Mandatory
 
