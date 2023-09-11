@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shell-script-cm
+  namespace: {{ template "oauth2-proxy.namespace" $ }}
+data:
+  iat_to_clienid.sh: |
+    #!/bin/sh
+
+    apk update
+    apk add curl
+    apk add jq
+    apk add tr
+    set -x
+    echo "generating a secret from IAT"
+
+    body='{
+      "client_name": "CPProxyPrat",
+      "software_id": "0.1-BETA",
+      "software_version": "0.1 BETA",
+      "scope": "TSC",
+      "token_endpoint_auth_method": "client_secret_basic",
+      "redirect_uris": [
+        "{{ .Values.config.IdM.DP_HOST }}",
+        "{{ .Values.config.IdM.DP_HOST }}/oauth2/login",
+        "{{ .Values.config.IdM.DP_HOST }}/oauth2/callback",
+        "{{ .Values.config.IdM.DP_HOST }}/oauth2/idpresponse"
+      ]
+    }'
+
+    exchangeIatForClientId () {
+      response=$(curl -s {{ .Values.config.IdM.CP_HOST }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.config.IdM.IAT }}" --data "${body}" --header 'Content-Type: application/json')
+      echo $response
+      clientId=$(echo -n $response | jq .client_id | base64)
+      clientSecret=$(echo -n $response | jq .client_secret | base64)
+    }
+
+    getSecret () {
+      http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/oauth2-proxy-tibx/secrets/{{ template "oauth2-proxy.secretName" $ }} \
+        --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+        --header "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+        --header 'Content-Type: application/yaml')
+        return $http_code
+    }
+    updateSecret () {
+      http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/{{ template "oauth2-proxy.namespace" $ }}/secrets/{{ template "oauth2-proxy.secretName" $ }} \
+        --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+        --header "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+        --header 'Content-Type: application/yaml' \
+        -X PUT \
+        -d "
+        apiVersion: v1
+        kind: Secret
+        metadata:
+            name: {{ template "oauth2-proxy.secretName" $ }}
+            namespace: {{ template "oauth2-proxy.namespace" $ }}
+        type: Opaque
+        data:
+          client-id: $clientId
+          client-secret: $clientSecret
+          cookie-secret: Y2hhbmdlbWVjaGFuZ2VtZWNoYW5nZW1l
+        ")
+        return $http_code
+    }
+    createSecret () {
+      http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/{{ template "oauth2-proxy.namespace" $ }}/secrets \
+        --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+        --header "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+        --header 'Content-Type: application/yaml' \
+        -X POST \
+        -d "
+        apiVersion: v1
+        kind: Secret
+        metadata:
+            name: {{ template "oauth2-proxy.secretName" $ }}
+            namespace: {{ template "oauth2-proxy.namespace" $ }}
+        type: Opaque
+        data:
+          client-id: $clientId
+          client-secret: $clientSecret
+          cookie-secret: Y2hhbmdlbWVjaGFuZ2VtZWNoYW5nZW1l
+        ")
+        return $http_code
+    }
+    exchangeIatForClientId
+    getSecret
+    if [ $http_code -eq 200 ]; then
+        echo "Updating oauth2-proxy secret"
+        updateSecret
+    else
+        echo "Creating new oauth2-proxy secret"
+        createSecret
+    fi
+    if [ $http_code -ne 200 ]; then
+        echo "Client registration failed. Aborting!"
+        exit $http_code
+    fi
+    return 0

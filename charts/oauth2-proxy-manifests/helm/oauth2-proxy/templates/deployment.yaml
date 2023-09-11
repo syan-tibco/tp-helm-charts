@@ -57,21 +57,15 @@ spec:
           hostnames:
           - {{ .Values.hostAlias.hostname }}
       {{- end }}
-      {{- if and .Values.redis.enabled .Values.initContainers.waitForRedis.enabled }}
+
       initContainers:
-      - name: wait-for-redis
-        image: "docker.io/bitnami/kubectl:{{ include "kubectl.version" . }}"
-        args:
-          - wait
-          - pod/{{ include "oauth2-proxy.redis.fullname" . }}-master-0
-          - --for=condition=ready
-          - --timeout={{ .Values.initContainers.waitForRedis.timeout }}s
-      {{- if .Values.initContainers.waitForRedis.securityContext.enabled }}
-      {{- $securityContext := unset .Values.initContainers.waitForRedis.securityContext "enabled" }}
-        securityContext:
-          {{- toYaml $securityContext | nindent 10 }}
-      {{- end }}
-      {{- end }}
+      - name: generate-oauth2-proxy-secret
+        image: alpine:3.17.2
+        command: [ "/bin/sh", "-c", "source /etc/config/script/iat_to_clienid.sh" ]
+        volumeMounts:
+        - name: shell-script-volume
+          mountPath: /etc/config/script/iat_to_clienid.sh
+          subPath: iat_to_clienid.sh            
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:v{{ include "oauth2-proxy.version" . }}"
@@ -346,7 +340,9 @@ spec:
 {{- end }}
         name: configaccesslist
 {{- end }}
-
+      - name: shell-script-volume
+        configMap:
+          name: shell-script-cm
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
