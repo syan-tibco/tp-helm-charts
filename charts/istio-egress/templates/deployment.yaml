@@ -9,7 +9,9 @@ metadata:
     {{- .Values.annotations | toYaml | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- with .Values.replicaCount }}
+  replicas: {{ . }}
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:
@@ -49,7 +51,7 @@ spec:
       containers:
         - name: istio-proxy
           # "auto" will be populated at runtime by the mutating webhook. See https://istio.io/latest/docs/setup/additional-setup/sidecar-injection/#customizing-injection
-          image: docker.io/istio/proxyv2:1.18.2
+          image: docker.io/istio/proxyv2:1.19.0
           {{- with .Values.imagePullPolicy }}
           imagePullPolicy: {{ . }}
           {{- end }}
@@ -110,3 +112,4 @@ spec:
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      terminationGracePeriodSeconds: {{ $.Values.terminationGracePeriodSeconds }}

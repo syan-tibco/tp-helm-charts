@@ -92,6 +92,14 @@ spec:
           {{- end}}
         {{- end}}
         ]
+    - name: GOMEMLIMIT
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.memory
+    - name: GOMAXPROCS
+      valueFrom:
+        resourceFieldRef:
+          resource: limits.cpu
     - name: ISTIO_META_APP_CONTAINERS
       value: "{{ $containers | join "," }}"
     - name: ISTIO_META_CLUSTER_ID
@@ -230,8 +238,4 @@ spec:
     {{- range .Values.global.imagePullSecrets }}
     - name: {{ . }}
     {{- end }}
-  {{- end }}
-  {{- if eq (env "ENABLE_LEGACY_FSGROUP_INJECTION" "false") "true" }}
-  securityContext:
-    fsGroup: 1337
   {{- end }}

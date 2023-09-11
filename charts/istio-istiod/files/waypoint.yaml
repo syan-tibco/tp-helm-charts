@@ -50,7 +50,17 @@ spec:
       terminationGracePeriodSeconds: 2
       serviceAccountName: {{.ServiceAccount | quote}}
       containers:
-      - args:
+      - name: istio-proxy
+        ports:
+        - containerPort: 15021
+          name: status-port
+          protocol: TCP
+        - containerPort: 15090
+          protocol: TCP
+          name: http-envoy-prom
+        image: {{.ProxyImage}}
+        {{with .Values.global.imagePullPolicy }}imagePullPolicy: "{{.}}"{{end}}
+        args:
         - proxy
         - waypoint
         - --domain
@@ -112,6 +122,14 @@ spec:
         - name: PROXY_CONFIG
           value: |
                  {{ protoToJSON .ProxyConfig }}
+        - name: GOMEMLIMIT
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.memory
+        - name: GOMAXPROCS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
         - name: ISTIO_META_CLUSTER_ID
           value: "{{ valueOrDefault .Values.global.multiCluster.clusterName `Kubernetes` }}"
         - name: ISTIO_META_INTERCEPTION_MODE
@@ -127,9 +145,6 @@ spec:
         - name: ISTIO_META_MESH_ID
           value: "{{ (valueOrDefault .MeshConfig.TrustDomain .Values.global.trustDomain) }}"
         {{- end }}
-        image: {{.ProxyImage}}
-        {{with .Values.global.imagePullPolicy }}imagePullPolicy: "{{.}}"{{end}}
-        name: istio-proxy
         resources:
           limits:
             cpu: "2"
@@ -229,10 +244,16 @@ metadata:
     uid: "{{.UID}}"
 spec:
   ports:
-  - name: https-hbone
-    port: 15008
+  {{- range $key, $val := .Ports }}
+  - name: {{ $val.Name | quote }}
+    port: {{ $val.Port }}
     protocol: TCP
-    appProtocol: https
+    appProtocol: {{ $val.AppProtocol }}
+  {{- end }}
   selector:
     istio.io/gateway-name: "{{.Name}}"
+  {{- if and (.Spec.Addresses) (eq .ServiceType "LoadBalancer") }}
+  loadBalancerIP: {{ (index .Spec.Addresses 0).Value | quote}}
+  {{- end }}
+  type: {{ .ServiceType | quote }}
 ---

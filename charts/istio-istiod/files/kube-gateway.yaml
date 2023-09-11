@@ -54,6 +54,10 @@ spec:
       containers:
       - name: istio-proxy
         image: "{{ .ProxyImage }}"
+        {{- if .Values.global.proxy.resources }}
+        resources:
+          {{- toYaml .Values.global.proxy.resources | nindent 10 }}
+        {{- end }}
         {{with .Values.global.imagePullPolicy }}imagePullPolicy: "{{.}}"{{end}}
         securityContext:
         {{- if .KubeVersion122 }}
@@ -149,6 +153,14 @@ spec:
           value: "[]"
         - name: ISTIO_META_APP_CONTAINERS
           value: ""
+        - name: GOMEMLIMIT
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.memory
+        - name: GOMAXPROCS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
         - name: ISTIO_META_CLUSTER_ID
           value: "{{ valueOrDefault .Values.global.multiCluster.clusterName .ClusterID }}"
         - name: ISTIO_META_NODE_NAME
@@ -157,9 +169,9 @@ spec:
               fieldPath: spec.nodeName
         - name: ISTIO_META_INTERCEPTION_MODE
           value: "{{ .ProxyConfig.InterceptionMode.String }}"
-        {{- if .Values.global.network }}
+        {{- with (valueOrDefault  (index .Labels "topology.istio.io/network") .Values.global.network) }}
         - name: ISTIO_META_NETWORK
-          value: "{{ .Values.global.network }}"
+          value: {{.|quote}}
         {{- end }}
         - name: ISTIO_META_WORKLOAD_NAME
           value: {{.DeploymentName|quote}}
@@ -305,8 +317,8 @@ spec:
   {{- end }}
   selector:
     istio.io/gateway-name: {{.Name}}
-  {{- if .Spec.Addresses }}
+  {{- if and (.Spec.Addresses) (eq .ServiceType "LoadBalancer") }}
   loadBalancerIP: {{ (index .Spec.Addresses 0).Value | quote}}
   {{- end }}
-  type: {{ index .Annotations "networking.istio.io/service-type" | default "LoadBalancer" | quote }}
+  type: {{ .ServiceType | quote }}
 ---

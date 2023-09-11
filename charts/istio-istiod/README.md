@@ -40,7 +40,7 @@ To view support configuration options and documentation, run:
 helm show values istio/istiod
 ```
 
-### Examples 
+### Examples
 
 #### Configuring mesh configuration settings
 
@@ -108,7 +108,7 @@ global:
       # zipkin service (port 9411) in the same namespace as the other istio components.
       address: ""
 ```
-    
+
 
 ### Configuration for revision
 Control plane revisions allow deploying multiple versions of the control plane in the same cluster.

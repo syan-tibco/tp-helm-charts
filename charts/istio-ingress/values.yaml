@@ -3,6 +3,8 @@ name: "istio-ingressgateway"
 # revision declares which revision this gateway is a part of
 revision: ""
 
+# Controls the spec.replicas setting for the Gateway deployment if set.
+# Otherwise defaults to Kubernetes Deployment default (1).
 replicaCount: 1
 
 kind: Deployment
@@ -93,12 +95,13 @@ affinity: {}
 
 # If specified, the gateway will act as a network gateway for the given network.
 networkGateway: ""
-    
+
 # Specify image pull policy if default behavior isn't desired.
 # Default behavior: latest images will be Always else IfNotPresent
 imagePullPolicy: ""
 
 imagePullSecrets: []
+
 # This value is used to configure a Kubernetes PodDisruptionBudget for the gateway.
 #
 # By default, the `podDisruptionBudget` is disabled (set to `{}`),
@@ -128,3 +131,5 @@ imagePullSecrets: []
 # podDisruptionBudget: {}
 #
 podDisruptionBudget: {}
+
+terminationGracePeriodSeconds: 30

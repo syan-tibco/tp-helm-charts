@@ -1,3 +1,11 @@
+dataplaneId: cj8nibajvtkr83ega0n0
+
+# service account
+serviceAccount:
+  create: true
+  annotations: {}
+  name: istio
+
 #.Values.pilot for discovery and mesh wide config
 
 ## Discovery Settings
@@ -5,6 +13,7 @@ pilot:
   autoscaleEnabled: true
   autoscaleMin: 1
   autoscaleMax: 5
+  autoscaleBehavior: {}
   replicaCount: 1
   rollingMaxSurge: 100%
   rollingMaxUnavailable: 25%
@@ -26,6 +35,9 @@ pilot:
   # Set to `type: RuntimeDefault` to use the default profile if available.
   seccompProfile: {}
 
+  # Additional container arguments
+  extraContainerArgs: []
+
   env: {}
 
   cpu:
@@ -36,11 +48,19 @@ pilot:
   # if protocol sniffing is enabled for inbound
   enableProtocolSniffingForInbound: true
 
+  # Additional volumeMounts to the istiod container
+  volumeMounts: []
+
+  # Additional volumes to the istiod pod
+  volumes: []
+
   nodeSelector: {}
   tolerations: []
   affinity: {}
   podAnnotations: {}
   serviceAnnotations: {}
+
+  topologySpreadConstraints: []
 
   # You can use jwksResolverExtraRootCA to provide a root certificate
   # in PEM format. This will then be trusted by pilot when resolving
@@ -97,6 +117,11 @@ sidecarInjectorWebhook:
   # with the exception of namespaces with "istio-injection:disabled" annotation
   # Only one environment should have this enabled.
   enableNamespacesByDefault: false
+
+  # Mutations that occur after the sidecar injector are not handled by default, as the Istio sidecar injector is only run
+  # once. For example, an OPA sidecar injected after the Istio sidecar will not have it's liveness/readiness probes rewritten.
+  # Setting this to `IfNeeded` will result in the sidecar injector being run again if additonal mutations occur.
+  reinvocationPolicy: Never
 
   rewriteAppHTTPProbe: true
 
@@ -164,6 +189,7 @@ telemetry:
       topology: false # deprecated. setting this to true will have no effect, as this option is no longer supported.
       disableOutbound: false
       #  configOverride parts give you the ability to override the low level configuration params passed to envoy filter.
+
       configOverride: {}
       #  e.g.
       #  disable_server_access_logging: false
@@ -174,7 +200,6 @@ telemetry:
       # To reduce the number of successful logs, default log window duration is
       # set to 12 hours.
       logWindowDuration: "43200s"
-
 # Revision is set as 'version' label and part of the resource names when installing multiple control planes.
 revision: ""
 
@@ -213,6 +238,7 @@ meshConfig:
   #    port: 4211
 
   enablePrometheusMerge: true
+
   # Config for the default ProxyConfig.
   # Initially using directly the proxy metadata - can also be activated using annotations
   # on the pod. This is an unsupported low-level API, pending review and decisions on
@@ -244,7 +270,6 @@ meshConfig:
 global:
   # Used to locate istiod.
   istioNamespace: istio-system
-
   # List of cert-signers to allow "approve" action in the istio cluster role
   #
   # certSigners:
@@ -253,7 +278,7 @@ global:
 
   # Specifies peer authentication mode between services.
   security:
-     peerAuthentication: STRICT
+     peerAuthentication: PERMISIVE
 
   # enable pod disruption budget for the control plane, which is used to
   # ensure Istio control plane components are gradually upgraded or recovered.
@@ -279,7 +304,7 @@ global:
   # Dev builds from prow are on gcr.io
   hub: docker.io/istio
   # Default tag for Istio images.
-  tag: 1.18.2
+  tag: 1.19.0
   # Variant of the image to use.
   # Currently supported are: [debug, distroless]
   variant: ""
@@ -547,4 +572,15 @@ base:
   # Users should consider enabling this if they want full gateway-api validation but don't have other validation servers.
   validateGateway: false
 
-members: []
+# keep in sync with settings used when installing the Istio CNI chart
+istio_cni:
+  enabled: false
+  chained: true
+
+# List of labels that specify the set of namespaces that Istio considers use to computing configuration updates for sidecars.
+# Elements in the list are disjunctive (OR semantics), # i.e. a namespace will be included if it matches any selector.
+# These labels will apply to math labels in discoverySelectors.
+members:
+   name: ""
+
+

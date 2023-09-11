@@ -1,15 +1,15 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: istio-reader-clusterrole{{- if not (eq .Values.revision "")}}-{{ .Values.revision }}{{- end }}-{{ .Release.Namespace }}
+  name: istio-{{ .Release.Namespace }}{{- if not (eq .Values.revision "")}}-{{ .Values.revision }}{{- end }}-reader-clusterrole
   labels:
     app: istio-reader
     release: {{ .Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: istio-reader-clusterrole{{- if not (eq .Values.revision "")}}-{{ .Values.revision }}{{- end }}-{{ .Release.Namespace }}
+  name: istio-{{ .Release.Namespace }}{{- if not (eq .Values.revision "")}}-{{ .Values.revision }}{{- end }}-reader-clusterrole
 subjects:
   - kind: ServiceAccount
-    name: istio-reader-service-account
+    name: {{ include "istio.reader.serviceAccountName" . }}
     namespace: {{ .Values.global.istioNamespace }}
