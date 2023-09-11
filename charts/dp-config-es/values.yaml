@@ -13,9 +13,8 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-evn: aws/on-perm
-
 storage:
+  enabled: false
   name: gp3enc
   reclaimPolicy: Delete
 
@@ -58,4 +57,3 @@ index:
   enabled: true
   patterns:
     userApps: ["user-app-*"]
-
