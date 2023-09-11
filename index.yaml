@@ -1041,6 +1041,37 @@ entries:
       artifacthub.io/prerelease: "true"
     apiVersion: v2
     appVersion: 10.2.1-4
+    created: "2023-09-11T14:02:35.436316204Z"
+    description: Data-plane provisioning chart for EMS-on-FTL server group
+    digest: 69897d93fce9a3c8556dc384fb5efe0da73e13446bb66b67c2de7181178d68e2
+    keywords:
+    - data-plane
+    - messaging
+    - EMS
+    name: dp-ems-on-ftl
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-ems-on-ftl-1.0.7/dp-ems-on-ftl-1.0.7.tgz
+    version: 1.0.7
+  - annotations:
+      artifacthub.io/category: streaming-messaging
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "Changed EMS service URL to tcp://${EMS_NAME}-ems.${NAMESPACE}.svc:9011"
+        - kind: added
+          description: "Added image support for python, java, prometheus endpoints"
+      artifacthub.io/images: |
+        - name: msg-ems-all
+           image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-6"
+           platforms:
+             - linux/amd64
+        - name: msg-dp-ops
+           image: "ghcr.io/tibco/msg-platform-cicd/msg-dp-ops:1.0.0-1"
+           platforms:
+             - linux/amd64
+      artifacthub.io/license: TIBCO
+      artifacthub.io/prerelease: "true"
+    apiVersion: v2
+    appVersion: 10.2.1-4
     created: "2023-08-25T15:43:00.488706443Z"
     description: Data-plane provisioning chart for EMS-on-FTL server group
     digest: 7c24b1beb68029453ee1f07d4b209edd28c47232aa9090577b6ca60e8e2f5632
@@ -1974,4 +2005,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-08T11:18:07.934903984Z"
+generated: "2023-09-11T14:02:35.436532104Z"
