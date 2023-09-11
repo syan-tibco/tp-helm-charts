@@ -1611,6 +1611,20 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-crd-1.16.1/istio-crd-1.16.1.tgz
     version: 1.16.1
+  - apiVersion: v1
+    appVersion: 1.19.0
+    created: "2023-09-11T22:22:15.919903821Z"
+    description: Helm chart for deploying Istio cluster resources and CRDs
+    digest: af0a322643ea502a019b627f037ce39ba0e65f5aead8fb4e7deaecc63bc996d4
+    icon: https://istio.io/latest/favicons/android-192x192.png
+    keywords:
+    - istio
+    name: istio-crd
+    sources:
+    - https://github.com/istio/istio
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-crd-1.0.1/istio-crd-1.0.1.tgz
+    version: 1.0.1
   istio-egressgateway:
   - apiVersion: v2
     appVersion: 1.18.2
@@ -1644,6 +1658,22 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-egressgateway-1.16.1/istio-egressgateway-1.16.1.tgz
     version: 1.16.1
+  - apiVersion: v2
+    appVersion: 1.19.0
+    created: "2023-09-11T22:22:16.045062851Z"
+    description: Helm chart for deploying Istio gateways
+    digest: 125802a54c869f8630e9fdea08e94f673970f6a7444ebdc89b8384abee60fb1e
+    icon: https://istio.io/latest/favicons/android-192x192.png
+    keywords:
+    - istio
+    - gateways
+    name: istio-egressgateway
+    sources:
+    - https://github.com/istio/istio
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-egressgateway-1.0.1/istio-egressgateway-1.0.1.tgz
+    version: 1.0.1
   istio-fluentbit:
   - annotations:
       artifacthub.io/changes: |
@@ -1709,6 +1739,22 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-ingressgateway-1.16.1/istio-ingressgateway-1.16.1.tgz
     version: 1.16.1
+  - apiVersion: v2
+    appVersion: 1.19.0
+    created: "2023-09-11T22:22:16.214966622Z"
+    description: Helm chart for deploying Istio gateways
+    digest: a7dbfd699cae1dfd7c4d6f85aa43719b90d5b9e24094a2d5707eaf679cf0cb32
+    icon: https://istio.io/latest/favicons/android-192x192.png
+    keywords:
+    - istio
+    - gateways
+    name: istio-ingressgateway
+    sources:
+    - https://github.com/istio/istio
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-ingressgateway-1.0.1/istio-ingressgateway-1.0.1.tgz
+    version: 1.0.1
   istio-istiod:
   - apiVersion: v1
     appVersion: 1.18.2
@@ -1742,6 +1788,22 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-istiod-1.16.1/istio-istiod-1.16.1.tgz
     version: 1.16.1
+  - apiVersion: v1
+    appVersion: 1.19.0
+    created: "2023-09-11T22:22:16.443945257Z"
+    description: Helm chart for istio control plane
+    digest: 8a0f6957ac6711aff8a9e13aa7bc8c23d206a7e38b88f42c9d46aa06d1c10ae3
+    icon: https://github.com/cncf/artwork/blob/master/projects/istio/icon/color/istio-icon-color.svg
+    keywords:
+    - istio
+    - istiod
+    - istio-discovery
+    name: istio-istiod
+    sources:
+    - https://github.com/istio/istio
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-istiod-1.0.1/istio-istiod-1.0.1.tgz
+    version: 1.0.1
   o11yservice:
   - apiVersion: v2
     appVersion: 1.0.0
@@ -2104,4 +2166,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-11T21:13:41.185543907Z"
+generated: "2023-09-11T22:22:16.445519325Z"
