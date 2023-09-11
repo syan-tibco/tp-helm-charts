@@ -1,0 +1,14 @@
+{{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
+{{ if ne "none" ( $emsParams.ems.pvcShareName | default "none" ) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: "{{ $emsParams.ems.pvcShareName }}"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: "{{ $emsParams.ems.pvcShareSize }}"
+  storageClassName: "{{ $emsParams.dp.scSharedName }}"
+{{ end }}
