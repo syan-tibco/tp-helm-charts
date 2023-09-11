@@ -20,6 +20,9 @@ webhooks:
   - v1
   sideEffects: None
   name: vtibcodistributedlock.kb.io
+  namespaceSelector:
+    matchLabels:
+      platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
   rules:
   - apiGroups:
     - cloud.tibco.com
@@ -31,6 +34,7 @@ webhooks:
     - DELETE
     resources:
     - tibcodistributedlocks
+    scope: Namespaced
   
 ---
 
