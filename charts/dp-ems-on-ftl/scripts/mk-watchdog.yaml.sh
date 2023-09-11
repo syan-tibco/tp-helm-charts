@@ -30,6 +30,24 @@ services:
         size: 10
         num: 50
         rotateonfirststart: true
+  - name: pod-stats
+    config:
+      cmd: bash /boot/pod-stats.sh
+      cwd: /logs/${MY_POD_NAME}/pod-stats
+      log:
+        size: 10
+        num: 50
+        debugfile: /logs/${MY_POD_NAME}/pod-stats/pod-mon.csv
+        rotateonfirststart: true
+  - name: health-watcher
+    config:
+      cmd: bash /boot/health-watcher.sh
+      cwd: /logs/${MY_POD_NAME}/health-watcher
+      log:
+        size: 10
+        num: 50
+        debugfile: /logs/${MY_POD_NAME}/health-watcher/health.csv
+        rotateonfirststart: true
   # - name: fluentbit
   #   config:
   #     cmd: /opt/td-agent-bit/bin/td-agent-bit -c /data/fluentbit.conf

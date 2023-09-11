@@ -33,8 +33,11 @@ metadata:
       tib-msg-ems-use: "{{ $emsParams.ems.use }}"
     annotations:
       {{ include "msg.dp.mon.annotations" . | indent 6 }}
+      # isLeader="http://localhost:9010/isReady"
       platform.tibco.com/leader-endpoint: "{{ $emsParams.ems.isLeader | default "none" }}"
       platform.tibco.com/quorum-strategy: "{{ $emsParams.ems.quorumStrategy | default "none" }}"
+      # isInQuorum="http://localhost:9013/api/v1/available"
+      platform.tibco.com/is-in-quorum: "{{ $emsParams.ems.isInQuorum | default "none" }}"
 spec:
     podManagementPolicy: Parallel
     replicas: {{ int $emsParams.ems.replicas }}
@@ -74,7 +77,7 @@ spec:
             topologySpreadConstraints:
             - maxSkew: 1
               topologyKey: kubernetes.io/hostname
-              {{- if eq $emsParams.ems.allowNodeSkew "false" }}
+              {{- if eq "false" ( $emsParams.ems.allowNodeSkew | default "true" ) }}
               whenUnsatisfiable: DoNotSchedule
               {{- else }}
               whenUnsatisfiable: ScheduleAnyway
@@ -86,7 +89,7 @@ spec:
             {{- if eq $emsParams.dp.where "aws" }}
             - maxSkew: 1
               topologyKey: topology.kubernetes.io/zone
-              {{- if eq $emsParams.ems.allowZoneSkew "false" }}
+              {{- if eq "false" ( $emsParams.ems.allowZoneSkew | default "true" ) }}
               whenUnsatisfiable: DoNotSchedule
               {{- else }}
               whenUnsatisfiable: ScheduleAnyway
@@ -225,6 +228,8 @@ spec:
               - name: TCM_WATCHDOG_HOSTPORT
                 # note: $(MY_POD_NAME) will be one of {{ $stsname }}-[012]
                 value: "$(MY_POD_NAME):$(TCM_WD_PORT)"
+              - name: POD_DISK_MON
+                value: "/data,/logs"
               #- name: TIB_RS_CURL_VERBOSE
               #  value: "1"
             volumes:
@@ -259,7 +264,7 @@ spec:
               runAsGroup: {{ int $emsParams.dp.gid }}
               fsGroup: {{ int $emsParams.dp.gid }}
             # The service account allows access to helm/kubectl actions
-            serviceAccountName: "{{ $emsParams.serviceAccount }}"
+            serviceAccountName: "{{ $emsParams.dp.serviceAccount }}"
             terminationGracePeriodSeconds: 10
     updateStrategy:
         type: OnDelete

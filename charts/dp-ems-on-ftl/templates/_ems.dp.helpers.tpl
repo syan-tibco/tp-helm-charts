@@ -10,101 +10,107 @@ need.msg.ems.params
 {{-  $dpParams := include "need.msg.dp.params" . | fromYaml -}}
 {{-  $emsDefaultFullImage := printf "%s/%s/msg-ems-all:10.2.1-6" $dpParams.dp.registry $dpParams.dp.repo -}}
 {{-  $opsDefaultFullImage := printf "%s/%s/msg-dp-ops:1.0.0-1" $dpParams.dp.registry $dpParams.dp.repo -}}
-{{ include "need.msg.dp.params" . }}
-ops:
-  image: {{ $opsDefaultFullImage }}
-ems:
-  name: {{ ternary .Release.Name .Values.ems.name ( not .Values.ems.name ) }}
-  replicas: 3
-  {{  $dpParams := include "need.msg.dp.params" . | fromYaml }}
-  ports:
-{{ .Values.ems.ports | toYaml | indent 4 }}
-
-  isLeader: "http://localhost:9010/isReady"
-  allowNodeSkew: "true"
-  allowZoneSkew: "true"
-  {{- $sizing := "small" -}}
-  {{- $use := "dev" -}}
-  {{- $storageSize := "4Gi" -}}
-  {{- $cpuReq := "0.3" -}}
-  {{- $cpuLim := "3" -}}
-  {{- $memReq := "1Gi" -}}
-  {{- $memLim := "4Gi" -}}
-  {{ if .Values.ems }}
-  stores: {{ ternary "ftl" .Values.ems.stores ( not .Values.ems.stores ) }}
-  image: {{ ternary $emsDefaultFullImage .Values.ems.image ( not .Values.ems.image ) }}
-  quorumStrategy: {{ ternary "quorum-based" .Values.ems.quorumStrategy ( not .Values.ems.quorumStrategy ) }}
-  {{- $sizing = ternary  "small" .Values.ems.sizing ( not  .Values.ems.sizing ) -}}
-  {{- $use = ternary  "dev" .Values.ems.use ( not  .Values.ems.use ) -}}
+# Set EMS defaults
+{{- $name := ternary .Release.Name .Values.ems.name ( not .Values.ems.name ) -}}
+{{- $sizing := ternary  "small" .Values.ems.sizing ( not  .Values.ems.sizing ) -}}
+{{- $use := ternary  "dev" .Values.ems.use ( not  .Values.ems.use ) -}}
+{{- $isProduction := false -}}
+{{- $cpuReq := "0.2" -}}
+{{- $cpuLim := "3" -}}
+{{- $memReq := "500Mi" -}}
+{{- $memLim := "4Gi" -}}
+{{- $stores := ternary "ftl" .Values.ems.stores ( not .Values.ems.stores ) -}}
+{{- $allowNodeSkew := "true" -}}
+{{- $allowZoneSkew := "true" -}}
+{{ $emsImage := ternary $emsDefaultFullImage .Values.ems.image ( not .Values.ems.image ) }}
+{{ $quorumStrategy := ternary "quorum-based" .Values.ems.quorumStrategy ( not .Values.ems.quorumStrategy ) }}
+{{ $msgStorageType := "emptyDir" }}
+{{ $msgStorageName := "none" }}
+{{ $msgStorageSize :=  "4Gi" }}
+{{ $dpCreateSharedPvc := "no" }}
+{{ $logStorageType := "useMsgData" }}
+{{ $logStorageName := "none" }}
+{{ $logStorageSize :=  "4Gi" }}
+{{ $pvcShareName :=  "none" }}
+{{ $pvcShareSize :=  $logStorageSize }}
   {{- if eq $sizing "medium" -}}
-    {{- $storageSize = "25Gi" -}}
+    {{- $msgStorageSize = "25Gi" -}}
+    {{- $logStorageSize = "10Gi" -}}
     {{- $cpuReq = "1.0" -}}
     {{- $cpuLim = "5" -}}
     {{- $memReq = "2Gi" -}}
     {{- $memLim = "8Gi" -}}
   {{- else if eq $sizing "large" -}}
-    {{- $storageSize = "50Gi" -}}
+    {{- $msgStorageSize = "50Gi" -}}
+    {{- $logStorageSize = "25Gi" -}}
     {{- $cpuReq = "2" -}}
     {{- $cpuLim = "8" -}}
     {{- $memReq = "8Gi" -}}
     {{- $memLim = "20Gi" -}}
   {{ end }}
-  {{- if eq $use "production" -}}
+  {{- if $isProduction -}}
     {{- $cpuReq = $cpuLim -}}
     {{- $memReq = $memLim -}}
+    {{- $allowNodeSkew = "false" -}}
+    {{- $allowZoneSkew = "false" -}}
   {{ end }}
+{{ $pvcShareSize :=  $logStorageSize }}
+  {{ if .Values.ems.msgData }}
+    {{ $msgStorageType = ternary  $msgStorageType .Values.ems.msgData.storageType ( not  .Values.ems.msgData.storageType ) }}
+    {{ $msgStorageName = ternary  $msgStorageName .Values.ems.msgData.storageName ( not  .Values.ems.msgData.storageName ) }}
+    {{ $msgStorageSize = ternary  $msgStorageSize .Values.ems.msgData.storageSize ( not  .Values.ems.msgData.storageSize ) }}
+  {{ end }}
+  {{ if .Values.ems.logs }}
+    {{ $logStorageType = ternary  $logStorageType .Values.ems.logs.storageType ( not  .Values.ems.logs.storageType ) }}
+    {{ $logStorageName = ternary  $logStorageName .Values.ems.logs.storageName ( not  .Values.ems.logs.storageName ) }}
+    {{ $logStorageSize = ternary  $logStorageSize .Values.ems.logs.storageSize ( not  .Values.ems.logs.storageSize ) }}
+  {{ end }}
+  {{ if eq "sharedStorageClass" $logStorageType }}
+    {{ $dpCreateSharedPvc = "yes" }}
+    {{ $logStorageType = "sharedPvc" }}
+    {{ $pvcShareName = ( printf "%s-share" $name ) }}
+    {{ $logStorageName = $pvcShareName }}
+  {{ end }}
+  {{ if eq "sharedStorageClass" $msgStorageType }}
+    {{ $dpCreateSharedPvc = "yes" }}
+    {{ $msgStorageType = "sharedPvc" }}
+    {{ $pvcShareName = ( printf "%s-share" $name ) }}
+    {{ $msgStorageName = $pvcShareName }}
+    {{ $pvcShareSize :=  $logStorageSize }}
+  {{ end }}
+# Fill in $emsParams yaml
+{{ include "need.msg.dp.params" . }}
+ops:
+  image: {{ $opsDefaultFullImage }}
+ems:
+  name: {{ $name }}
+  image: {{ $emsImage }}
+  replicas: 3
   sizing: {{ $sizing }}
   use: {{ $use }}
+  isProduction: {{ $isProduction }}
+  pvcShareName: {{ $pvcShareName }}
+  pvcShareSize: {{ $pvcShareSize }}
   msgData: 
-    {{ if .Values.ems.msgData }}
-    storageType: {{ ternary  "storageClass" .Values.ems.msgData.storageType ( not  .Values.ems.msgData.storageType ) }}
-    storageName: {{ ternary  "hostpath" .Values.ems.msgData.storageName ( not  .Values.ems.msgData.storageName ) }}
-    storageSize: {{ ternary  $storageSize .Values.ems.msgData.storageSize ( not  .Values.ems.msgData.storageSize ) }}
-    {{ else }}
-    storageType: storageClass
-    storageName: hostpath
-    storageSize: {{ $storageSize }}
-    {{ end }}
+    storageType: {{ $msgStorageType }}
+    storageName: {{ $msgStorageName }}
+    storageSize: {{ $msgStorageSize }}
   logs: 
-    {{ if .Values.ems.logs }}
-    storageType: {{ ternary  "useMsgData" .Values.ems.logs.storageType ( not  .Values.ems.logs.storageType ) }}
-    storageName: {{ ternary  "none" .Values.ems.logs.storageName ( not  .Values.ems.logs.storageName ) }}
-    storageSize: {{ ternary  $storageSize .Values.ems.logs.storageSize ( not  .Values.ems.logs.storageSize ) }}
-    {{ else }}
-    storageType: useMsgData
-    storageName: none
-    storageSize: {{ $storageSize }}
-    {{ end }}
+    storageType: {{ $logStorageType }}
+    storageName: {{ $logStorageName }}
+    storageSize: {{ $logStorageSize }}
+  ports:
+{{ .Values.ems.ports | toYaml | indent 4 }}
+  stores: {{ $stores }}
+  quorumStrategy: {{ $quorumStrategy }}
+  isLeader: {{ printf "http://localhost:%d/isReady" ( int .Values.ems.ports.httpPort ) }}
+  isInQuorum: {{ printf "http://localhost:%d/api/v1/available" ( int .Values.ems.ports.realmPort ) }}
+  allowNodeSkew: "{{ $allowNodeSkew }}"
+  allowZoneSkew: "{{ $allowZoneSkew }}"
   resources:
     {{ if .Values.ems.resources }}
-    {{ .Values.ems.resources | indent 4 }}
+{{ .Values.ems.resources | indent 4 }}
     {{ else }}
-  {{ if ne $use "dev" }}
-    requests:
-      memory: {{ $memReq }}
-      cpu: {{ $cpuReq }}
-    limits:
-      memory: {{ $memLim }}
-      cpu: {{ $cpuLim }}
-  {{ end }}
-    {{ end }}
-  {{ else }}
-  name: {{ .Release.Name }}
-  image: {{ $emsDefaultFullImage }}
-  stores: ftl
-  quorumStrategy: "quorum-based"
-  sizing: small
-  use: {{ $use }}
-  msgData: 
-    storageType: storageClass
-    storageName: hostpath
-    storageSize: "1Gi"
-  logs: 
-    storageType: useMsgData
-    storageName: none
-    storageSize: "1Gi"
-  resources:
-    {{ if ne $use "dev" }}
     requests:
       memory: {{ $memReq }}
       cpu: {{ $cpuReq }}
@@ -112,5 +118,4 @@ ems:
       memory: {{ $memLim }}
       cpu: {{ $cpuLim }}
     {{ end }}
-  {{ end }}
 {{ end }}

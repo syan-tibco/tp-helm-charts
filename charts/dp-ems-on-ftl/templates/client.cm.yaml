@@ -20,6 +20,7 @@ metadata:
   namespace: "{{ .Release.Namespace }}"
   labels:
     tib-dp-app: msg-ems-ftl
+    tib-dp-msg-info: "ems-ew-clients"
     tib-msg-stsname: "{{ $emsParams.ems.name }}-ems"
     {{ include "msg.dp.labels" . | indent 4 }}
 data:

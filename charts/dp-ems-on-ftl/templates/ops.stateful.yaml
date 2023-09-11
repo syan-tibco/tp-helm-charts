@@ -33,6 +33,8 @@ metadata:
       tib-msg-ems-use: "{{ $emsParams.ems.use }}"
     annotations:
       {{ include "msg.dp.mon.annotations" . | indent 6 }}
+      platform.tibco.com/quorum-strategy: "active-active"
+      platform.tibco.com/quorum-min: "1"
 spec:
     podManagementPolicy: Parallel
     replicas: 1
@@ -89,10 +91,26 @@ spec:
               - mountPath: /boot
                 name: scripts-vol
               - mountPath: /logs
-                name: "ems-log"
                   {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+                name: "ems-share"
                 subPathExpr: "$(MY_RELEASE)/logs"
+                  {{ else }}
+                name: "ems-log"
                   {{ end }}
+              {{ $shareName := "none" }}
+                {{ if eq "sharedPvc" $emsParams.ems.msgData.storageType }}
+                  {{ $shareName = $emsParams.ems.msgData.storageName }}
+                {{ end }}
+                {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+                  {{ $shareName = $emsParams.ems.logs.storageName }}
+                {{ end }}
+                {{ if ne "none" ( $emsParams.ems.pvcShareName | default "none" ) }}
+                  {{ $shareName = $emsParams.ems.pvcShareName }}
+                {{ end }}
+              {{ if ne "none" $shareName }}
+              - mountPath: /share
+                name: "ems-share"
+              {{ end }}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
               env:
@@ -140,11 +158,13 @@ spec:
             - name: scripts-vol
               configMap:
                 name: "{{ $emsParams.ems.name }}-scripts"
-            - name: "ems-log"
-            {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+            {{ if ne "none" $shareName }}
+            - name: "ems-share"
               persistentVolumeClaim:
-                claimName: "{{ $emsParams.ems.logs.storageName }}"
-            {{ else }}
+                claimName: "{{ $shareName }}"
+            {{ end }}
+            {{ if ne "sharedPvc" $emsParams.ems.logs.storageType }}
+            - name: "ems-log"
               emptyDir: {}
             {{ end }}
             dnsPolicy: ClusterFirst
@@ -156,7 +176,7 @@ spec:
               runAsGroup: {{ int $emsParams.dp.gid }}
               fsGroup: {{ int $emsParams.dp.gid }}
             # The service account allows access to helm/kubectl actions
-            serviceAccountName: "{{ $emsParams.serviceAccount }}"
+            serviceAccountName: "{{ $emsParams.dp.serviceAccount }}"
             terminationGracePeriodSeconds: 10
     updateStrategy:
         # type: OnDelete

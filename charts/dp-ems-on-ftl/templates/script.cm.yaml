@@ -13,8 +13,9 @@ metadata:
     tib-msg-stsname: "{{ $emsParams.ems.name }}-ems"
     {{ include "msg.dp.labels" . | indent 4 }}
 data:
-  {{- range $key, $val := $emsParams.dp }}
-  dp-{{ $key }}: {{ $val | quote }}
-  {{- end }}
+  emsParams: |
+{{ include "need.msg.ems.params" . | indent 4 }}
+
+# 
 {{ (.Files.Glob "scripts/*").AsConfig | indent 2 }}
 ...
