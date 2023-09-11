@@ -117,6 +117,20 @@ entries:
   distributed-lock-operator:
   - apiVersion: v1
     appVersion: 1.0.0
+    created: "2023-09-11T14:29:59.589067657Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: 57d1b74d67403bf43b1b6f5c120ac5053fc479487a3362907d30c77743798a57
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.3/distributed-lock-operator-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v1
+    appVersion: 1.0.0
     created: "2023-09-05T05:09:58.62772488Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
     digest: c08e198fdd0942ae79dae4ef1fcb8f626bc892e8a621023c384d0e7121bdb2d3
@@ -2005,4 +2019,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-11T14:02:35.436532104Z"
+generated: "2023-09-11T14:29:59.589351258Z"
