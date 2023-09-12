@@ -6,31 +6,51 @@ metadata:
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
 rules:
+# required by otel collector
+- apiGroups: [""]
+  resources: ["nodes", "nodes/spec", "nodes/stats", "nodes/proxy"]
+  verbs: ["get", "list", "watch"]
+# required by otel collector
+- apiGroups: [""]
+  resources: ["namespaces", "namespaces/status"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: [""]
   resources: ["configmaps"]
   verbs: ["get", "list", "watch"]
 - apiGroups: [""]
   resources: ["endpoints"]
   verbs: ["list", "watch"]
+# required by otel collector
 - apiGroups: [""]
-  resources: ["nodes"]
+  resources: ["resourcequotas"]
+  verbs: ["get", "list", "watch"]
+# required by otel collector
+- apiGroups: [""]
+  resources: ["events"]
   verbs: ["get", "list", "watch"]
 - apiGroups: [""]
   resources: ["secrets"]
   verbs: ["get", "list", "watch"]
 - apiGroups: [""]
-  resources: ["namespaces"]
-  verbs: ["get"]
-- apiGroups: [""]
   resources: ["services"]
   verbs: ["get", "list", "watch"]
-# question: required for monitoring agent
-# question: can BW list namespaces first by label and then get deployment?
-- apiGroups: ["apps"]
-  resources: ["deployments"]
-  verbs: ["get", "list", "watch"]
+# required by otel collector
 - apiGroups: [""]
-  resources: ["pods"]
+  resources: ["replicationcontrollers", "replicationcontrollers/status"]
+  verbs: ["get", "list", "watch"]
+# question: can BW list namespaces first by label and then get deployment?
+# required for monitoring agent
+# required by otel collector
+- apiGroups: ["apps"]
+  resources: ["deployments", "daemonsets", "statefulsets"]
+  verbs: ["get", "list", "watch"]
+# required by otel collector
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["get", "list", "watch"]
+# required by otel collector
+- apiGroups: [""]
+  resources: ["pods", "pods/status"]
   verbs: ["get", "list", "watch"]
 - apiGroups: ["extensions", "networking.k8s.io"]
   resources: ["ingresses", "ingressclasses"]
