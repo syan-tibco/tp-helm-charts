@@ -342,7 +342,7 @@ spec:
 {{- end }}
       - name: shell-script-volume
         configMap:
-          name: shell-script-cm
+          name: {{ template "oauth2-proxy.fullname" . }}-shell-script-cm
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
