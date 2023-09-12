@@ -190,6 +190,9 @@ config:
      host: ""
      port: 8080
      username: ""
+  finops:
+    collector:
+      endpoint: ""
 secret:
   logserver:
     userapp:

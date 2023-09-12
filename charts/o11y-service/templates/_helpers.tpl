@@ -36,6 +36,9 @@
 {{- define "o11y-service.promserver-proxy-password" }}promserver-proxy-password{{ end -}}
 {{- define "o11y-service.promserver-exporter-token" }}promserver-exporter-token{{ end -}}
 
+{{- define "o11y-service.jaeger-collector-endpoint" }}jaeger-collector.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local{{ end -}}
+{{- define "o11y-service.finops-collector-endpoint" }}cp-proxy.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local{{ end -}}
+
 {{- define "o11y-service.role" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-o11y-role{{ end -}}
 {{- define "o11y-service.role-bind" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-o11y-role-bind{{ end -}}
 
