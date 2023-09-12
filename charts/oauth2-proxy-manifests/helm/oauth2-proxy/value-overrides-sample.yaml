@@ -6,6 +6,7 @@ config:
     IAT: changemechangemechangeme
     DP_HOST: "https://changeme.tcie.pro"
     CP_HOST: "https://changeme.tcie.pro"
+    CAPABILITY_PATH_PREFIX: ""
   existingSecret: "oauth2-proxy" 
   # OAuth client ID
   clientID: "changemechangemechangeme"

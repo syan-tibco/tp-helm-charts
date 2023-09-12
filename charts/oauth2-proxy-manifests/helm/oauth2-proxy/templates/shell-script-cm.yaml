@@ -21,10 +21,10 @@ data:
       "scope": "TSC",
       "token_endpoint_auth_method": "client_secret_basic",
       "redirect_uris": [
-        "{{ .Values.config.IdM.DP_HOST }}",
-        "{{ .Values.config.IdM.DP_HOST }}/oauth2/login",
-        "{{ .Values.config.IdM.DP_HOST }}/oauth2/callback",
-        "{{ .Values.config.IdM.DP_HOST }}/oauth2/idpresponse"
+        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}",
+        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/login",
+        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/callback",
+        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/idpresponse"
       ]
     }'
 
