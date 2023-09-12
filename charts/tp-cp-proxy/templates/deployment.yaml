@@ -21,12 +21,25 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: CONTROL_PLANE_URL
-            value: {{ .Values.global.cp.controlPlaneUrl }}
-          - name: CLIENT_CREDENTIALS
+            value: "https://{{ .Values.global.cp.cpHostName }}"
+          - name: CLIENT_ID
             valueFrom:
               secretKeyRef:
-                key: clientCredentials
+                key: clientId
                 name: {{ include "tp-cp-proxy.consts.outputSecretName" . }}
+          - name: CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: clientSecret
+                name: {{ include "tp-cp-proxy.consts.outputSecretName" . }}
+          - name: DATAPLANE_ID
+            value: {{ .Values.global.cp.dataplaneId }}
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
+        args:
+          - start
+          - -o
+          - "https://{{ .Values.global.cp.cpHostName }}"
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10}}
@@ -47,6 +60,4 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       imagePullSecrets:
-        {{- if .Values.global.cp.containerRegistry.username }}{{if .Values.global.cp.containerRegistry.password }}
-        - name: {{ .Values.global.cp.dataplaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
-        {{- end }}{{ end }}
+        - name: {{ .Values.global.cp.containerRegistry.secret }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}

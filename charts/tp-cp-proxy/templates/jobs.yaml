@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-secret-creation
+  name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-creation
   labels:
     {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 4 }}
   annotations:
@@ -9,6 +9,7 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 spec:
   backoffLimit: 0
+  ttlSecondsAfterFinished: 18000 #cleanup after 5hr
   template:
     metadata:
       name: client-credential-creation
@@ -16,28 +17,27 @@ spec:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.global.cp.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceAccount.serviceAccountName | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
       containers:
         - name: post-install-job
-          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}/stratosphere/cli:latest
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/bin/bash","/etc/config/clientCredentialCreation.sh"]
-          volumeMounts:
-            - mountPath: /etc/config
-              name: client-credential-scripts
+          args:
+            - configure
+            - -i
+            - {{ .Values.global.cp.secrets.iat }}
+            - -o
+            - {{ .Values.global.cp.cpHostName}}
+            - -s
+            - {{ include "tp-cp-proxy.consts.outputSecretName" .}}
+          env:
+            - name: DATAPLANE_ID
+              value: {{ .Values.global.cp.dataplaneId }}
+            - name: NAMESPACE
+              value: {{ .Release.Namespace }}
       imagePullSecrets:
-        {{- if .Values.global.cp.containerRegistry.username }}{{if .Values.global.cp.containerRegistry.password }}
-        - name: {{ .Values.global.cp.dataplaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
-        {{- end }}{{ end }}
+        - name: {{ .Values.global.cp.containerRegistry.secret }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
 
-      volumes:
-        - name: client-credential-scripts
-          configMap:
-            name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-secret-scripts
-            items:
-              - key: clientCredentialCreation.sh
-                path: clientCredentialCreation.sh
-                mode: 0777
 ---
 apiVersion: batch/v1
 kind: Job
@@ -49,6 +49,7 @@ metadata:
     "helm.sh/hook": pre-delete
     "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 spec:
+  ttlSecondsAfterFinished: 18000 #cleanup after 5hr
   backoffLimit: 0
   template:
     metadata:
@@ -57,24 +58,19 @@ spec:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.global.cp.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
       containers:
         - name: pre-delete-job
-          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}/stratosphere/cli:latest
+          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/bin/bash","/etc/config/clientCredentialDeletion.sh"]
-          volumeMounts:
-            - mountPath: /etc/config
-              name: client-credential-scripts
+          args:
+            - delete
+            - -s
+            - {{ include "tp-cp-proxy.consts.outputSecretName" .}}
+          env:
+            - name: DATAPLANE_ID
+              value: {{ .Values.global.cp.dataplaneId }}
+            - name: NAMESPACE
+              value: {{ .Release.Namespace }}
       imagePullSecrets:
-        {{- if .Values.global.cp.containerRegistry.username }}{{if .Values.global.cp.containerRegistry.password }}
-        - name: {{ .Values.global.cp.dataplaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
-        {{- end }}{{ end }}
-      volumes:
-        - name: client-credential-scripts
-          configMap:
-            name: {{ include "tp-cp-proxy.consts.appName" . }}-client-credential-secret-scripts
-            items:
-              - key: clientCredentialDeletion.sh
-                path: clientCredentialDeletion.sh
-                mode: 0777
+        - name: {{ .Values.global.cp.containerRegistry.secret }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
