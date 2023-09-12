@@ -36,7 +36,7 @@ data:
     }
 
     getSecret () {
-      http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/oauth2-proxy-tibx/secrets/{{ template "oauth2-proxy.secretName" $ }} \
+      http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/{{ template "oauth2-proxy.namespace" $ }}/secrets/{{ template "oauth2-proxy.secretName" $ }} \
         --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
         --header "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
         --header 'Content-Type: application/yaml')
