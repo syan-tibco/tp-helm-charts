@@ -18,23 +18,32 @@ image:
   repository: stratosphere/tp-cp-proxy
   pullPolicy: IfNotPresent
 
-# Kubectl and curl are required by the job responsible for creating. TODO: we should revisit docker-image(this one is 445 mb). bitnami/kubectl does not support curl.
-clientCredentials:
-  # intialAccessToken : Control Plane Authentication TODO: terminologies are not fixed yet, will revisit later.
-  # this is used to generate client id and client secret.
-  # Client Id and secret are used to generate time bound access token
-  initialAccessToken: "test" #initial access token used to generate client credentials
+# intialAccessToken : Control Plane Authentication
+# this is used to generate client id and client secret.
+# Client Id and secret are used to generate time bound access token
+initialAccessToken: "" #initial access token used to generate client credentials
+
 
 nodeSelector:
   kubernetes.io/os: linux
 
 affinity: {}
 
+tolerations: {}
+
 global:
   cp:
+    cpHostName: "acme.local.my.cic2.pro"
     dataplaneId: "abcd"
-    subscriptionId: "sub1"
-    controlPlaneUrl: "https://account.local.cic2.pro"
-    serviceAccount: ""
+    subscriptionId : "sub1"
     containerRegistry:
-      url: reldocker.tibco.com
+      url: "reldocker.tibco.com"
+      secret: "abcd"
+    resources:
+      serviceAccount:
+        serviceAccountName: ""
+    secrets:
+      # iat : Control Plane Authentication
+      # this is used to generate client id and client secret.
+      # Client Id and secret are used to generate time bound access token
+      iat: "" #initial access token used to generate client credentials

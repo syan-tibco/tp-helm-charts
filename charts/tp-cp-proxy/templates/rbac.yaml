@@ -1,4 +1,4 @@
-{{ if eq .Values.global.cp.serviceAccount "" }}
+{{ if eq .Values.global.cp.resources.serviceAccount.serviceAccountName "" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -14,6 +14,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "tp-cp-proxy.consts.appName" .}}-job-rolebinding
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 4 }}
 subjects:
