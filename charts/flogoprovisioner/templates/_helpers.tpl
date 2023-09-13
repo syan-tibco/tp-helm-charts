@@ -48,7 +48,7 @@ Create the name of the service account to use
 {{- if .Values.serviceAccount.create }}
 {{- default (include "flogoprovisioner.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- tpl .Values.global.flogoprovisioner.serviceAccount . }}
+{{- tpl .Values.global.cp.resources.serviceaccount.serviceAccountName . }}
 {{- end }}
 {{- end }}
 
