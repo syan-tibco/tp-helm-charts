@@ -14,11 +14,7 @@ spec:
     {{- range .Values.volumes.artifactmanager.persistentVolumeClaim.accessModes }}
     - {{ . }}
     {{- end }}
-  {{- if eq .Values.global.cp.environmentType "vagrant" -}}
-  storageClassName: {{ .Values.global.artifactmanager.storage.local.storageClassName | quote }}
-  {{- else }}
   storageClassName: {{ .Values.global.cp.resources.storage.storageClassName | quote }}
-  {{- end }}
   volumeMode: {{ .Values.volumes.artifactmanager.persistentVolumeClaim.volumeMode }}
   {{- with .Values.volumes.artifactmanager.persistentVolumeClaim.resources }}
   resources:

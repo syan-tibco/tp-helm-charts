@@ -18,14 +18,11 @@ global:
     environmentType: "vagrant"
     resources:
       storage:
-        storageClassName: "gp2"
+        storageClassName: "standard"
       serviceaccount:
         nameSpace: ""
         serviceAccountName: ""
   artifactmanager:
-    storage:
-      local:
-        storageClassName: "standard"
     serviceAccount: ""
     data:
       namespace: dp-integration-default
