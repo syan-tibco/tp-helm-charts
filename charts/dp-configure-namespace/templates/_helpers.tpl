@@ -92,7 +92,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 platform.tibco.com/dataPlane-id: {{ .Values.global.tibco.dataPlaneId }}
 {{- end -}}
 
-{{/* Verify namespace labels.*/}}
+{{/*
+================================================================
+                  FUNCTIONS
+================================================================
+*/}}
+
+
+{{/* Verify platform label for the release namespace.*/}}
 {{- define "dp-configure-namespace.validate-namespace" -}}
 {{- $ns_name := .Release.Namespace -}}
 {{- $ns := (lookup "v1" "Namespace" "" $ns_name) -}}
