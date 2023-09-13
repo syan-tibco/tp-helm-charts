@@ -53,6 +53,9 @@ data:
         metadata:
             name: {{ template "oauth2-proxy.secretName" $ }}
             namespace: {{ template "oauth2-proxy.namespace" $ }}
+          labels:
+            app.kubernetes.io/instance: oauth2-proxy
+            app.kubernetes.io/part-of: {{ template "oauth2-proxy.fullname" . }}            
         type: Opaque
         data:
           client-id: $clientId
@@ -73,6 +76,9 @@ data:
         metadata:
             name: {{ template "oauth2-proxy.secretName" $ }}
             namespace: {{ template "oauth2-proxy.namespace" $ }}
+          labels:
+            app.kubernetes.io/instance: oauth2-proxy
+            app.kubernetes.io/part-of: {{ template "oauth2-proxy.fullname" . }}
         type: Opaque
         data:
           client-id: $clientId
