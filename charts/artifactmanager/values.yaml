@@ -15,7 +15,7 @@ global:
     containerRegistry:
       secret: ""
       url: reldocker.tibco.com
-    environmentType: ""
+    environmentType: "vagrant"
     resources:
       storage:
         storageClassName: "gp2"
@@ -23,6 +23,9 @@ global:
         nameSpace: ""
         serviceAccountName: ""
   artifactmanager:
+    storage:
+      local:
+        storageClassName: "standard"
     serviceAccount: ""
     data:
       namespace: dp-integration-default
