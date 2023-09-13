@@ -15,7 +15,7 @@
 {{/* A fixed short name for the application. Can be different than the chart name */}}
 {{- define "o11y-service.consts.appName" }}o11y-service{{ end -}}
 
-{{- define "o11y-service.cp.domain" }}cp-proxy.tibco-dp-{{ .Values.global.cp.dataplaneId }}.svc.cluster.local{{ end -}}
+{{- define "o11y-service.cp.domain" }}cp-proxy.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local{{ end -}}
 
 {{- define "o11y-service.sa" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-o11y-sa{{ end -}}
 
