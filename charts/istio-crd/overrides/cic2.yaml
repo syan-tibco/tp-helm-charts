@@ -1,5 +1,12 @@
-global:
-  istioNamespace: istio-system
-  istiod:
-    enableAnalysis: true
+revision: "platform"
 
+serviceAccount:
+  create: true
+  name: istio-service-account
+
+#repository:
+#  chartMuseum:
+#    host: https://syan-tibco.github.io/tp-helm-charts/
+
+global:
+  istioNamespace: apim-cic2

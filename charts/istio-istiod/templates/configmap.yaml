@@ -25,6 +25,15 @@
     {{- end }}
   {{- end }}
 
+    {{- if ((.Values.global).cp).dataplaneId }}
+    discoverySelectors:
+      - matchExpressions:
+        - key: platform.tibco.com/dataplane-id
+          operator: In
+          values:
+          - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
+
     defaultConfig:
       {{- if .Values.global.meshID }}
       meshId: "{{ .Values.global.meshID }}"

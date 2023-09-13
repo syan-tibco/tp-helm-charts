@@ -1,7 +1,9 @@
+revision: "platform"
+
 replicaCount: 1
 
 global:
-  istioNamespace: istio-system
+  istioNamespace: apim-cic2
 
 service:
   type: LoadBalancer
@@ -37,3 +39,5 @@ tolerations:
     value: apim
     effect: NoSchedule
 
+#nodeSelector:
+#  scope: istio

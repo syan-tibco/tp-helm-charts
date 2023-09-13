@@ -70,6 +70,12 @@ webhooks:
       operator: NotIn
       values:
       - "false"
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
 
 {{- /* Case 2: No namespace selector, but object selects our revision (and doesn't disable) */}}
 {{- include "core" (mergeOverwrite (deepCopy $whv) (dict "Prefix" "rev.object.") ) }}
@@ -93,6 +99,12 @@ webhooks:
       {{- else }}
       - "{{ .Values.revision }}"
       {{- end }}
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
 
 {{- /* Webhooks for default revision */}}
 {{- if (eq .Values.revision "") }}
@@ -111,6 +123,12 @@ webhooks:
       operator: NotIn
       values:
       - "false"
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
 
 {{- /* Case 2: no namespace label, but object selector is enabled (and revision label is not, which has priority) */}}
 {{- include "core" (mergeOverwrite (deepCopy $whv) (dict "Prefix" "object.") ) }}
@@ -128,6 +146,12 @@ webhooks:
       - "true"
     - key: istio.io/rev
       operator: DoesNotExist
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
 
 {{- if .Values.sidecarInjectorWebhook.enableNamespacesByDefault }}
 {{- /* Special case 3: no labels at all */}}
@@ -147,6 +171,12 @@ webhooks:
       operator: DoesNotExist
     - key: istio.io/rev
       operator: DoesNotExist
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
 {{- end }}
 
 {{- end }}
