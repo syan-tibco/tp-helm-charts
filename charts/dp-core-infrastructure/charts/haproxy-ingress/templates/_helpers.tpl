@@ -92,7 +92,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   {{- if .Values.serviceAccount.create }}
     {{- default (include "haproxy-ingress.fullname" .) .Values.serviceAccount.name }}
   {{- else }}
-    {{- default "default" .Values.serviceAccount.name }}
+    {{- default "default" (tpl .Values.serviceAccount.name .) }}
   {{- end }}
 {{- end }}
 
