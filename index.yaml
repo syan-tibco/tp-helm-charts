@@ -3,6 +3,20 @@ entries:
   artifactmanager:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-13T05:30:02.113352152Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: 694b0b89ba1b5be5eef80a181f339b5e4a0dcc92c190e282311de623fae2aabb
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.4/artifactmanager-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-05T05:09:58.406661672Z"
     description: TIBCO Platform Dataplane Core -- Artifact Manager
     digest: 73fa303ff7bdce7c3e0821aaeaec71621603c05f5b597563b9180b0b1b369963
@@ -2208,4 +2222,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-12T15:17:02.228271522Z"
+generated: "2023-09-13T05:30:02.113595268Z"
