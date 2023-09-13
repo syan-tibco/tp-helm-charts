@@ -14,16 +14,12 @@ data:
     echo "generating a secret from IAT"
 
     body='{
-      "client_name": "CPProxyPrat",
-      "software_id": "0.1-BETA",
-      "software_version": "0.1 BETA",
+      "client_name": "OAuth_Proxy_{{ .Values.config.IdM.CAPABILITY_INSTANCE_ID }}",
       "scope": "TSC",
       "token_endpoint_auth_method": "client_secret_basic",
+      "instance_id": "{{ .Values.config.IdM.CAPABILITY_INSTANCE_ID }}",
       "redirect_uris": [
-        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}",
-        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/login",
         "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/callback",
-        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/idpresponse"
       ]
     }'
 
