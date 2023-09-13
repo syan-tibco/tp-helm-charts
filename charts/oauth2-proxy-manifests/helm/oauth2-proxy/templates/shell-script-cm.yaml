@@ -19,15 +19,15 @@ data:
       "token_endpoint_auth_method": "client_secret_basic",
       "instance_id": "{{ .Values.config.IdM.CAPABILITY_INSTANCE_ID }}",
       "redirect_uris": [
-        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/callback",
+        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/callback"
       ]
     }'
 
     exchangeIatForClientId () {
       response=$(curl -s {{ .Values.config.IdM.CP_HOST }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.config.IdM.IAT }}" --data "${body}" --header 'Content-Type: application/json')
       echo $response
-      clientId=$(echo -n $response | jq .client_id | base64)
-      clientSecret=$(echo -n $response | jq .client_secret | base64)
+      clientId=$(echo -n $response | jq -r .client_id | base64)
+      clientSecret=$(echo -n $response | jq -r .client_secret | base64)
     }
 
     getSecret () {
@@ -49,9 +49,9 @@ data:
         metadata:
             name: {{ template "oauth2-proxy.secretName" $ }}
             namespace: {{ template "oauth2-proxy.namespace" $ }}
-          labels:
-            app.kubernetes.io/instance: oauth2-proxy
-            app.kubernetes.io/part-of: {{ template "oauth2-proxy.fullname" . }}            
+            labels:
+              app.kubernetes.io/instance: oauth2-proxy
+              app.kubernetes.io/part-of: {{ template "oauth2-proxy.fullname" . }}            
         type: Opaque
         data:
           client-id: $clientId
@@ -72,9 +72,9 @@ data:
         metadata:
             name: {{ template "oauth2-proxy.secretName" $ }}
             namespace: {{ template "oauth2-proxy.namespace" $ }}
-          labels:
-            app.kubernetes.io/instance: oauth2-proxy
-            app.kubernetes.io/part-of: {{ template "oauth2-proxy.fullname" . }}
+            labels:
+              app.kubernetes.io/instance: oauth2-proxy
+              app.kubernetes.io/part-of: {{ template "oauth2-proxy.fullname" . }}
         type: Opaque
         data:
           client-id: $clientId
