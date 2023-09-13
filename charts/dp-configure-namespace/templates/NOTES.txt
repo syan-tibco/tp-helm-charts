@@ -1,1 +1,5 @@
-This chart is used to configure namespaces for TIBCO Platform Data Plane
+{{ include "dp-configure-namespace.validate-namespace" . }}
+Release name: {{ .Release.Name }}.
+To learn more about the release, try:
+  $ helm status {{ .Release.Name }}
+  $ helm get all {{ .Release.Name }}
