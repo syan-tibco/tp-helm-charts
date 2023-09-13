@@ -91,3 +91,24 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- define "dp-configure-namespace.platformLabels" -}}
 platform.tibco.com/dataPlane-id: {{ .Values.global.tibco.dataPlaneId }}
 {{- end -}}
+
+{{/* Verify namespace labels.*/}}
+{{- define "dp-configure-namespace.validate-namespace" -}}
+{{- $ns_name := .Release.Namespace -}}
+{{- $ns := (lookup "v1" "Namespace" "" $ns_name) -}}
+{{- if $ns -}}
+{{- if $ns.metadata.labels -}}
+{{- if (hasKey $ns.metadata.labels "platform.tibco.com/dataplane-id" ) -}}
+{{- if eq (get $ns.metadata.labels "platform.tibco.com/dataplane-id") .Values.global.tibco.dataPlaneId -}}
+{{- printf "Namespace %s validation for data plane id %s label is successful." $ns_name .Values.global.tibco.dataPlaneId -}}
+{{- else -}}
+{{- printf "Namespace %s is NOT labelled with the correct data plane id %s." $ns_name .Values.global.tibco.dataPlaneId | fail -}}
+{{- end -}}
+{{- else -}}
+{{- printf "Namespace %s does not have label platform.tibco.com/dataplane-id." $ns_name | fail -}}
+{{- end -}}
+{{- end -}}
+{{- else -}}
+{{/* no op is ns does not exists. We expect the ns to be already present. We have this to avoid helm templating issue*/}}
+{{- end -}}
+{{- end -}}
