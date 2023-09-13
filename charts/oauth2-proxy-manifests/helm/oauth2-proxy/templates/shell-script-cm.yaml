@@ -26,8 +26,8 @@ data:
     exchangeIatForClientId () {
       response=$(curl -s {{ .Values.config.IdM.CP_HOST }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.config.IdM.IAT }}" --data "${body}" --header 'Content-Type: application/json')
       echo $response
-      clientId=$(echo -n $response | jq -r .client_id | base64)
-      clientSecret=$(echo -n $response | jq -r .client_secret | base64)
+      clientId=$(echo -n $response | jq -rj .client_id | base64)
+      clientSecret=$(echo -n $response | jq -rj .client_secret | base64)
     }
 
     getSecret () {
