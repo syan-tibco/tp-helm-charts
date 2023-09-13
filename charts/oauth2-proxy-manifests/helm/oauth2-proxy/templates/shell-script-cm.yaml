@@ -10,7 +10,6 @@ data:
     apk update
     apk add curl
     apk add jq
-    apk add tr
     set -x
     echo "generating a secret from IAT"
 
@@ -58,7 +57,7 @@ data:
         data:
           client-id: $clientId
           client-secret: $clientSecret
-          cookie-secret: Y2hhbmdlbWVjaGFuZ2VtZWNoYW5nZW1l
+          cookie-secret: $(head /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c32 | base64)
         ")
         return $http_code
     }
@@ -78,15 +77,16 @@ data:
         data:
           client-id: $clientId
           client-secret: $clientSecret
-          cookie-secret: Y2hhbmdlbWVjaGFuZ2VtZWNoYW5nZW1l
+          cookie-secret: $(head /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c32 | base64)
         ")
         return $http_code
     }
     exchangeIatForClientId
     getSecret
     if [ $http_code -eq 200 ]; then
-        echo "Updating oauth2-proxy secret"
-        updateSecret
+        #echo "Updating oauth2-proxy secret"
+        #updateSecret
+        echo "Oauth2-proxy secret exists. We will not update it."
     else
         echo "Creating new oauth2-proxy secret"
         createSecret
