@@ -15,7 +15,7 @@ spec:
     - {{ . }}
     {{- end }}
   {{- if eq .Values.global.cp.environmentType "vagrant" -}}
-  storageClassName: {{ .Values.artifactmanager.storage.local.storageClassName | quote }}
+  storageClassName: {{ .Values.global.artifactmanager.storage.local.storageClassName | quote }}
   {{- else }}
   storageClassName: {{ .Values.global.cp.resources.storage.storageClassName | quote }}
   {{- end }}
