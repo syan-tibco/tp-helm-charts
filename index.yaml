@@ -102,6 +102,20 @@ entries:
   bwprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-14T13:02:34.953382224Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: 46a9d4c100fb2dac56a7c519c0040fdc847461f09f14d51fc17f800b1cb6fac2
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.6/bwprovisioner-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-13T15:22:42.889358405Z"
     description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
     digest: 84ee1894b91f5824552a70e087e1c92eda1c4e0cac4668fe6d9dac39bdb7802b
@@ -2530,4 +2544,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-14T10:34:51.270021805Z"
+generated: "2023-09-14T13:02:35.182106595Z"
