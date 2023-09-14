@@ -34,7 +34,7 @@ global:
       url: "reldocker.tibco.com"
       secret: "abcd"
     resources:
-      serviceAccount:
+      serviceaccount:
         serviceAccountName: ""
     secrets:
       # iat : Control Plane Authentication

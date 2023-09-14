@@ -17,7 +17,7 @@ spec:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.global.cp.resources.serviceAccount.serviceAccountName | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
       containers:
         - name: post-install-job
           image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
@@ -58,7 +58,7 @@ spec:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ .Values.global.cp.resources.serviceAccount | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
       containers:
         - name: pre-delete-job
           image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
