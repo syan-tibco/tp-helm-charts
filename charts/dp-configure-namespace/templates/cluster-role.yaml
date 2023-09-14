@@ -52,6 +52,10 @@ rules:
   resources: ["deployments", "daemonsets", "statefulsets"]
   verbs: ["get", "list", "watch"]
 # required by otel collector
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers"]
+  verbs: ["list"]
+# required by otel collector
 - apiGroups: ["batch"]
   resources: ["jobs", "cronjobs"]
   verbs: ["get", "list", "watch"]
