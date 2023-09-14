@@ -14,6 +14,11 @@ createServiceAccount: true
 
 # Flag to enable or disable default network policies for a namespace
 # Default value is true. Possible values are true, false
-createNetworkPolicy: true
-# Capture any additional network policies to be created for a namespace
-additionalNetworkPolicy: {}
+networkPolicy:
+  createDefault: false
+  privateIpBlockRanges: ""
+  externalNamespace:
+    - key1: value1
+    - key2: value2
+  # Capture any additional network policies to be created for a namespace
+  additionalNetworkPolicy: {}

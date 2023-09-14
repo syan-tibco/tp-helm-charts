@@ -1,0 +1,124 @@
+{{- if .Values.networkPolicy.createDefault -}}
+
+# Enable egress comminucation to all the pods in the namespace(s) with same dataplane id
+# Enable ingress comminucation from all the pods in the namespace(s) with same dataplane id
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-namespaces-ingress-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  - Ingress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector: {}
+---
+
+# Label based network policy to enable egress communication to internet
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-internet-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/internet-all: enable
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+          {{- range .Values.global.privateIpBlockRanges -}}
+          - {{ . }}
+          {{- end -}}
+{{- end -}}
+
+---
+
+# Label based network policy to enable egress communication to internet
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-egress-external-namespaces
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/external-ns: enable
+  policyTypes:
+  - Egress
+  egress:
+    - to:
+      - namespaceSelector:
+          matchLabels:
+            platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+        podSelector: {}
+
+{{- end -}}
+
+--- 
+# {{- if .Values.networkPolicy.createAdditional -}}
+
+# kind: NetworkPolicy
+# apiVersion: networking.k8s.io/v1
+# metadata:
+#   name: {{ .Values.networkPolicy.custom.name }}
+#   namespace: {{ .Release.Namespace }}
+#   {{- if .Values.networkPolicy.custom.labels -}}
+#   labels:
+#     {{- range $key, $value := .Values.networkPolicy.custom.labels }}
+#     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+#     {{- end }}
+#   {{- end -}}
+#   {{- if .Values.networkPolicy.custom.annotations -}}
+#   annotations:
+#     {{- range $key, $value := .Values.networkPolicy.custom.annotations }}
+#     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+#     {{- end }}
+#   {{- end -}}
+# spec:
+#   podSelector:
+#     matchLabels:
+#       {{- include "opentelemetry-collector.selectorLabels" . | nindent 6 }}
+#       {{- include "opentelemetry-collector.component" . | nindent 6 }}
+#   ingress:
+#     - ports:
+#         {{- range $port := .Values.networkPolicy.custom. }}
+#         {{- if $port.enabled }}
+#         - port: {{ $port.containerPort }}
+#           protocol: {{ $port.protocol }}
+#         {{- end }}
+#         {{- end }}
+#       {{- if .Values.networkPolicy.allowIngressFrom }}
+#       from:
+#         {{- toYaml .Values.networkPolicy.allowIngressFrom | nindent 8 }}
+#       {{- end }}
+#     {{- if .Values.networkPolicy.extraIngressRules }}
+#     {{- toYaml .Values.networkPolicy.extraIngressRules | nindent 4 }}
+#     {{- end }}
+#   {{- if .Values.networkPolicy.egressRules }}
+#   egress:
+#     {{- toYaml .Values.networkPolicy.egressRules | nindent 4 }}
+#   {{- end }}
+# {{- end }}
