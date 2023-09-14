@@ -27,7 +27,7 @@ spec:
             - -i
             - {{ .Values.global.cp.secrets.iat }}
             - -o
-            - {{ .Values.global.cp.cpHostName}}
+            - "https://{{ .Values.global.cp.cpHostName}}"
             - -s
             - {{ include "tp-cp-proxy.consts.outputSecretName" .}}
           env:
