@@ -184,6 +184,10 @@ rules:
   verbs: ["create", "get"]
 # required by istio for permissions to verify the webhook is ready and rejecting
 - apiGroups: ["networking.istio.io"]
-  verbs: ["create"]
   resources: ["gateways"]
+  verbs: ["create"]
+# required by provisioner agent
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["create", "delete", "update"]
 {{- end -}}
