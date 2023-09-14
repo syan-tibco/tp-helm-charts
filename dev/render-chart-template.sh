@@ -19,8 +19,6 @@ pushd ../charts || exit
 
 # sample value
 cat <<EOF> values-customize.yaml
-awsRole2:
-  enable: true
 traefik:
   enabled: false
 global:

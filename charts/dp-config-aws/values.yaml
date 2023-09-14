@@ -27,6 +27,25 @@ httpIngress:
     alb.ingress.kubernetes.io/target-type: ip
     external-dns.alpha.kubernetes.io/hostname: "*.abc.dataplanes.pro"
 
+# this service object is used for NLB user case. Ideally, we will use annotation to create NLB
+service:
+  # list of annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.5/guide/service/annotations/
+  enabled: false
+  name: dp-config-aws-service
+  type: LoadBalancer
+  annotations: {}
+  labels: {}
+  ports:
+    ems:
+      enabled: true
+      containerPort: 8080
+      servicePort: 443
+      protocol: TCP
+      # hostPort: 443
+      # nodePort: 30317
+      # appProtocol: tcp
+  selector: {}
+
 # storageClass can not be updated: parameters: Forbidden: updates to parameters are forbidden
 storageClass:
   # see: https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
