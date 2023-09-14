@@ -159,24 +159,24 @@ config:
         port: 4317
   logserver:
     userapp:
-      logindex: ""
+      logindex: "tibco-user-app"
       traceindex: ""
     services:
-      logindex: ""
+      logindex: "tibco-services"
     proxy:
       userapp:
         logindex:
-          endpoint: ""
-          username: ""
+          endpoint: "https://elastic.dp1-platform.tcie.pro"
+          username: "elastic"
     exporter:
       userapp:
         logindex:
-          endpoint: ""
-          username: ""
+          endpoint: "https://elastic.dp1-platform.tcie.pro"
+          username: "elastic"
       services:
         logindex:
-          endpoint: ""
-          username: ""
+          endpoint: "https://elastic.dp1-platform.tcie.pro"
+          username: "elastic"
   promserver:
     proxy:
       endpoint: ""
@@ -185,11 +185,12 @@ config:
       endpoint: ""
   jaeger:
     collector:
-      endpoint: ""
+      host: ""
+      port: 4317
     es:
-     host: ""
-     port: 8080
-     username: ""
+     host: "https://elastic.dp1-platform.tcie.pro"
+     port: 9200
+     username: "elastic"
   finops:
     collector:
       endpoint: ""
@@ -197,12 +198,12 @@ secret:
   logserver:
     userapp:
       proxy:
-        password: "logserver_userapp_proxy_dummy"
+        password: "MrZvu5n4m4924FqT48EI9WM7"
       exporter:
-        password: "logserver_userapp_exporter_dummy"
+        password: "MrZvu5n4m4924FqT48EI9WM7"
     services:
       exporter:
-        password: "logserver_services_exporter_dummy"
+        password: "MrZvu5n4m4924FqT48EI9WM7"
   promserver:
     proxy:
       password: "promserver_proxy_dummy"
@@ -210,5 +211,5 @@ secret:
       token: "promserver_exporter_dummy"
   jaeger:
     es:
-     password: "jaeger_es_dummy"
+     password: "MrZvu5n4m4924FqT48EI9WM7"
 
