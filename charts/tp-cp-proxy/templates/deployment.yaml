@@ -20,8 +20,6 @@ spec:
         image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
-          - name: CONTROL_PLANE_URL
-            value: "https://{{ .Values.global.cp.cpHostName }}"
           - name: CLIENT_ID
             valueFrom:
               secretKeyRef:
