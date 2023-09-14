@@ -424,6 +424,29 @@ entries:
           description: "update traefik to 24.0.0"
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-14T14:30:53.984641838Z"
+    dependencies:
+    - condition: traefik.enabled
+      name: traefik
+      repository: https://traefik.github.io/charts
+      version: 24.0.0
+    description: dp-config-aws is used to config CIC2 TIBCO Dataplane
+    digest: 3e4f0ad703d55ee13d832db1cdc95df247b0c5aaf30570cb5c94336d45e43dc1
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aws
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aws-1.0.14/dp-config-aws-1.0.14.tgz
+    version: 1.0.14
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "update traefik to 24.0.0"
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-08-23T16:54:28.033440767Z"
     dependencies:
     - condition: traefik.enabled
@@ -2544,4 +2567,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-14T13:02:35.182106595Z"
+generated: "2023-09-14T14:30:53.985611349Z"
