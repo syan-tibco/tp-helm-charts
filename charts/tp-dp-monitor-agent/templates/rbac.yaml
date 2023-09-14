@@ -4,7 +4,7 @@ metadata:
   name: monitor-agent-{{ .Values.global.cp.dataplaneId }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.global.serviceAccountName }}
+  name: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
   namespace: {{ .Release.Namespace }}
 roleRef:
   kind: ClusterRole

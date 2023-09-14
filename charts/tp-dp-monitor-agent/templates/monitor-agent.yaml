@@ -47,7 +47,7 @@ spec:
         checksum/config: {{ include (print $.Template.BasePath "/fluentbit-configmap.yaml") . | sha256sum }}
 {{- end }}
     spec:
-      serviceAccountName:  {{ .Values.global.serviceAccountName }}
+      serviceAccountName:  {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       nodeSelector:
         kubernetes.io/os: linux
       terminationGracePeriodSeconds: 10
