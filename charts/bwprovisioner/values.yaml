@@ -94,7 +94,7 @@ service:
 
 ingress:
   # -- Enables configuration of ingress to expose bwprovisioner. Requires ingress support in the Kubernetes cluster.
-  enabled: false
+  enabled: true
   hostsOverride: false
   className: haproxy
   hosts:
