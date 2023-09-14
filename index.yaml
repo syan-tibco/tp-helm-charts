@@ -2131,6 +2131,23 @@ entries:
     version: 6.17.0
   tp-cp-proxy:
   - apiVersion: v2
+    appVersion: 1.0.90
+    created: "2023-09-14T09:00:41.141498724Z"
+    description: TIBCO Data Plane -- Control Plane Proxy
+    digest: 57f5318bce0aa6c6e50b067a1ae1fd0dd6cfa8bf1ac0fc794e3618444f6741e2
+    home: https://github.com/tibco/tp-core-cp-proxy
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - cp-proxy
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-cp-proxy
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.90/tp-cp-proxy-1.0.90.tgz
+    version: 1.0.90
+  - apiVersion: v2
     appVersion: 1.0.89
     created: "2023-09-12T08:55:26.092496856Z"
     description: TIBCO Data Plane -- Control Plane Proxy
@@ -2423,4 +2440,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-14T08:46:52.002165234Z"
+generated: "2023-09-14T09:00:41.141721725Z"
