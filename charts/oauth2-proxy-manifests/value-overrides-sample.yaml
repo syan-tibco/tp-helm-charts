@@ -1,33 +1,29 @@
 image:
-  repository: "changeme.tcie.pro/oauth2-proxy-tibx"
+  repository: "ghcr.io/snenkov-tibco/oauth2-proxy-tibx"
   tag: "v7.4.0-tibx"
 config:
-  IdM:
-    IAT: changemechangemechangeme
-    DP_HOST: "https://changeme.tcie.pro"
-    CP_HOST: "https://changeme.tcie.pro"
-    CAPABILITY_PATH_PREFIX: ""
-    CAPABILITY_INSTANCE_ID: ""
-  existingSecret: "oauth2-proxy" 
-  # OAuth client ID
-  clientID: "changemechangemechangeme"
-  # # OAuth client secret
-  clientSecret: "changemechangemechangeme"
-  cookieSecret: "changemechangemechangeme"
-  # # cookieName: "_oauth_proxy"
+  existingSecret: "oauth2-proxy-tibx" ### can be the release name to make it unique
 extraArgs:
-  provider: "tibco-oidc"
-  http-address: "0.0.0.0:4180"
-  oidc-issuer-url: "https://changeme.tcie.pro"
-  email-domain: "*"
-  pass-authorization-header: true
-  set-authorization-header: true
-  set-xauthrequest: true
-  pass-access-token: true
-  upstream: "static://202"
-  reverse-proxy: true
-  skip-jwt-bearer-tokens: true
-  redirect-url: "http://localhost:4180/oauth2/callback"
-  skip-provider-button: true
+  oidc-issuer-url: "https://changeme.tcie.pro" ### https://${global.cp.cpHostname}
+  redirect-url: "https://changeme.tcie.pro/oauth2/callback" ### https://${global.co.resources.ingress.fqdn}/${global.cp.capability.pathPrefix}/oauth2/callback
+
 ingress:
-  enabled: false
+  className: nginx ### ${global.co.resources.ingress.ingressClassName}
+  hosts: 
+    - changeme.tcie.pro ### ${global.co.resources.ingress.fqdn}
+  path: "/oauth2" ### ${global.cp.capability.pathPrefix}/oauth2
+
+# CP Provided
+  # global:
+  # cp:
+  #   secrets:
+  #     iat:
+  #   cpHostname:
+  #   instanceId:
+  #   capability:
+  #     pathPrefix: ""
+  # co:
+  #   resources:
+  #     ingress:
+  #       fqdn:
+  #       ingressClassName:

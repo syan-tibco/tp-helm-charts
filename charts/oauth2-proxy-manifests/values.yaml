@@ -83,7 +83,19 @@ image:
 # This will default to 4443 if this value is not set and the httpScheme set to https
 # containerPort: 4180
 
-extraArgs: {}
+extraArgs:
+  provider: "tibco-oidc"
+  http-address: "0.0.0.0:4180"
+  email-domain: "*"
+  pass-authorization-header: true
+  set-authorization-header: true
+  set-xauthrequest: true
+  pass-access-token: true
+  upstream: "static://202"
+  reverse-proxy: true
+  skip-jwt-bearer-tokens: true
+  skip-provider-button: true
+
 extraEnv: []
 
 # -- Custom labels to add into metadata
@@ -140,11 +152,11 @@ serviceAccount:
   annotations: {}
 
 ingress:
-  enabled: false
+  enabled: true
   # className: nginx
   path: /
   # Only used if API capabilities (networking.k8s.io/v1) allow it
-  pathType: ImplementationSpecific
+  pathType: Prefix
   # Used to create an Ingress record.
   # hosts:
     # - chart-example.local
