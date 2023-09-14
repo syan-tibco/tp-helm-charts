@@ -38,8 +38,7 @@ pilot:
   # Additional container arguments
   extraContainerArgs: []
 
-  env:
-    ENABLE_ENHANCED_RESOURCE_SCOPING: true
+  env: {}
 
   cpu:
     targetAverageUtilization: 80
@@ -284,8 +283,7 @@ global:
   # enable pod disruption budget for the control plane, which is used to
   # ensure Istio control plane components are gradually upgraded or recovered.
   defaultPodDisruptionBudget:
-    # EIN-11430 - setting to false
-    enabled: false
+    enabled: true
     # The values aren't mutable due to a current PodDisruptionBudget limitation
     # minAvailable: 1
 
