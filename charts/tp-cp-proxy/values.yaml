@@ -18,12 +18,6 @@ image:
   repository: stratosphere/tp-cp-proxy
   pullPolicy: IfNotPresent
 
-# intialAccessToken : Control Plane Authentication
-# this is used to generate client id and client secret.
-# Client Id and secret are used to generate time bound access token
-initialAccessToken: "" #initial access token used to generate client credentials
-
-
 nodeSelector:
   kubernetes.io/os: linux
 
