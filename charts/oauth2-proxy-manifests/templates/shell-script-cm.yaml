@@ -14,17 +14,17 @@ data:
     echo "generating a secret from IAT"
 
     body='{
-      "client_name": "OAuth_Proxy_{{ .Values.config.IdM.CAPABILITY_INSTANCE_ID }}",
+      "client_name": "OAuth_Proxy_{{ .Values.global.cp.instanceId }}",
       "scope": "TSC",
       "token_endpoint_auth_method": "client_secret_basic",
-      "instance_id": "{{ .Values.config.IdM.CAPABILITY_INSTANCE_ID }}",
+      "instance_id": "{{ .Values.global.cp.instanceId }}",
       "redirect_uris": [
-        "{{ .Values.config.IdM.DP_HOST }}/{{ .Values.config.IdM.CAPABILITY_PATH_PREFIX }}/oauth2/callback"
+        "https://{{ .Values.global.cp.resources.ingress.fqdn }}/{{ .Values.global.cp.capability.pathPrefix }}/oauth2/callback"
       ]
     }'
 
     exchangeIatForClientId () {
-      response=$(curl -s {{ .Values.config.IdM.CP_HOST }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.config.IdM.IAT }}" --data "${body}" --header 'Content-Type: application/json')
+      response=$(curl -s https://{{ .Values.global.cp.cpHostname }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.global.cp.secrets.iat }}" --data "${body}" --header 'Content-Type: application/json')
       echo $response
       clientId=$(echo -n $response | jq -rj .client_id | base64)
       clientSecret=$(echo -n $response | jq -rj .client_secret | base64)
