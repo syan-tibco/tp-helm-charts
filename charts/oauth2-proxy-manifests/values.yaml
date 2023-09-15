@@ -95,6 +95,7 @@ extraArgs:
   reverse-proxy: true
   skip-jwt-bearer-tokens: true
   skip-provider-button: true
+  scope: openid email profile TSC
 
 extraEnv: []
 
