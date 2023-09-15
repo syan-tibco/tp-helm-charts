@@ -18,6 +18,47 @@ spec:
   selector:
     {{- include "tp-dp-monitor-agent.shared.labels.selector" . | nindent 4 }}
 ---
+# exposes the service on targetPorts 7831 to be scraped only for o11y 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tp-dp-monitor-agent.consts.appName" . }}-o11y
+  labels:
+    {{- include "tp-dp-monitor-agent.shared.labels.standard" . | nindent 4 }}
+    prometheus.io/scrape: "true"
+  annotations:
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "7831"
+spec:
+  ports:
+  - name: server
+    port: 7831
+    protocol: TCP
+    targetPort: 7831
+  selector:
+    {{- include "tp-dp-monitor-agent.shared.labels.selector" . | nindent 4 }}
+---
+# exposes the service on targetPorts 7831 to be scraped both for o11y and for finops
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tp-dp-monitor-agent.consts.appName" . }}-finops
+  labels:
+    {{- include "tp-dp-monitor-agent.shared.labels.standard" . | nindent 4 }}
+    prometheus.io/scrape: "true"
+    platform.tibco.com/scrape_finops: "true"
+  annotations:
+    prometheus.io/path: "/api/v1/metrics/rai"
+    prometheus.io/port: "7831"
+spec:
+  ports:
+  - name: server
+    port: 7831
+    protocol: TCP
+    targetPort: 7831
+  selector:
+    {{- include "tp-dp-monitor-agent.shared.labels.selector" . | nindent 4 }}
+---
 # monitor Agent Deployment definition; this is a k8s Deployment
 # apart from some tibco specific specificiations,
 # this defines the resources for the pod, liveness and readiness probes
