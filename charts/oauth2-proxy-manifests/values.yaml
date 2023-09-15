@@ -411,3 +411,27 @@ extraObjects: []
   #         objectName: cookie-secret
   #       secretName: oauth2-proxy-secrets-store
   #       type: Opaque
+
+
+global:
+  cp:
+    cpHostName: "bwce.us-west.cp-platform-my.tcie.pro"
+    #dataplaneId: "abcd"
+    #subscriptionId : "sub1"
+    instanceId: ""
+    #containerRegistry:
+    #  url: "reldocker.tibco.com"
+    #  secret: "abcd"
+    capability:
+      pathPrefix: "tibco/u"
+    resources:
+    #   serviceaccount:
+    #     serviceAccountName: ""
+      ingress:
+        fqdn: "scenario-first.trop-dev.tcie.pro"
+        ingressClassName: "nginx"
+    secrets:
+      # iat : Control Plane Authentication
+      # this is used to generate client id and client secret.
+      # Client Id and secret are used to generate time bound access token
+      iat: "iat.FsmOXGoNtTykdlqyMMPot_u2" #initial access token used to generate client credentials
