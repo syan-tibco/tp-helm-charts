@@ -12,8 +12,8 @@ resources:
 replicaCount: "1"
 
 image:
-  registry: ""
-  repository: stratosphere/tp-provisioner-agent
+  name: tp-provisioner-agent
+  tag: 183
   pullPolicy: Always
 
 nodeSelector:

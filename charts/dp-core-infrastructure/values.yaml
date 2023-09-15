@@ -12,7 +12,7 @@ global:
       url: "reldocker.tibco.com" 
       # username: "test" # [optional] Create a imagePullSecret named <dpId> for private container registry.
       # password: "test"
-      # email: "tibco-plt@tibco.com"
+      # email: "tibco-plt@cloud.com"
 
 tp-tibtunnel:
   enabled: true
@@ -53,8 +53,6 @@ haproxy-ingress:
       controllerClass: "{{ .Values.global.tibco.dataPlaneId }}"
     service:
       type: ClusterIP
-tp-cp-proxy:
-  enabled: true
 
 config:
   enabled: true

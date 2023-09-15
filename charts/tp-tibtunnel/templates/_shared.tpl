@@ -64,7 +64,6 @@ Includes labels used as selectors (i.e. template "labels.selector")
 {{ include  "tp-tibtunnel.shared.labels.selector" . }}
 {{ include "tp-tibtunnel.shared.labels.platform" . }}
 app.cloud.tibco.com/created-by: {{ include "tp-tibtunnel.consts.team" . }}
-app.cloud.tibco.com/build-timestamp: {{ include "tp-tibtunnel.generated.buildTimestamp" . }}
 app.cloud.tibco.com/tenant-name: {{ include "tp-tibtunnel.consts.tenantName" . }}
 helm.sh/chart: {{ include "tp-tibtunnel.shared.labels.chartLabelValue" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}

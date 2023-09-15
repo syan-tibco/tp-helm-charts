@@ -1,2 +1,0 @@
-stratosphere/cli:latest
-stratosphere/tp-cp-proxy:latest

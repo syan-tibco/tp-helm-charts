@@ -109,3 +109,28 @@ app.kubernetes.io/instance: {{ .Release.Name }}
     {{- printf "%s/%s" "$(POD_NAMESPACE)" (include "haproxy-ingress.fullname" .) | trimSuffix "-" }}
   {{- end }}
 {{- end }}
+
+
+
+{{- define "haproxy-ingress.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "haproxy-ingress.const.ecrImageRepo" }}stratosphere{{end}}
+{{- define "haproxy-ingress.const.acrImageRepo" }}stratosphere{{end}}
+{{- define "haproxy-ingress.const.harborImageRepo" }}stratosphere{{end}}
+{{- define "haproxy-ingress.const.defaultImageRepo" }}stratosphere{{end}}
+
+{{- define "haproxy-ingress.image.registry" }}
+  {{- .Values.global.tibco.containerRegistry.url }}
+{{- end -}}
+
+{{/* set repository based on the registry url. We will have different repo for each one. */}}
+{{- define "haproxy-ingress.image.repository" -}}
+  {{- if contains "jfrog.io" (include "haproxy-ingress.image.registry" .) }} 
+    {{- include "haproxy-ingress.const.jfrogImageRepo" .}}
+  {{- else if contains "amazonaws.com" (include "haproxy-ingress.image.registry" .) }}
+    {{- include "haproxy-ingress.const.ecrImageRepo" .}}
+  {{- else if contains "reldocker.tibco.com" (include "haproxy-ingress.image.registry" .) }}
+    {{- include "haproxy-ingress.const.harborImageRepo" .}}
+  {{- else }}
+    {{- include "haproxy-ingress.const.defaultImageRepo" .}}
+  {{- end }}
+{{- end -}}

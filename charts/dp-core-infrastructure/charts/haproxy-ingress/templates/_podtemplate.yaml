@@ -22,7 +22,7 @@ spec:
   initContainers:
 {{- if .Values.controller.haproxy.enabled }}
     - name: haproxy-ingress-init
-      image: {{ .Values.global.tibco.containerRegistry.url }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}
+      image: {{ include "haproxy-ingress.image.registry" .}}{{"/"}}{{ include "haproxy-ingress.image.repository" .}}{{"/"}}{{ .Values.controller.image.name }}:{{ .Values.controller.image.tag }}
       imagePullPolicy: "{{ .Values.controller.image.pullPolicy }}"
       args:
         - --init
@@ -43,7 +43,7 @@ spec:
 {{- end }}
   containers:
     - name: haproxy-ingress
-      image: {{ .Values.global.tibco.containerRegistry.url }}/{{ .Values.controller.image.repository }}:{{ .Values.controller.image.tag }}
+      image: {{ include "haproxy-ingress.image.registry" .}}{{"/"}}{{ include "haproxy-ingress.image.repository" .}}{{"/"}}{{ .Values.controller.image.name }}:{{ .Values.controller.image.tag }}
       imagePullPolicy: "{{ .Values.controller.image.pullPolicy }}"
       args:
         - --configmap={{ .Release.Namespace }}/{{ include "haproxy-ingress.fullname" . }}
@@ -132,7 +132,7 @@ spec:
 {{- end }}
 {{- if .Values.controller.haproxy.enabled }}
     - name: haproxy
-      image: "{{ .Values.global.tibco.containerRegistry.url }}:{{ .Values.controller.haproxy.image.tag }}"
+      image: {{ include "haproxy-ingress.image.registry" .}}{{"/"}}{{ include "haproxy-ingress.image.repository" .}}{{"/"}}{{ .Values.controller.image.name }}:{{ .Values.controller.haproxy.image.tag }}
       imagePullPolicy: "{{ .Values.controller.haproxy.image.pullPolicy }}"
       args:
         - -W
@@ -173,7 +173,7 @@ spec:
 {{- end }}
 {{- if .Values.controller.logs.enabled }}
     - name: access-logs
-      image:  "{{ .Values.global.tibco.containerRegistry.url }}:{{ .Values.controller.logs.image.tag }}"
+      image:  {{ include "haproxy-ingress.image.registry" .}}{{"/"}}{{ include "haproxy-ingress.image.repository" .}}{{"/"}}{{ .Values.controller.logs.image.name }}:{{ .Values.controller.logs.image.tag }}
       imagePullPolicy: "{{ .Values.controller.logs.image.pullPolicy }}"
       ports:
         - name: udp
@@ -204,7 +204,7 @@ spec:
 {{- end }}
 {{- if and .Values.controller.stats.enabled .Values.controller.metrics.enabled (not .Values.controller.metrics.embedded) }}
     - name: prometheus-exporter
-      image:  "{{ .Values.global.tibco.containerRegistry.url }}:{{ .Values.controller.metrics.image.tag }}"
+      image:  {{ include "haproxy-ingress.image.registry" .}}{{"/"}}{{ include "haproxy-ingress.image.repository" .}}{{"/"}}{{ .Values.controller.metrics.image.name }}:{{ .Values.controller.metrics.image.tag }}
       imagePullPolicy: "{{ .Values.controller.metrics.image.pullPolicy }}"
       args:
         - '--haproxy.scrape-uri=http://localhost:{{ .Values.controller.stats.port }}/haproxy?stats;csv'
