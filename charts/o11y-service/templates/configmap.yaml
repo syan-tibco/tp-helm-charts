@@ -15,19 +15,19 @@ data:
   logserver-proxy-app-endpoint: {{ .Values.config.logserver.proxy.userapp.logindex.endpoint }}
   logserver-proxy-app-userName: {{ .Values.config.logserver.proxy.userapp.logindex.username }}
   logserver-exporter-app-endpoint: {{ .Values.config.logserver.exporter.userapp.logindex.endpoint }}
-  logserver-exporter-app-userName: {{ .Values.config.logserver.exporter.userapp.logindex.userName }}
+  logserver-exporter-app-userName: {{ .Values.config.logserver.exporter.userapp.logindex.username }}
   logserver-exporter-svc-endpoint: {{ .Values.config.logserver.exporter.services.logindex.endpoint }}
-  logserver-exporter-svc-userName: {{ .Values.config.logserver.exporter.services.logindex.userName }}
+  logserver-exporter-svc-userName: {{ .Values.config.logserver.exporter.services.logindex.username }}
   promserver-proxy-endpoint: {{ .Values.config.promserver.proxy.endpoint }}
-  promserver-proxy-userName: {{ .Values.config.promserver.proxy.userName }}
+  promserver-proxy-userName: {{ .Values.config.promserver.proxy.username }}
   jaeger-es-host: {{ .Values.config.jaeger.es.host }}
   jaeger-es-port: {{ quote .Values.config.jaeger.es.port }}
   jaeger-es-username: {{ .Values.config.jaeger.es.username }}
   ES_SERVER_EXPORTER_ENDPOINT: {{ .Values.config.logserver.exporter.userapp.logindex.endpoint }}
-  ES_EXPORTER_LOG_INDEX_NAME: {{ .Values.config.logserver.exporter.userapp.logindex.userName }}
+  ES_EXPORTER_LOG_INDEX_NAME: {{ .Values.config.logserver.exporter.userapp.logindex.username }}
   ES_EXPORTER_LOG_INDEX_USERNAME: {{ .Values.config.logserver.proxy.userapp.logindex.username }}
   ES_SERVER_SERVICE_ENDPOINT: {{ .Values.config.logserver.exporter.services.logindex.endpoint }}
   ES_SERVICE_LOG_INDEX_NAME: {{ .Values.config.logserver.services.logindex }}
-  ES_SERVICE_LOG_INDEX_USERNAME: {{ .Values.config.logserver.exporter.services.logindex.userName }}
+  ES_SERVICE_LOG_INDEX_USERNAME: {{ .Values.config.logserver.exporter.services.logindex.username }}
   JAEGER_COLLECTOR_ENDPOINT: {{ include "o11y-service.jaeger-collector-endpoint" . }}
   FINOPS_OTLP_COLLECTOR_ENDPOINT: {{ include "o11y-service.finops-collector-endpoint" . }}
