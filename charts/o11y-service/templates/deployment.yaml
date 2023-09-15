@@ -50,6 +50,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: DATAPLANE_ID
+              value: {{ .Values.global.cp.dataplaneId }}
           volumeMounts:
             - name: o11y-cfgs
               readOnly: true
