@@ -1891,6 +1891,37 @@ entries:
           description: "Set fluent-bit binary as command"
     apiVersion: v1
     appVersion: 2.1.7
+    created: "2023-09-15T05:19:51.823857784Z"
+    description: Fast and lightweight log processor and forwarder or Linux, OSX and
+      BSD family operating systems.
+    digest: 3f1b07d925bf6dacfb8991719a7cb62b9d263dd06ced3a17e101ffaa6e3c9f8c
+    home: https://fluentbit.io/
+    icon: https://raw.githubusercontent.com/cncf/artwork/master/projects/fluentd/fluentbit/icon/fluentbit-icon-color.svg
+    keywords:
+    - logging
+    - fluent-bit
+    - fluentd
+    maintainers:
+    - email: eduardo@calyptia.com
+      name: edsiper
+    - email: naseem@transit.app
+      name: naseemkullah
+    - email: towmeykaw@gmail.com
+      name: Towmeykaw
+    - email: steve.hipwell@gmail.com
+      name: stevehipwell
+    name: istio-fluentbit
+    sources:
+    - https://github.com/fluent/fluent-bit/
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-fluentbit-1.0.1/istio-fluentbit-1.0.1.tgz
+    version: 1.0.1
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: "Set fluent-bit binary as command"
+    apiVersion: v1
+    appVersion: 2.1.7
     created: "2023-08-29T16:46:41.159419041Z"
     description: Fast and lightweight log processor and forwarder or Linux, OSX and
       BSD family operating systems.
@@ -2624,4 +2655,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.0/tp-provisioner-agent-1.0.0.tgz
     version: 1.0.0
-generated: "2023-09-14T15:54:36.920224791Z"
+generated: "2023-09-15T05:19:52.023636322Z"
