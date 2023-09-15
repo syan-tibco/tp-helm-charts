@@ -64,9 +64,6 @@ rules:
 - apiGroups: [""]
   resources: ["pods", "pods/status"]
   verbs: ["get", "list", "watch"]
-- apiGroups: ["extensions", "networking.k8s.io"]
-  resources: ["ingresses", "ingressclasses"]
-  verbs: ["get", "list", "watch"]
 # required by istio
 - apiGroups: ["gateway.networking.k8s.io", "networking.x-k8s.io"]
   resources: ["gateways", "gatewayclasses", "httproutes", "tlsroutes", "tcproutes", "udproutes", "backendpolicies"]
@@ -77,17 +74,6 @@ rules:
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
   verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
-# required by istio for webhook controller
-- apiGroups: ["admissionregistration.k8s.io"]
-  resources: ["validatingwebhookconfigurations"]
-  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
-# required by istio for sidecar injection controller
-- apiGroups: ["admissionregistration.k8s.io"]
-  resources: ["mutatingwebhookconfigurations"]
-  verbs: ["get", "list", "watch", "update", "patch"]
-- apiGroups: ["extensions", "networking.k8s.io"]
-  resources: ["ingresses/status"]
-  verbs: ["update"]
 # required by istio
 - apiGroups: ["config.istio.io", "security.istio.io", "networking.istio.io", "authentication.istio.io", "rbac.istio.io", "telemetry.istio.io", "extensions.istio.io"]
   resources: ["*"]
@@ -100,19 +86,50 @@ rules:
 - apiGroups: ["discovery.k8s.io"]
   resources: ["endpointslices"]
   verbs: ["get", "list", "watch"]
-# required by istio to verify the JWT tokens
+
+# required by istio ingress controller
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses", "ingressclasses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses/status"]
+  verbs: ["update"]
+# required by istio for configuration validation webhook controller
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["validatingwebhookconfigurations"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by istio for sidecar injection controller
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["mutatingwebhookconfigurations"]
+  verbs: ["get", "list", "watch", "update", "patch"]
+# required by istio for Istiod to verify the JWT tokens
 - apiGroups: ["authentication.k8s.io"]
   resources: ["tokenreviews"]
   verbs: ["create"]
-# required by istio to verify gateway SDS
+# required by istio for Istiod to verify gateway SDS
 - apiGroups: ["authorization.k8s.io"]
   resources: ["subjectaccessreviews"]
   verbs: ["create"]
-# required by istio
+# Use for Kubernetes Service APIs
+- apiGroups: ["networking.x-k8s.io", "gateway.networking.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["networking.x-k8s.io", "gateway.networking.k8s.io"]
+  resources: ["*"] # TODO: should be on just */status but wildcard is not supported
+  verbs: ["update", "patch"]
+- apiGroups: ["gateway.networking.k8s.io", "networking.x-k8s.io"]
+  resources: ["gateways", "gatewayclasses", "httproutes", "tlsroutes", "tcproutes", "udproutes", "backendpolicies"]
+  verbs: ["get", "list", "watch"]
+  verbs: ["create", "update", "patch", "delete"]
+# required by istio needed for multicluster secret reading, possibly ingress certs in the future
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "watch", "list"]
+# required by istio needed for MCS serviceexport management
 - apiGroups: ["multicluster.x-k8s.io"]
   resources: ["serviceexports"]
   verbs: ["create", "get", "list", "watch", "delete"]
-# required by istio
+# required by istio needed for MCS serviceimport management
 - apiGroups: ["multicluster.x-k8s.io"]
   resources: ["serviceimports"]
   verbs: ["get", "list", "watch"]
@@ -120,9 +137,7 @@ rules:
 - apiGroups: ["apps"]
   resources: ["replicasets"]
   verbs: ["get", "list", "watch"]
-
---- 
-
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -194,4 +209,63 @@ rules:
 - apiGroups: ["batch"]
   resources: ["jobs"]
   verbs: ["create", "delete", "update"]
+---
+{{ $mcsAPIGroup := "multicluster.x-k8s.io" }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "dp-configure-namespace.dataPlaneId" . }}-reader-cluster-scope
+  labels:
+    app: istio-reader
+    release: {{ .Release.Name }}
+rules:
+- apiGroups:
+    - "config.istio.io"
+    - "security.istio.io"
+    - "networking.istio.io"
+    - "authentication.istio.io"
+    - "rbac.istio.io"
+  resources: ["*"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["endpoints", "pods", "services", "nodes", "replicationcontrollers", "namespaces", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.istio.io"]
+  verbs: [ "get", "watch", "list" ]
+  resources: [ "workloadentries" ]
+- apiGroups: ["networking.x-k8s.io", "gateway.networking.k8s.io"]
+  resources: ["gateways"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["{{ $mcsAPIGroup }}"]
+  resources: ["serviceexports"]
+  verbs: ["get", "list", "watch", "create", "delete"]
+- apiGroups: ["{{ $mcsAPIGroup }}"]
+  resources: ["serviceimports"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["authentication.k8s.io"]
+  resources: ["tokenreviews"]
+  verbs: ["create"]
+- apiGroups: ["authorization.k8s.io"]
+  resources: ["subjectaccessreviews"]
+  verbs: ["create"]
+{{- if .Values.global.externalIstiod }}
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["create", "get", "list", "watch", "update"]
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["mutatingwebhookconfigurations"]
+  verbs: ["get", "list", "watch", "update", "patch"]
+- apiGroups: ["admissionregistration.k8s.io"]
+  resources: ["validatingwebhookconfigurations"]
+  verbs: ["get", "list", "watch", "update"]
+{{- end}}
 {{- end -}}
