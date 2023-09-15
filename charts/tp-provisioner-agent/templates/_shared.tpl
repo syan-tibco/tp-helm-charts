@@ -38,7 +38,7 @@ Standard labels added to all resources created by this chart.
 Includes labels used as selectors (i.e. template "labels.selector")
 */}}
 {{- define "tp-provisioner-agent.shared.labels.standard" -}}
-{{ include "tp-provisioner-agent.shared.labels.selector" . }}
+{{ include  "tp-provisioner-agent.shared.labels.selector" . }}
 {{ include "tp-provisioner-agent.shared.labels.platform" . }}
 app.cloud.tibco.com/created-by: {{ include "tp-provisioner-agent.consts.team" . }}
 app.cloud.tibco.com/build-timestamp: {{ include "tp-provisioner-agent.generated.buildTimestamp" . }}
