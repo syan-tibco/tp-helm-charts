@@ -54,5 +54,11 @@ webhooks:
           {{- else }}
           - "{{ .Values.revision }}"
           {{- end }}
+        {{- if ((.Values.global).cp).dataplaneId }}
+        - key: platform.tibco.com/dataplane-id
+          operator: In
+          values:
+          - {{ .Values.global.cp.dataplaneId }}
+        {{- end }}
 ---
 {{- end }}

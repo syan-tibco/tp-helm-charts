@@ -352,23 +352,24 @@ config:
   service: |
     [SERVICE]
         Daemon Off
-        Flush {{ .Values.flush }}
-        Log_Level {{ .Values.logLevel }}
+        Flush 1
+        Log_Level error
         Parsers_File /fluent-bit/etc/parsers.conf
         Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
         HTTP_Server On
         HTTP_Listen 0.0.0.0
-        HTTP_Port {{ .Values.metricsPort }}
+        HTTP_Port 2020
         Health_Check On
 
   ## https://docs.fluentbit.io/manual/pipeline/inputs
   inputs: |
     [INPUT]
         Name tail
+        Tag_Regex  (?<pod_name>[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-
+        Tag  kube.<container_name>.<namespace_name>
         Path /var/log/containers/*.log
         multiline.parser docker, cri
-        Tag kube.*
-        Mem_Buf_Limit 5MB
+        Mem_Buf_Limit 25MB
         Skip_Long_Lines On
 
     [INPUT]
@@ -387,8 +388,23 @@ config:
         K8S-Logging.Parser On
         K8S-Logging.Exclude On
 
+    [FILTER]
+        Name                parser
+        Match               kube.istio-proxy.*
+        Key_Name            log
+        Reserve_Data        On
+        Parser              istio-envoy-proxy
+
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
+    ## Forward data received using Fluentd Forward protocol to the opentelemetry collector url
+    ## https://docs.fluentbit.io/manual/pipeline/outputs/forward
+    ##[OUTPUT]
+    ##    Name    forward
+    ##    Host    opentelemetry-collector.apim-observability.svc.cluster.local
+    ##    Port    8006
+    ##    Match *
+
     [OUTPUT]
         Name es
         Match kube.*
@@ -409,6 +425,7 @@ config:
   upstream: {}
 
   ## https://docs.fluentbit.io/manual/pipeline/parsers
+  ## https://github.com/fluent/fluent-bit/blob/master/conf/parsers.conf
   customParsers: |
     [PARSER]
         Name docker_no_time
@@ -416,6 +433,22 @@ config:
         Time_Keep Off
         Time_Key time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
+
+    [PARSER]
+        Name    envoy
+        Format  regex
+        Regex ^\[(?<start_time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)? (?<protocol>\S+)" (?<code>[^ ]*) (?<response_flags>[^ ]*) (?<bytes_received>[^ ]*) (?<bytes_sent>[^ ]*) (?<duration>[^ ]*) (?<x_envoy_upstream_service_time>[^ ]*) "(?<x_forwarded_for>[^ ]*)" "(?<user_agent>[^\"]*)" "(?<request_id>[^\"]*)" "(?<authority>[^ ]*)" "(?<upstream_host>[^ ]*)"
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+        Time_Keep   On
+        Time_Key start_time
+
+    [PARSER]
+        Name    istio-envoy-proxy
+        Format  regex
+        Regex ^\[(?<start_time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)? (?<protocol>\S+)" (?<response_code>[^ ]*) (?<response_flags>[^ ]*) (?<response_code_details>[^ ]*) (?<connection_termination_details>[^ ]*) (?<upstream_transport_failure_reason>[^ ]*) (?<bytes_received>[^ ]*) (?<bytes_sent>[^ ]*) (?<duration>[^ ]*) (?<x_envoy_upstream_service_time>[^ ]*) "(?<x_forwarded_for>[^ ]*)" "(?<user_agent>[^\"]*)" "(?<x_request_id>[^\"]*)" (?<authority>[^ ]*)" "(?<upstream_host>[^ ]*)" (?<upstream_cluster>[^ ]*) (?<upstream_local_address>[^ ]*) (?<downstream_local_address>[^ ]*) (?<downstream_remote_address>[^ ]*) (?<requested_server_name>[^ ]*) (?<route_name>[^  ]*)
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+        Time_Keep   On
+        Time_Key start_time
 
   # This allows adding more files with arbitary filenames to /fluent-bit/etc/conf by providing key/value pairs.
   # The key becomes the filename, the value becomes the file content.

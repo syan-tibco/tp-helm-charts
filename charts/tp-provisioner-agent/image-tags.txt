@@ -1,1 +1,0 @@
-stratosphere/tp-provisioner-agent:latest

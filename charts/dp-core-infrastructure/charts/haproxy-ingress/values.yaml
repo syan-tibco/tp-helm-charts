@@ -1,6 +1,14 @@
 global:
   tibco:
     dataPlaneId: "abcd"
+    subscriptionId: "sub1"
+    controlPlaneUrl: "https://account.local.cic2.pro" # Control Plane DNS domain
+    serviceAccount: ""                                # customer provided service account
+    containerRegistry:
+      url: "reldocker.tibco.com" 
+      # username: "test" # [optional] Create a imagePullSecret named <dpId> for private container registry.
+      # password: "test"
+      # email: "tibco-plt@tibco.com"
 
 # Enable RBAC
 rbac:
@@ -21,9 +29,10 @@ serviceAccount:
 nameOverride: ""
 fullnameOverride: ""
 
+
 controller:
   image:
-    repository: stratosphere/haproxy
+    name: haproxy
     tag: v0.14.0
     pullPolicy: IfNotPresent
 
@@ -327,7 +336,7 @@ controller:
     enabled: false
 
     image:
-      repository: haproxy
+      name: haproxy-sidecar
       tag: "2.4.20-alpine"
       pullPolicy: IfNotPresent
 
@@ -388,7 +397,7 @@ controller:
     # (scrapes the stats port and exports metrics to prometheus)
     # Only used if embedded == false
     image:
-      repository: quay.io/prometheus/haproxy-exporter
+      name: haproxy-exporter
       tag: "v0.11.0"
       pullPolicy: IfNotPresent
 
@@ -481,7 +490,7 @@ controller:
     # https://github.com/whereisaaron/kube-syslog-sidecar
     # (listens on UDP port 514 and outputs to stdout)
     image:
-      repository: whereisaaron/kube-syslog-sidecar
+      name: kube-syslog-sidecar
       tag: latest
       pullPolicy: IfNotPresent
 
@@ -514,7 +523,7 @@ defaultBackend:
 
   name: default-backend
   image:
-    repository: k8s.gcr.io/defaultbackend-amd64
+    name: defaultbackend-amd64
     tag: "1.5"
     pullPolicy: IfNotPresent
 

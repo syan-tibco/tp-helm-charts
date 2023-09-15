@@ -12,8 +12,8 @@ resources:
 replicaCount: "1"
 
 image:
-  registry: ""
-  repository: /stratosphere/tp-provisioner-agent
+  name: tp-provisioner-agent
+  tag: 183
   pullPolicy: Always
 
 nodeSelector:
@@ -32,9 +32,10 @@ ingress:
   className: "haproxy-dp-{{ .Values.global.tibco.dataPlaneId}}"  # Ex: nginx, haproxy
 
 global:
-  serviceAccount: "" #user provided service account.
   tibco:
     dataPlaneId: "abcd"
     subscriptionId: "sub1"
-    dockerRegistry: reldocker.tibco.com
     controlPlaneUrl: "https://account.local.cic2.pro"
+    serviceAccount: "" #user provided service account.
+    containerRegistry:
+      url: reldocker.tibco.com

@@ -9,6 +9,8 @@ metadata:
     {{- with .Values.ingress.annotations }}
     {{- tpl (toYaml .) $ | nindent 4}}
     {{- end }}
+    "helm.sh/hook": post-install, post-upgrade # using post install hooks to create ingress rule. the post-upgrade hook is debatable as this would the ingress rule gets recreated in each upgrade.
+    "helm.sh/hook-delete-policy": before-hook-creation
   labels:
     {{- include "tp-provisioner-agent.shared.labels.standard" .| nindent 4}}
 spec:
