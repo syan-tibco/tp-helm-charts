@@ -6,7 +6,7 @@ global:
     dataPlaneId: "abcd"
     subscriptionId: "sub1"
     containerRegistry:
-      url: "reldocker.tibco.com"
+      url: reldocker.tibco.com
 
 # tibtunnel cli flags
 connect:
