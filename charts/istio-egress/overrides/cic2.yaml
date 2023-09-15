@@ -1,7 +1,9 @@
+revision: "platform"
+
 replicaCount: 1
 
 global:
-  istioNamespace: istio-system
+  istioNamespace: apim-cic2
 
 service:
   type: ClusterIP

@@ -1,3 +1,9 @@
+revision: "platform"
+
+serviceAccount:
+  create: true
+  name: istio-service-account
+
 pilot:
   autoscaleEnabled: true
   autoscaleMin: 1
@@ -6,9 +12,13 @@ pilot:
   traceSampling: 100.0
 
 global:
-  istioNamespace: istio-system
+  istioNamespace: apim-cic2
+  cp:
+    resources:
+      serviceaccount:
+        serviceAccountName: istio-cp-service-account
   security:
-     peerAuthentication: STRICT
+     peerAuthentication: PERMISSIVE
   defaultResources:
     requests:
       cpu: 250m
@@ -16,33 +26,35 @@ global:
     limits:
       cpu: 500m
       memory: 512Mi
-  proxy:
-    tracer: "zipkin"
-  tracer:
-    zipkin:
-      address: "opentelemetry-collector.apim-observability.svc.cluster.local:9411"
 
 meshConfig:
   accessLogFile: /dev/stdout
 
+  defaultConfig:
+    tracing:
+      zipkin:
+        address: "opentelemetry-collector.apim-cic2.svc.cluster.local:9411"
+
   #defaultProviders:
+  #  metrics: ["prometheus"]
   #  tracing: ["traceCollector"]
   #  accessLogging: ["logCollector"]
 
   #extensionProviders:
   #- name: logCollector
   #  envoyOtelAls:
-  #    service: elasticsearch.istio-obvervability.svc.cluster.local
-  #    port: 9200
+  #    service: opentelemetry-collector.apim-cic2.svc.cluster.local
+  #    port: 4318
   #    logName: "istio_envoy_accesslog"
   #- name: traceCollector
   #  opentelemetry:
-  #    service: opentelemetry-collector.istio-obvervability.svc.cluster.local
+  #    service: opentelemetry-collector.apim-cic2.svc.cluster.local
   #    port: 4317
   #- name: zipkin
   #  zipkin:
-  #    service: opentelemetry-collector.istio-obvervability.svc.cluster.local
-  #    port: 4211
+  #    service: opentelemetry-collector.apim-cic2.svc.cluster.local
+  #    port: 9411
 
-#members: ["apim-observability","apim-playground"]
+members:
+   dataplane-id: tibco-dp
 

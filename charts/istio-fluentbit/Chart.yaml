@@ -24,4 +24,4 @@ maintainers:
 name: istio-fluentbit
 sources:
 - https://github.com/fluent/fluent-bit/
-version: 0.36.0
+version: 1.0.1

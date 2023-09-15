@@ -265,11 +265,17 @@ meshConfig:
   # What we may configure in mesh config is the ".global" - and use of other suffixes.
   # No hurry to do this in 1.6, we're trying to prove the code.
 
-
-
 global:
+  # Label that specify the set of namespaces that Istio considers use to computing configuration updates for sidecars.
+  # These labels will apply to namespace selector in discoverySelectors and MutatingWebhookConfiguration
+  cp:
+    dataplaneId:
+    resources:
+      serviceaccount:
+        serviceAccountName:
   # Used to locate istiod.
   istioNamespace: istio-system
+
   # List of cert-signers to allow "approve" action in the istio cluster role
   #
   # certSigners:
@@ -283,7 +289,7 @@ global:
   # enable pod disruption budget for the control plane, which is used to
   # ensure Istio control plane components are gradually upgraded or recovered.
   defaultPodDisruptionBudget:
-    enabled: true
+    enabled: false
     # The values aren't mutable due to a current PodDisruptionBudget limitation
     # minAvailable: 1
 
@@ -576,11 +582,5 @@ base:
 istio_cni:
   enabled: false
   chained: true
-
-# List of labels that specify the set of namespaces that Istio considers use to computing configuration updates for sidecars.
-# Elements in the list are disjunctive (OR semantics), # i.e. a namespace will be included if it matches any selector.
-# These labels will apply to math labels in discoverySelectors.
-members:
-   name: ""
 
 

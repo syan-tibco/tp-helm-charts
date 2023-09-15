@@ -64,6 +64,12 @@ webhooks:
       {{- end }}
     - key: istio-injection
       operator: DoesNotExist
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
   objectSelector:
     matchExpressions:
     - key: sidecar.istio.io/inject
@@ -79,6 +85,12 @@ webhooks:
       operator: DoesNotExist
     - key: istio-injection
       operator: DoesNotExist
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
   objectSelector:
     matchExpressions:
     - key: sidecar.istio.io/inject
@@ -94,6 +106,7 @@ webhooks:
       - "{{ .Values.revision }}"
       {{- end }}
 
+
 {{- /* Webhooks for default revision */}}
 {{- if (eq .Values.revision "") }}
 
@@ -105,6 +118,12 @@ webhooks:
       operator: In
       values:
       - enabled
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
   objectSelector:
     matchExpressions:
     - key: sidecar.istio.io/inject
@@ -120,6 +139,12 @@ webhooks:
       operator: DoesNotExist
     - key: istio.io/rev
       operator: DoesNotExist
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
   objectSelector:
     matchExpressions:
     - key: sidecar.istio.io/inject
@@ -141,6 +166,12 @@ webhooks:
     - key: "kubernetes.io/metadata.name"
       operator: "NotIn"
       values: ["kube-system","kube-public","kube-node-lease","local-path-storage"]
+    {{- if ((.Values.global).cp).dataplaneId }}
+    - key: "platform.tibco.com/dataplane-id"
+      operator: In
+      values:
+      - {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
   objectSelector:
     matchExpressions:
     - key: sidecar.istio.io/inject
