@@ -22,7 +22,7 @@ spec:
       {{- end }}
       containers:
       - name: provisioner-agent
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-provisioner-agent.generated.buildNumber" . }}
+        image: {{ include "tp-provisioner-agent.image.registry" .}}{{"/"}}{{ include "tp-provisioner-agent.image.repository" .}}{{"/"}}{{ .Values.image.name }}:{{ .Values.image.tag}}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: NAMESPACE

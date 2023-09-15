@@ -40,9 +40,9 @@ resources:
 replicaCount: "1"
 
 image:
-  registry: ""
-  repository: stratosphere/tp-tibtunnel
+  name: tp-tibtunnel
   pullPolicy: Always
+  tag: 70
 
 nodeSelector:
   kubernetes.io/os: linux

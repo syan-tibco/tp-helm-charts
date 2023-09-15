@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: tibtunnel
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
+        image: {{ include "tp-tibtunnel.image.registry" .}}{{"/"}}{{ include "tp-tibtunnel.image.repository" .}}{{"/"}}{{ .Values.image.name }}:{{ .Values.image.tag}}
         {{/* Converting the command from "" to ["",""]. Split input command by space and coverting it into array of string */}}
         {{/* @input: "tp-tibtunnel connect --remote-debug -s localhost:80 connecturl" */}}
         {{/* @output: ["tp-tibtunnel", "connect", "--remote-debug","-s","localhost:80","connecturl"] */}}
@@ -31,7 +31,7 @@ spec:
           mountPath: /etc/config
       initContainers:
       - name: tibtunnel-init
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.tibco.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-tibtunnel.generated.buildNumber" . }}
+        image: {{ include "tp-tibtunnel.image.registry" .}}{{"/"}}{{ include "tp-tibtunnel.image.repository" .}}{{"/"}}{{ .Values.image.name }}:{{ .Values.image.tag}}
         command: [{{- range $v := (mustRegexSplit " +" (include "tp-tibtunnel.helpers.command.configure" .) -1) -}}"{{- $v -}}",{{- end -}}]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
