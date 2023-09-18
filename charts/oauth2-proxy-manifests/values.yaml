@@ -416,23 +416,23 @@ extraObjects: []
 
 global:
   cp:
-    cpHostName: "bwce.us-west.cp-platform-my.tcie.pro"
-    #dataplaneId: "abcd"
+    cpHostName: ""   #CP HOST NAME
+    #dataplaneId: "abcd"   #DP ID
     #subscriptionId : "sub1"
-    instanceId: ""
+    instanceId: ""   #CAPABILITY INSTANCE ID
     #containerRegistry:
     #  url: "reldocker.tibco.com"
     #  secret: "abcd"
     capability:
-      pathPrefix: "tibco/u"
+      pathPrefix: "/"    #PATH PREFIX FOR CAPABILITY
     resources:
     #   serviceaccount:
-    #     serviceAccountName: ""
+    #     serviceAccountName: ""  #SA NAME
       ingress:
-        fqdn: "scenario-first.trop-dev.tcie.pro"
-        ingressClassName: "nginx"
+        fqdn: ""    #CAPABILITY FQDN
+        ingressClassName: ""  #INGRESS CLASS NAME
     secrets:
       # iat : Control Plane Authentication
       # this is used to generate client id and client secret.
       # Client Id and secret are used to generate time bound access token
-      iat: "iat.FsmOXGoNtTykdlqyMMPot_u2" #initial access token used to generate client credentials
+      iat: "" #initial access token used to generate client credentials
