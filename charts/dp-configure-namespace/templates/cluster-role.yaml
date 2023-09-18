@@ -101,7 +101,7 @@ rules:
 # required by istio for sidecar injection controller
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["mutatingwebhookconfigurations"]
-  verbs: ["get", "list", "watch", "update", "patch"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
 # required by istio for Istiod to verify the JWT tokens
 - apiGroups: ["authentication.k8s.io"]
   resources: ["tokenreviews"]
@@ -137,6 +137,12 @@ rules:
 - apiGroups: ["apps"]
   resources: ["replicasets"]
   verbs: ["get", "list", "watch"]
+- apiGroups: ["policy"]
+  resources: ["poddisruptionbudgets"]
+  verbs: ["create", "get", "list", "watch", "delete","patch", "update"]
+- apiGroups: ["security.istio.io"]
+  resources: ["peerauthentications"]
+  verbs: ["create", "get", "list", "watch", "delete","patch", "update"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
