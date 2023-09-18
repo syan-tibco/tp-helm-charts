@@ -62,7 +62,7 @@ spec:
             - name: SERVER_PORT
               value: "{{ .Values.service.port }}"
             - name: APP_INIT_IMAGE_TAG
-              value: "10-flogo-m1"
+              value: "16-flogo-m1"
             - name: CP_DOMAIN
               value: {{ include "flogoprovisioner.cp.domain" . }}
             - name: POD_NAMESPACE

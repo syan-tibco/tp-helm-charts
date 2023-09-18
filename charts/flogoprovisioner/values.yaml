@@ -191,7 +191,7 @@ config:
   DP_INTERNAL_URL: "***NOT AVAILABLE***"
   BWCE_BASE_VERSION: "5-2.8.1-V47.0.1-GA-m1-ext"
   ARTIFACT_MANAGER_PORT: "7813"
-  APP_INIT_IMAGE_TAG: "5-m1"
+  APP_INIT_IMAGE_TAG: "16-flogo-m1"
 
 rbac:
   create: false
