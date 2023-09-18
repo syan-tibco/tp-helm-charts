@@ -1,3 +1,4 @@
+{{- if or (.Values.serviceAccount.create) (not (((.Values.global.cp).resources).serviceaccount).serviceAccountName) -}}
 {{ $mcsAPIGroup := or .Values.pilot.env.MCS_API_GROUP "multicluster.x-k8s.io" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -56,3 +57,5 @@ rules:
     resources: ["validatingwebhookconfigurations"]
     verbs: ["get", "list", "watch", "update"]
 {{- end}}
+{{- end}}
+
