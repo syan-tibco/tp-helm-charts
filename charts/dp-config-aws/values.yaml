@@ -12,11 +12,11 @@ dns:
 # this ingress object is used for AWS Load Balancer Controller to create ALB
 httpIngress:
   enabled: true
-  name: traefik
+  name: nginx
   ingressClassName: alb
   backend:
-    serviceName: dp-config-aws-traefik
-    servicePort: 443
+    serviceName: ingress-nginx-controller
+    servicePort: 80
   # more AWS annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/
   annotations:
     alb.ingress.kubernetes.io/group.name: "abc.dataplanes.pro"
@@ -79,23 +79,31 @@ storageClass:
       # gidRangeEnd: "2000" # optional
       # ensureUniqueDirectory: "true" # optional
 
-traefik:
+# traefik:
+#   enabled: false
+#   hub: # for hub
+#     enabled: false
+#   service: # for external-dns
+#     type: ClusterIP
+#   ingressRoute: # for dashboard
+#     dashboard:
+#       matchRule: Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/api`)
+#       entryPoints:
+#         - traefik
+#         - web
+#         - websecure
+#   providers: # for external service
+#     kubernetesIngress:
+#       allowExternalNameServices: true
+#   nodeSelector: # for cic2
+#     kubernetes.io/os: linux
+#   additionalArguments:
+#     - '--serversTransport.insecureSkipVerify=true'
+
+nginx:
   enabled: true
-  hub: # for hub
-    enabled: false
-  service: # for external-dns
-    type: ClusterIP
-  ingressRoute: # for dashboard
-    dashboard:
-      matchRule: Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/api`)
-      entryPoints:
-        - traefik
-        - web
-        - websecure
-  providers: # for external service
-    kubernetesIngress:
-      allowExternalNameServices: true
-  nodeSelector: # for cic2
-    kubernetes.io/os: linux
-  additionalArguments:
-    - '--serversTransport.insecureSkipVerify=true'
+  controller:
+    service: # for external-dns
+      type: ClusterIP
+    nodeSelector:
+      kubernetes.io/os: linux

@@ -9,10 +9,14 @@ maintainers:
   - name: TIBCO Cloud Dev Team
     email: cloud@tibco.com
 dependencies:
-  - name: traefik
-    version: 24.0.0
-    repository: https://traefik.github.io/charts
-    condition: traefik.enabled
+  # - name: traefik
+  #   version: 24.0.0
+  #   repository: https://traefik.github.io/charts
+  #   condition: traefik.enabled
+  - name: ingress-nginx
+    version: 4.7.2
+    repository: https://kubernetes.github.io/ingress-nginx
+    condition: nginx.enabled
 annotations:
   artifacthub.io/changes: |
     - kind: changed
