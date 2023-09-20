@@ -211,3 +211,11 @@ oauth2proxy:
       #  - secretName: chart-example-tls
       #    hosts:
       #      - chart-example.local
+
+publicApi:
+  ingress:
+    controllerName: nginx
+    nginx:
+      className: nginx
+      pathPrefix: /tibco/bw
+      fqdn: bwce.dp-bwdev.tcie.pro
