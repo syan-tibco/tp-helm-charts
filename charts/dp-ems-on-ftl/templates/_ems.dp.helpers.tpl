@@ -99,6 +99,8 @@ ems:
     storageType: {{ $logStorageType }}
     storageName: {{ $logStorageName }}
     storageSize: {{ $logStorageSize }}
+  skipRedeploy: "{{ .Values.ems.skipRedeploy }}"
+  istioEnable: "{{.Values.ems.istioEnable | default "false" }}"
   ports:
 {{ .Values.ems.ports | toYaml | indent 4 }}
   stores: {{ $stores }}

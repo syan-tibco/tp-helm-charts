@@ -1,11 +1,12 @@
-{{- if .Release.IsInstall }}
+{{ if .Release.IsUpgrade }}
 # Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
 
-# FOR NEW INSTALLS: load an initial tibemsd-ftl.json
+# FOR UPGRADES: Do safe pod-kills, leader last
 
 #
 {{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
 {{- $dataPvc := $emsParams.ems.logs.storageName -}}
+{{- $jobname := printf "%s-emsupgrade" $emsParams.ems.name -}}
 {{- $stsname := printf "%s-ems" $emsParams.ems.name -}}
 {{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
 {{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
@@ -15,28 +16,27 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-    name: "{{ $emsParams.ems.name }}-emsinit"
+    name: "{{ $jobname }}"
     labels:
-      name: "{{ $emsParams.ems.name }}-emsinit"
+      name: "{{ $jobname }}"
       {{ include "msg.dp.labels" . | indent 6 }}
       tib-dp-app: msg-ems-ftl
     namespace: "{{ .Release.Namespace }}"
     annotations:
-      rollme: {{ randAlphaNum 5 | quote }}
+      "helm.sh/hook": post-upgrade
+      "helm.sh/hook-weight": "5"
 spec:
     backoffLimit: 0
     #4hr limit -  activeDeadlineSeconds: 14400
     ttlSecondsAfterFinished: 180
     template:
         metadata:
-            name: "{{ $emsParams.ems.name }}-emsinit"
+            name: "{{ $jobname }}"
             namespace: "{{ .Release.Namespace }}"
             labels:
-                name: "{{ $emsParams.ems.name }}-emsinit"
+                name: "{{ $jobname }}"
                 tib-dp-app: msg-ems-ftl
                 {{ include "msg.dp.labels" . | indent 16 }}
-            annotations:
-                rollme: {{ randAlphaNum 5 | quote }}
         spec:
             enableServiceLinks: false
             nodeSelector:
@@ -66,7 +66,14 @@ spec:
                 - >
                   ( mkdir -p /logs/$MY_POD_NAME/boot ; cd /logs/$MY_POD_NAME/boot ;
                       for x in /boot/mk-*.sh ; do bash < $x ; done | tee boot.out ) ;
-                  bash < /boot/load-ems-init-json.sh ; 
+                  echo "Upgrading pods ..." ; 
+                  kubectl get pods -l=tib-msg-stsname={{ $stsname }} | egrep -v NAME | while read x o ; do 
+                    echo "POD=$x"; done ; 
+                  export HEALTH_ACTION=redeploy ; 
+                  {{ if .Values.ems.skipRedeploy }}
+                  export HEALTH_ACTION=skip-redeploy ; 
+                  {{ end }}
+                  bash < /boot/health-watcher.sh 
                 image: "{{ $emsParams.ems.image }}"
                 imagePullPolicy: "{{ $emsParams.dp.pullPolicy }}"
                 volumeMounts:
@@ -84,6 +91,8 @@ spec:
                   value: "y"
                 - name: MY_RELEASE
                   value: "{{ .Release.Name }}"
+                - name: MY_SVC_NAME
+                  value: "{{ $stsname }}"
                 - name: FTL_SERVICE
                   value: "{{ $emsParams.ems.name }}-ftl"
                 - name: EMS_SERVICE
@@ -100,4 +109,4 @@ spec:
                   # the service load-balanced REALM URL
                   value: "http://{{ $svcFtlHost }}:$(REALM_PORT)"
 
-{{- end }}
+{{ end }}
