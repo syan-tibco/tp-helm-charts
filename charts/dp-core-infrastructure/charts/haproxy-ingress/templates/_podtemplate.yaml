@@ -234,10 +234,13 @@ spec:
 {{- if .Values.controller.extraContainers }}
     {{- toYaml .Values.controller.extraContainers | nindent 4 }}
 {{- end }}
-{{- if .Values.controller.imagePullSecrets }}
   imagePullSecrets:
+    {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
+    - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
+    {{- end }}{{ end }}
+    {{- if .Values.controller.imagePullSecrets }}
     {{- toYaml .Values.controller.imagePullSecrets | nindent 4 }}
-{{- end }}
+    {{- end }}
 {{- if or .Values.controller.haproxy.enabled .Values.controller.template .Values.controller.templateFile .Values.controller.extraVolumes .Values.controller.customFiles }}
   volumes:
 {{- if .Values.controller.haproxy.enabled }}

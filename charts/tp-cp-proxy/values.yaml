@@ -14,8 +14,8 @@ replicaCount: "1"
 
 
 image:
-  registry: ""
-  repository: stratosphere/tp-cp-proxy
+  name: tp-cp-proxy
+  tag: 91
   pullPolicy: IfNotPresent
 
 nodeSelector:

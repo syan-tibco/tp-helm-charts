@@ -24,3 +24,26 @@
 
 {{/* Data plane workload type */}}
 {{- define "tp-dp-secret-controller.consts.workloadType" }}infra{{ end -}}
+
+{{- define "tp-dp-secret-controller.consts.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "tp-dp-secret-controller.consts.ecrImageRepo" }}stratosphere{{end}}
+{{- define "tp-dp-secret-controller.consts.acrImageRepo" }}stratosphere{{end}}
+{{- define "tp-dp-secret-controller.consts.harborImageRepo" }}stratosphere{{end}}
+{{- define "tp-dp-secret-controller.consts.defaultImageRepo" }}stratosphere{{end}}
+ 
+{{- define "tp-dp-secret-controller.image.registry" }}
+  {{- .Values.global.cp.containerRegistry.url }}
+{{- end -}}
+ 
+{{/* set repository based on the registry url. We will have different repo for each one. */}}
+{{- define "tp-dp-secret-controller.image.repository" -}}
+  {{- if contains "jfrog.io" (include "tp-dp-secret-controller.image.registry" .) }}
+    {{- include "tp-dp-secret-controller.consts.jfrogImageRepo" .}}
+  {{- else if contains "amazonaws.com" (include "tp-dp-secret-controller.image.registry" .) }}
+    {{- include "tp-dp-secret-controller.consts.ecrImageRepo" .}}
+  {{- else if contains "reldocker.tibco.com" (include "tp-dp-secret-controller.image.registry" .) }}
+    {{- include "tp-dp-secret-controller.consts.harborImageRepo" .}}
+  {{- else }}
+    {{- include "tp-dp-secret-controller.consts.defaultImageRepo" .}}
+  {{- end }}
+{{- end -}}

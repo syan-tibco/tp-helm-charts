@@ -41,7 +41,6 @@ Includes labels used as selectors (i.e. template "labels.selector")
 {{ include  "tp-cp-proxy.shared.labels.selector" . }}
 {{ include "tp-cp-proxy.shared.labels.platform" . }}
 app.cloud.tibco.com/created-by: {{ include "tp-cp-proxy.consts.team" . }}
-app.cloud.tibco.com/build-timestamp: {{ include "tp-cp-proxy.generated.buildTimestamp" . }}
 app.cloud.tibco.com/tenant-name: {{ include "tp-cp-proxy.consts.tenantName" . }}
 helm.sh/chart: {{ include "tp-cp-proxy.shared.labels.chartLabelValue" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
