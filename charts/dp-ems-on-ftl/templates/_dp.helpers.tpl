@@ -32,6 +32,7 @@ dp:
         {{ if .Values.global.cp.containerRegistry }}
           {{ $registry = ternary  $registry  .Values.global.cp.containerRegistry.url ( not  .Values.global.cp.containerRegistry.url ) }}
           {{ $repo = ternary  "msg-platform-cicd"  .Values.global.cp.containerRegistry.repo ( not  .Values.global.cp.containerRegistry.repo ) }}
+          {{ $pullSecret = ternary  $pullSecret  .Values.global.cp.containerRegistry.secret ( not  .Values.global.cp.containerRegistry.secret ) }}
         {{ end }}
       {{ $cpHostname = ternary  $cpHostname .Values.global.cp.cpHostname ( not  .Values.global.cp.cpHostname ) }}
       {{ $instanceId = ternary  $instanceId .Values.global.cp.instanceId ( not  .Values.global.cp.instanceId ) }}
@@ -104,7 +105,7 @@ note: tib-msg-stsname will be added directly in statefulset charts, as it needs 
 */}}
 {{- define "msg.dp.labels" }}
 tib-dp-release: {{ .Release.Name | quote }}
-tib-dp-msgbuild: "1.0.0.10"
+tib-dp-msgbuild: "1.0.0.11"
 tib-dp-chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
 tib-dp-workload-type: "capability-service"
 tib-dp-dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"
