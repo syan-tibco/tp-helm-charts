@@ -41,7 +41,6 @@ Includes labels used as selectors (i.e. template "labels.selector")
 {{ include  "tp-dp-secret-controller.shared.labels.selector" . }}
 {{ include "tp-dp-secret-controller.shared.labels.platform" . }}
 app.cloud.tibco.com/created-by: {{ include "tp-dp-secret-controller.consts.team" . }}
-app.cloud.tibco.com/build-timestamp: {{ include "tp-dp-secret-controller.generated.buildTimestamp" . }}
 app.cloud.tibco.com/tenant-name: {{ include "tp-dp-secret-controller.consts.tenantName" . }}
 helm.sh/chart: {{ include "tp-dp-secret-controller.shared.labels.chartLabelValue" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}

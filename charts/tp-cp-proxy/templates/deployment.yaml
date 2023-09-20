@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: cp-proxy
-        image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{"/"}}{{ .Values.image.repository }}:{{ include "tp-cp-proxy.generated.buildNumber" . }}
+        image: {{ include "tp-cp-proxy.image.registry" .}}{{"/"}}{{ include "tp-cp-proxy.image.repository" .}}{{"/"}}{{ .Values.image.name }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: CLIENT_ID
