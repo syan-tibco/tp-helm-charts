@@ -80,6 +80,7 @@ storageClass:
       # ensureUniqueDirectory: "true" # optional
 
 traefik:
+  # chart values: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
   enabled: false
   hub: # for hub
     enabled: false
@@ -100,7 +101,8 @@ traefik:
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
 
-nginx:
+ingress-nginx:
+  # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
   enabled: true
   controller:
     service: # for external-dns
