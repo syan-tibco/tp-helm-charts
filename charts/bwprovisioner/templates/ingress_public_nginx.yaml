@@ -1,4 +1,5 @@
 {{- if eq .Values.publicApi.ingress.controllerName "nginx" -}}
+{{- $fullName := include "bwprovisioner.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
