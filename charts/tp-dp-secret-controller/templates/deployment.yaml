@@ -15,7 +15,7 @@ spec:
       labels:
         {{- include "tp-dp-secret-controller.shared.labels.standard" . | nindent 8 }}
     spec:
-      {{- if .Values.global.cp.serviceAccount }}
+      {{- if .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       {{- else }}
       serviceAccountName: {{ include "tp-dp-secret-controller.consts.appName" . }}
