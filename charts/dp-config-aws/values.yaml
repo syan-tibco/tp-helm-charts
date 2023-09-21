@@ -12,11 +12,11 @@ dns:
 # this ingress object is used for AWS Load Balancer Controller to create ALB
 httpIngress:
   enabled: true
-  name: nginx
+  name: nginx         #traefik for traefik
   ingressClassName: alb
   backend:
-    serviceName: ingress-nginx-controller
-    servicePort: 80
+    serviceName: ingress-nginx-controller  #serviceName dp-config-aws-traefik for traefik
+    servicePort: 80    #port 443 for traefik
   # more AWS annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/
   annotations:
     alb.ingress.kubernetes.io/group.name: "abc.dataplanes.pro"
@@ -79,26 +79,26 @@ storageClass:
       # gidRangeEnd: "2000" # optional
       # ensureUniqueDirectory: "true" # optional
 
-# traefik:
-#   enabled: false
-#   hub: # for hub
-#     enabled: false
-#   service: # for external-dns
-#     type: ClusterIP
-#   ingressRoute: # for dashboard
-#     dashboard:
-#       matchRule: Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/api`)
-#       entryPoints:
-#         - traefik
-#         - web
-#         - websecure
-#   providers: # for external service
-#     kubernetesIngress:
-#       allowExternalNameServices: true
-#   nodeSelector: # for cic2
-#     kubernetes.io/os: linux
-#   additionalArguments:
-#     - '--serversTransport.insecureSkipVerify=true'
+traefik:
+  enabled: false
+  hub: # for hub
+    enabled: false
+  service: # for external-dns
+    type: ClusterIP
+  ingressRoute: # for dashboard
+    dashboard:
+      matchRule: Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/dashboard`) || Host(`traefik-alb-apps.dp-platform.tcie.pro`) && PathPrefix(`/api`)
+      entryPoints:
+        - traefik
+        - web
+        - websecure
+  providers: # for external service
+    kubernetesIngress:
+      allowExternalNameServices: true
+  nodeSelector: # for cic2
+    kubernetes.io/os: linux
+  additionalArguments:
+    - '--serversTransport.insecureSkipVerify=true'
 
 nginx:
   enabled: true
