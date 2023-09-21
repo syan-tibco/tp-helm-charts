@@ -1,3 +1,4 @@
+{{/* service account is created only in the primary namespace */}}
 {{- if eq .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
 {{- if .Values.createServiceAccount -}}
 kind: ServiceAccount

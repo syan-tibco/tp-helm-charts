@@ -1,4 +1,6 @@
+{{/* all cluster roles are created at once during the deployment of the chart in primary namespace */}}
 {{- if eq .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
+{{ $mcsAPIGroup := "multicluster.x-k8s.io" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -8,6 +10,7 @@ metadata:
 rules:
 # required by otel collector
 # required by istio for discover and routing
+# required by EMS
 - apiGroups: [""]
   resources: ["nodes", "nodes/spec", "nodes/stats", "nodes/proxy"]
   verbs: ["get", "list", "watch"]
@@ -32,7 +35,7 @@ rules:
 - apiGroups: [""]
   resources: ["events"]
   verbs: ["get", "list", "watch"]
-# required by istio for discover and routing
+# required by istio for multicluster secret reading, possibly ingress certs in the future
 - apiGroups: [""]
   resources: ["secrets"]
   verbs: ["get", "list", "watch"]
@@ -48,8 +51,9 @@ rules:
 # question: can BW list namespaces first by label and then get deployment?
 # required for monitoring agent
 # required by otel collector
+# required by istio
 - apiGroups: ["apps"]
-  resources: ["deployments", "daemonsets", "statefulsets"]
+  resources: ["deployments", "daemonsets", "statefulsets", "replicasets"]
   verbs: ["get", "list", "watch"]
 # required by otel collector
 - apiGroups: ["autoscaling"]
@@ -64,64 +68,80 @@ rules:
 - apiGroups: [""]
   resources: ["pods", "pods/status"]
   verbs: ["get", "list", "watch"]
-- apiGroups: ["extensions", "networking.k8s.io"]
-  resources: ["ingresses", "ingressclasses"]
-  verbs: ["get", "list", "watch"]
 # required by istio
-- apiGroups: ["gateway.networking.k8s.io", "networking.x-k8s.io"]
+- apiGroups: ["networking.x-k8s.io", "gateway.networking.k8s.io"]
   resources: ["gateways", "gatewayclasses", "httproutes", "tlsroutes", "tcproutes", "udproutes", "backendpolicies"]
-  verbs: ["get", "list", "watch"]
-# write permissions are required for following
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by istio
+- apiGroups: ["networking.x-k8s.io", "gateway.networking.k8s.io"]
+  resources: ["*"]
+  verbs: ["get", "list", "watch", "update", "patch"]
 # required by distributed lock operator for CRD creation
 # required by istio for installed CRD definitions auto-detect
 - apiGroups: ["apiextensions.k8s.io"]
   resources: ["customresourcedefinitions"]
   verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
-# required by istio for webhook controller
+# required by istio
+- apiGroups: ["config.istio.io", "security.istio.io", "networking.istio.io", "authentication.istio.io", "rbac.istio.io", "telemetry.istio.io", "extensions.istio.io"]
+  resources: ["*"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by istio
+- apiGroups: ["networking.istio.io"]
+  resources: ["workloadentries", "workloadentries/status"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by istio
+- apiGroups: ["discovery.k8s.io"]
+  resources: ["endpointslices"]
+  verbs: ["get", "list", "watch"]
+# required by istio ingress controller
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses", "ingressclasses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses/status"]
+  verbs: ["update"]
+# required by istio for configuration validation webhook controller
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["validatingwebhookconfigurations"]
   verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
 # required by istio for sidecar injection controller
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["mutatingwebhookconfigurations"]
-  verbs: ["get", "list", "watch", "update", "patch"]
-- apiGroups: ["extensions", "networking.k8s.io"]
-  resources: ["ingresses/status"]
-  verbs: ["update"]
-# required by istio
-- apiGroups: ["config.istio.io", "security.istio.io", "networking.istio.io", "authentication.istio.io", "rbac.istio.io", "telemetry.istio.io", "extensions.istio.io"]
-  resources: ["*"]
-  verbs: ["get", "list", "watch", "update"]
-# required by istio
-- apiGroups: ["networking.istio.io"]
-  resources: ["workloadentries", "workloadentries/status"]
-  verbs: ["create", "get", "list", "watch", "delete","patch", "update"]
-# required by istio
-- apiGroups: ["discovery.k8s.io"]
-  resources: ["endpointslices"]
-  verbs: ["get", "list", "watch"]
-# required by istio to verify the JWT tokens
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by istio for Istiod to verify the JWT tokens
 - apiGroups: ["authentication.k8s.io"]
   resources: ["tokenreviews"]
   verbs: ["create"]
-# required by istio to verify gateway SDS
+# required by istio for Istiod to verify gateway SDS
 - apiGroups: ["authorization.k8s.io"]
   resources: ["subjectaccessreviews"]
   verbs: ["create"]
-# required by istio
-- apiGroups: ["multicluster.x-k8s.io"]
+# required by istio needed for MCS serviceexport management
+- apiGroups: ["{{ $mcsAPIGroup }}"]
   resources: ["serviceexports"]
   verbs: ["create", "get", "list", "watch", "delete"]
-# required by istio
-- apiGroups: ["multicluster.x-k8s.io"]
+# required by istio needed for MCS serviceimport management
+- apiGroups: ["{{ $mcsAPIGroup }}"]
   resources: ["serviceimports"]
   verbs: ["get", "list", "watch"]
 # required by istio
-- apiGroups: ["apps"]
-  resources: ["replicasets"]
-  verbs: ["get", "list", "watch"]
+- apiGroups: ["policy"]
+  resources: ["poddisruptionbudgets"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by istio
+- apiGroups: ["security.istio.io"]
+  resources: ["peerauthentications"]
+  verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by EMS
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["get", "list"]
+# required by EMS
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "list"]
 
---- 
+---
 
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -133,9 +153,14 @@ rules:
 - apiGroups: ["apps"]
   resources: ["deployments"]
   verbs: ["create", "delete", "patch", "update"]
+# required for EMS
+- apiGroups: ["apps"]
+  resources: ["statefulsets"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+# required by EMS
 - apiGroups: [""]
   resources: ["pods"]
-  verbs: ["create", "delete", "patch", "update"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 # required for getting pod logs for user-apps
 - apiGroups: [""]
   resources: ["pods/log"]
@@ -145,10 +170,12 @@ rules:
   resources: ["replicasets"]
   verbs: ["get", "list", "watch"]
 # delete required by istio for deletion of distribution report configmap
+# required by EMS
 - apiGroups: [""]
   resources: ["configmaps"]
-  verbs: ["create", "delete", "patch", "update", "delete"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 # required by istio for storing CA secret
+# required by EMS
 - apiGroups: [""]
   resources: ["secrets"]
   verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
@@ -157,7 +184,7 @@ rules:
   verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 - apiGroups: [""]
   resources: ["services"]
-  verbs: ["create", "delete", "patch", "update"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 - apiGroups: [""]
   resources: ["events"]
   verbs: ["create", "patch"]
@@ -177,12 +204,14 @@ rules:
 - apiGroups: ["cloud.tibco.com"]
   resources: ["tibcodistributedlocks", "tibcodistributedlocks/status"]
   verbs: ["create", "get", "list", "watch", "delete", "patch", "update"]
+# required by EMS
 - apiGroups: [""]
   resources: ["persistentvolumeclaims"]
-  verbs: ["create", "get", "list", "update"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
+# required by otel collector
 - apiGroups: ["networking.k8s.io"]
   resources: ["ingresses"]
-  verbs: ["create", "get", "list", "delete", "update"]
+  verbs: ["get", "list", "create", "delete", "patch", "update"]
 - apiGroups: ["cert-manager.io"]
   resources: ["certificates","issuers"]
   verbs: ["create", "get"]
@@ -191,7 +220,8 @@ rules:
   resources: ["gateways"]
   verbs: ["create"]
 # required by provisioner agent
+# required by EMS
 - apiGroups: ["batch"]
   resources: ["jobs"]
-  verbs: ["create", "delete", "update"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 {{- end -}}
