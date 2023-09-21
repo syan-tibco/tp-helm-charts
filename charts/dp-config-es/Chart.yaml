@@ -1,6 +1,6 @@
 apiVersion: v2
 name: dp-config-es
-version: "1.0.10"
+version: "1.0.11"
 appVersion: "1.0.0"
 description: dp-config-es
 type: application
@@ -16,4 +16,4 @@ dependencies:
 annotations:
   artifacthub.io/changes: |
     - kind: changed
-      description: "add flag for storage class"
+      description: "add nginx support"
