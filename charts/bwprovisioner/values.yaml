@@ -79,6 +79,11 @@ service:
   port: 7814
   targetPort: 7814
 
+publicApiService:
+  type: ClusterIP
+  port: 7816
+  targetPort: 7816
+
 #ingress:
 #  enabled: false
 #  annotations: {}
