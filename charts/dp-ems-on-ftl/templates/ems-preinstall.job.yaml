@@ -63,7 +63,7 @@ spec:
                 command: ['/compliance/check_eua', 'bash', '-c' ]
                 args:
                 - >
-                  echo "Doing pre-install checks ... " ; sleep 10 ; 
+                  echo "Doing pre-install checks ... " ; 
                 image: "{{ $emsParams.ems.image }}"
                 imagePullPolicy: "{{ $emsParams.dp.pullPolicy }}"
                 # volumeMounts:

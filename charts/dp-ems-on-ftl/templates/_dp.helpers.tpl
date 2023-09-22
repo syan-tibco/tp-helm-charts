@@ -3,6 +3,13 @@
 MSG DP Common Helpers
 */}}
 
+{{- define "msgdp.ghcrImageRepo" -}}"tibco/msg-platform-cicd"{{ end }}
+{{- define "msgdp.jfrogImageRepo" -}}"platform/msg"{{ end }}
+{{- define "msgdp.ecrImageRepo" -}}"msg-platform-cicd"{{ end }}
+{{- define "msgdp.acrImageRepo" -}}"msg-platform-cicd"{{ end }}
+{{- define "msgdp.reldockerImageRepo" -}}"messaging"{{ end }}
+{{- define "msgdp.defaultImageRepo" -}}"messaging"{{ end }}
+
 {{/*
 need.msg.dp.params
 */}}
@@ -15,7 +22,7 @@ dp:
   {{- $name := "dp-noname" -}}
   {{- $pullSecret := "cic2-tcm-ghcr-secret" -}}
   {{- $registry := "ghcr.io" -}}
-  {{- $repo := "tibco/msg-platform-cicd" -}}
+  {{- $repo := include "msgdp.ghcrImageRepo" . -}}
   {{- $pullPolicy := "IfNotPresent" -}}
   {{- $serviceAccount := "provisioner" -}}
   {{- $scSharedName := "none" -}}
@@ -31,7 +38,21 @@ dp:
       {{ $pullPolicy = ternary  $pullPolicy  .Values.global.cp.pullPolicy ( not  .Values.global.cp.pullPolicy ) }}
         {{ if .Values.global.cp.containerRegistry }}
           {{ $registry = ternary  $registry  .Values.global.cp.containerRegistry.url ( not  .Values.global.cp.containerRegistry.url ) }}
-          {{ $repo = ternary  "msg-platform-cicd"  .Values.global.cp.containerRegistry.repo ( not  .Values.global.cp.containerRegistry.repo ) }}
+          {{- if .Values.global.cp.containerRegistry.repo -}}
+            {{- $repo = .Values.global.cp.containerRegistry.repo -}}
+          {{- else if contains "ghcr.io" $registry -}}
+            {{- $repo = "tibco/msg-platform-cicd" -}}
+          {{- else if contains "jfrog.io" $registry -}}
+            {{- $repo = include "msgdp.jfrogImageRepo" . -}}
+          {{- else if contains "amazonaws.com" $registry -}}
+            {{- $repo = include "msgdp.ecrImageRepo" . -}}
+          {{- else if contains "azurecr.io" $registry -}}
+            {{- $repo = include "msgdp.acrImageRepo" . -}}
+          {{- else if contains "reldocker.tibco.com" $registry -}}
+            {{- $repo = include "msgdp.reldockerImageRepo" . -}}
+          {{- else -}}
+            {{- $repo = include "msgdp.defaultImageRepo" . -}}
+          {{- end -}}
           {{ $pullSecret = ternary  $pullSecret  .Values.global.cp.containerRegistry.secret ( not  .Values.global.cp.containerRegistry.secret ) }}
         {{ end }}
       {{ $cpHostname = ternary  $cpHostname .Values.global.cp.cpHostname ( not  .Values.global.cp.cpHostname ) }}
@@ -105,7 +126,7 @@ note: tib-msg-stsname will be added directly in statefulset charts, as it needs 
 */}}
 {{- define "msg.dp.labels" }}
 tib-dp-release: {{ .Release.Name | quote }}
-tib-dp-msgbuild: "1.0.0.11"
+tib-dp-msgbuild: "1.0.0.12"
 tib-dp-chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
 tib-dp-workload-type: "capability-service"
 tib-dp-dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"
