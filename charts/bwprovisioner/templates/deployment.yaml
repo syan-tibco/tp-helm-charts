@@ -39,6 +39,8 @@ spec:
           ports:
             - containerPort: {{ .Values.service.port }}
               name: server
+            - containerPort: {{ .Values.publicApiService.port }}
+              name: publicapiserver
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ .Values.global.cp.containerRegistry.url }}/piap/bw-provisioner:{{ .Values.global.bwprovisioner.image.tag }}
@@ -72,6 +74,8 @@ spec:
               value: "{{ .Values.global.bwprovisioner.image.tag }}"
             - name: SERVER_PORT
               value: "{{ .Values.service.port }}"
+            - name: PUBLIC_API_SERVER_PORT
+              value: "{{ .Values.publicApiService.port }}"
             - name: CP_DOMAIN
               value: {{ include "bwprovisioner.cp.domain" . }}
             - name: POD_NAMESPACE

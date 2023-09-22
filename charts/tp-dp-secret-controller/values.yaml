@@ -14,8 +14,8 @@ replicaCount: "1"
 
 
 image:
-  registry: ""
-  repository: stratosphere/tp-dp-secret-controller
+  name: tp-dp-secret-controller
+  tag: 20
   pullPolicy: IfNotPresent
 
 nodeSelector:
@@ -27,9 +27,12 @@ tolerations: {}
 
 global:
   cp:
+    cpHostName: "acme.local.my.cic2.pro"
     dataplaneId: "abcd"
-    subscriptionId: "sub1"
+    subscriptionId : "sub1"
     containerRegistry:
-      url: reldocker.tibco.com
-      secret: "{{.Values.global.cp.dataplaneId}}"
-    serviceAccount: ""
+      url: "reldocker.tibco.com"
+      secret: "abcd"
+    resources:
+      serviceaccount:
+        serviceAccountName: ""

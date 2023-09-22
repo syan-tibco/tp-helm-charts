@@ -23,14 +23,15 @@ metadata:
     labels:
       {{ include "msg.dp.labels" . | indent 6 }}
       name: "{{ $stsname }}"
+      app.kubernetes.io/name: "{{ $stsname }}"
       app: msg-ems-ftl
       tib-dp-app: msg-ems-ftl
-      tib-dp-release: "{{ $emsParams.ems.name }}"
       tib-msg-stsname: "{{ $stsname }}"
       tib-msg-svcname: "{{ $emsParams.ems.name }}-ems"
       tib-msg-ems-name: "{{ $emsParams.ems.name }}"
       tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
       tib-msg-ems-use: "{{ $emsParams.ems.use }}"
+      sidecar.istio.io/inject: "{{ $emsParams.ems.istioEnable }}"
     annotations:
       {{ include "msg.dp.mon.annotations" . | indent 6 }}
       # isLeader="http://localhost:9010/isReady"
@@ -57,6 +58,7 @@ spec:
                 tib-msg-ems-name: "{{ $emsParams.ems.name }}"
                 tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
                 tib-msg-ems-use: "{{ $emsParams.ems.use }}"
+                "sidecar.istio.io/inject": "{{ $emsParams.ems.istioEnable }}"
             name: ems
             annotations:
               prometheus.io/scrape: "true"
@@ -154,6 +156,9 @@ spec:
                 name: ems-data
                 subPathExpr: "$(MY_RELEASE)/data/$(MY_POD_NAME)"
               {{ else if eq "emptyDir" $emsParams.ems.msgData.storageType }}
+                  {{ if $emsParams.ems.isProduction }}
+                  {{ fail "emptyDir not applicable for Production message storage" }}
+                  {{ end }}
                 name: ems-data
               {{ else }} 
                 {{ fail "Unsupported ems /data storageType" }}
@@ -245,7 +250,6 @@ spec:
                 claimName: "{{ $emsParams.ems.msgData.storageName }}"
             {{ else if eq "emptyDir" $emsParams.ems.msgData.storageType }}
             - name: "ems-data"
-              # FIXME: fail "storageType of emptyDir only supported for dev use" ##
               emptyDir: {}
             {{ end }}
             {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}

@@ -15,14 +15,14 @@ spec:
       labels:
         {{- include "tp-dp-secret-controller.shared.labels.standard" . | nindent 8 }}
     spec:
-      {{- if .Values.global.cp.serviceAccount }}
-      serviceAccountName: {{ .Values.global.cp.serviceAccount }}
+      {{- if .Values.global.cp.resources.serviceaccount.serviceAccountName }}
+      serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
       {{- else }}
       serviceAccountName: {{ include "tp-dp-secret-controller.consts.appName" . }}
       {{- end }}
       containers:
         - name: controller
-          image: {{ if .Values.image.registry}}{{ .Values.image.registry }}{{else}}{{ .Values.global.cp.containerRegistry.url }}{{end}}{{ "/" }}{{ .Values.image.repository }}:{{ include "tp-dp-secret-controller.generated.buildNumber" . }}
+          image: {{ include "tp-dp-secret-controller.image.registry" .}}{{"/"}}{{ include "tp-dp-secret-controller.image.repository" .}}{{"/"}}{{ .Values.image.name }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
@@ -30,7 +30,7 @@ spec:
             - name: DATAPLANE_ID
               value: {{ .Values.global.cp.dataplaneId }}
       imagePullSecrets:
-        - name: {{ tpl .Values.global.cp.containerRegistry.secret . }}
+        - name: {{ .Values.global.cp.containerRegistry.secret }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,12 +1,11 @@
-{{- if .Release.IsInstall }}
 # Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
 
-# FOR NEW INSTALLS: load an initial tibemsd-ftl.json
+# FOR UNINSTALLS: Remove any lingering PVCs
 
 #
 {{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
 {{- $dataPvc := $emsParams.ems.logs.storageName -}}
-{{- $stsname := printf "%s-ems" $emsParams.ems.name -}}
+{{- $jobname := printf "%s-uninstall" $emsParams.ems.name -}}
 {{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
 {{- $svcFtl := printf "%s-%s" $emsParams.ems.name "ftl" -}}
 {{- $svcFtlHost := printf "%s.%s.svc" $svcFtl .Release.Namespace -}}
@@ -15,28 +14,28 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-    name: "{{ $emsParams.ems.name }}-emsinit"
+    name: "{{ $jobname }}"
     labels:
-      name: "{{ $emsParams.ems.name }}-emsinit"
+      name: "{{ $jobname }}"
       {{ include "msg.dp.labels" . | indent 6 }}
       tib-dp-app: msg-ems-ftl
     namespace: "{{ .Release.Namespace }}"
     annotations:
-      rollme: {{ randAlphaNum 5 | quote }}
+      "helm.sh/hook": post-delete
+      "helm.sh/hook-weight": "5"
+      # "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 spec:
     backoffLimit: 0
     #4hr limit -  activeDeadlineSeconds: 14400
     ttlSecondsAfterFinished: 180
     template:
         metadata:
-            name: "{{ $emsParams.ems.name }}-emsinit"
+            name: "{{ $jobname }}"
             namespace: "{{ .Release.Namespace }}"
             labels:
-                name: "{{ $emsParams.ems.name }}-emsinit"
+                name: "{{ $jobname }}"
                 tib-dp-app: msg-ems-ftl
                 {{ include "msg.dp.labels" . | indent 16 }}
-            annotations:
-                rollme: {{ randAlphaNum 5 | quote }}
         spec:
             enableServiceLinks: false
             nodeSelector:
@@ -47,36 +46,38 @@ spec:
             {{- end }}
             serviceAccountName: "{{ $emsParams.dp.serviceAccount }}"
             restartPolicy: Never
-            volumes:
-            - name: scripts-vol
-              configMap:
-                name: "{{ $emsParams.ems.name }}-scripts"
-            - name: "ems-log"
-              {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
-              persistentVolumeClaim:
-                claimName: "{{ $emsParams.ems.logs.storageName }}"
-              {{ else }}
-              emptyDir: {}
-              {{ end }}
+            # volumes:
+            # - name: scripts-vol
+            #   configMap:
+            #     name: "{{ $emsParams.ems.name }}-scripts"
+            # - name: "ems-log"
+            #   {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+            #   persistentVolumeClaim:
+            #     claimName: "{{ $emsParams.ems.logs.storageName }}"
+            #   {{ else }}
+            #   emptyDir: {}
+            #   {{ end }}
             terminationGracePeriodSeconds: 10
             containers:
             -   name: "main"
                 command: ['/compliance/check_eua', 'bash', '-c' ]
+                ## kubectl get pvc -l=tib-dp-release=$relname | egrep -v NAME | while read x o ; do kubectl delete pvc $x ; done
                 args:
                 - >
-                  ( mkdir -p /logs/$MY_POD_NAME/boot ; cd /logs/$MY_POD_NAME/boot ;
-                      for x in /boot/mk-*.sh ; do bash < $x ; done | tee boot.out ) ;
-                  bash < /boot/load-ems-init-json.sh ; 
+                  echo "Cleaning up PVCs ... " ; 
+                  kubectl get pvc -l=tib-dp-release={{ .Release.Name }} | egrep -v NAME | while read x o ; do 
+                    kubectl delete pvc $x ; done
+
                 image: "{{ $emsParams.ems.image }}"
                 imagePullPolicy: "{{ $emsParams.dp.pullPolicy }}"
-                volumeMounts:
-                - mountPath: /boot
-                  name: scripts-vol
-                - mountPath: /logs
-                  name: "ems-log"
-                  {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
-                  subPathExpr: "$(MY_RELEASE)/logs"
-                  {{ end }}
+                # volumeMounts:
+                # - mountPath: /boot
+                #   name: scripts-vol
+                # - mountPath: /logs
+                #   name: "ems-log"
+                #   {{ if eq "sharedPvc" $emsParams.ems.logs.storageType }}
+                #   subPathExpr: "$(MY_RELEASE)/logs"
+                #   {{ end }}
                 env:
                 # CAUTION! Setting Names here overrides envFrom values
                 {{ include "msg.envStdPodRefs" . | indent  16 }}
@@ -99,5 +100,3 @@ spec:
                 - name: FTL_REALM_URL
                   # the service load-balanced REALM URL
                   value: "http://{{ $svcFtlHost }}:$(REALM_PORT)"
-
-{{- end }}

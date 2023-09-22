@@ -31,6 +31,8 @@ es:
     service: dp-config-es-es-http
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+      nginx.ingress.kubernetes.io/proxy-ssl-verify: 'false'
 
 kibana:
   version: "8.9.0"
@@ -41,6 +43,8 @@ kibana:
     service: dp-config-es-kb-http
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+      nginx.ingress.kubernetes.io/proxy-ssl-verify: 'false'
 
 apm:
   enabled: true
@@ -52,6 +56,8 @@ apm:
     service: dp-config-es-apm-http
     annotations:
       traefik.ingress.kubernetes.io/router.entrypoints: websecure
+      nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+      nginx.ingress.kubernetes.io/proxy-ssl-verify: 'false'
 
 index:
   enabled: true

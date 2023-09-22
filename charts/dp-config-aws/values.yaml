@@ -12,16 +12,16 @@ dns:
 # this ingress object is used for AWS Load Balancer Controller to create ALB
 httpIngress:
   enabled: true
-  name: traefik
-  ingressClassName: alb
+  name: nginx         #traefik for traefik
+  ingressClassName: alb # this is for AWS ingress controller
   backend:
-    serviceName: dp-config-aws-traefik
-    servicePort: 443
+    serviceName: dp-config-aws-ingress-nginx-controller  # serviceName dp-config-aws-traefik for traefik
+    servicePort: 80    # port 443 for traefik
   # more AWS annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/
   annotations:
     alb.ingress.kubernetes.io/group.name: "abc.dataplanes.pro"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/backend-protocol: HTTP # HTTPS for traefik
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/success-codes: 200-499
     alb.ingress.kubernetes.io/target-type: ip
@@ -80,7 +80,8 @@ storageClass:
       # ensureUniqueDirectory: "true" # optional
 
 traefik:
-  enabled: true
+  # chart values: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+  enabled: false
   hub: # for hub
     enabled: false
   service: # for external-dns
@@ -99,3 +100,12 @@ traefik:
     kubernetes.io/os: linux
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
+
+ingress-nginx:
+  # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+  enabled: true
+  controller:
+    service: # for external-dns
+      type: ClusterIP
+    nodeSelector:
+      kubernetes.io/os: linux

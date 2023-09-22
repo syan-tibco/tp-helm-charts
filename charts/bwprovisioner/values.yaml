@@ -79,6 +79,11 @@ service:
   port: 7814
   targetPort: 7814
 
+publicApiService:
+  type: ClusterIP
+  port: 7816
+  targetPort: 7816
+
 #ingress:
 #  enabled: false
 #  annotations: {}
@@ -211,3 +216,11 @@ oauth2proxy:
       #  - secretName: chart-example-tls
       #    hosts:
       #      - chart-example.local
+
+publicApi:
+  ingress:
+    controllerName: nginx
+    nginx:
+      className: nginx
+      pathPrefix: /tibco/bw
+      fqdn: bwce.dp-bwdev.tcie.pro
