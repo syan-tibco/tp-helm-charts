@@ -1,11 +1,90 @@
-{{- if .Values.networkPolicy.createDefault -}}
+## If default network policy is to be created (default value TRUE)
+## 1. Label Based Egress - access to internet with exception of private ip blocks
+## 2. Label Based Egress - access to k8s api server with exception of node CIDR
+## 3. For primary namespace - allow egress to and ingress from all namespaces with label data plane id
+## 4. For non-primary namespace - allow egress to and ingress from primary namespace (match expression data plane id and namespace name)
+## Exra label based policies
+## 5. Label Based Other Apps Namespaces Egress - 
+      ## allow egress to all the pods on the all the ports for other data plane id labelled apps namespaces
+## 6. Other Apps Namespaces Ingress 
+      ## allow ingress from all the pods on the all the ports for other data plane id labelled apps namespaces
+## 7. External Namespaces Egress 
+      ## allow egress to all the pods on the all the ports for external namespaces with particual label
+## 8. External Namespaces Ingress 
+      ## allow ingress from all the pods on the all the ports for external namespaces with particual label
+## Additional than default
+## 9. Additional Egress - Detailed policy required (Annotations?, Names? Labels?)
+## 10. Additional Ingress - Detailed policy required (Annotations?, Names? Labels?)
 
-# Enable egress comminucation to all the pods in the namespace(s) with same dataplane id
-# Enable ingress comminucation from all the pods in the namespace(s) with same dataplane id
+{{ $root := . }}
+{{- if .Values.networkPolicy.default.create -}}
+{{/* Label based network policy to enable egress communication to internet with exception for accessing private IPs on all ports */}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-internet-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/internet-all: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        {{- $length_ip_list := len .Values.networkPolicy.default.privateIpBlockRanges }}
+        {{- if gt $length_ip_list 0 }}
+        except:
+        {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
+        - {{ . }}
+        {{- end }}
+        {{- end }}
+
+---
+
+{{/* Label based network policy to enable egress communication to kubernetes api server with exception for accessing node cidr on port 443 and 6443 */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-namespaces-ingress-egress
+  name: {{ .Values.global.tibco.dataPlaneId }}-kubernetes-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      egress.networking.platform.tibco.com/kubernetes-api: enable
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector: {}
+      podSelector:
+        matchLabels:
+          component: kube-apiserver
+    {{- if .Values.networkPolicy.default.nodeCidrIpBlock }}
+    - ipBlock:
+        cidr: {{ .Values.networkPolicy.default.nodeCidrIpBlock }}
+    {{- end }}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 6443
+
+---
+
+{{- if eq .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
+{{/* Enable egress comminucation to all the pods in the namespace(s) labelled with same dataplane id */}}
+{{/* Enable ingress comminucation from all the pods in the namespace(s) labelled with same dataplane id */}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-primary-ns-egress-ingress
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
@@ -26,39 +105,126 @@ spec:
         matchLabels:
           platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
       podSelector: {}
+{{- end }}
+
 ---
 
-# Label based network policy to enable egress communication to internet
+{{- if ne .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
+{{/* Enable egress comminucation to all the pods in the primary namespace labelled with same dataplane id */}}
+{{/* Enable ingress comminucation from all the pods in the primary namespace labelled with same dataplane id */}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-apps-ns-ingress-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  - Ingress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchExpressions:
+        - key: "platform.tibco.com/dataplane-id"
+          operator: In
+          values: [{{ .Values.global.tibco.dataPlaneId | quote }}]
+        - key: "kubernetes.io/metadata.name"
+          operator: In
+          values: [{{ .Values.global.tibco.primaryNamespaceName | quote }}]
+      podSelector: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchExpressions:
+        - key: "platform.tibco.com/dataplane-id"
+          operator: In
+          values: [{{ .Values.global.tibco.dataPlaneId | quote }}]
+        - key: "kubernetes.io/metadata.name"
+          operator: In
+          values: [{{ .Values.global.tibco.primaryNamespaceName | quote }}]
+      podSelector: {}
+{{- end }}
+{{- end }}
+
+---
+
+{{/* Label based network policy to enable egress communication to all pods in other apps namespaces labelled with same data plane id on all ports */}}
+{{- $length_apps_ns_egress := len .Values.networkPolicy.otherAppsNamespacesEgress -}}
+{{- if gt $length_apps_ns_egress 0 -}}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-internet-egress
+  name: {{ .Values.global.tibco.dataPlaneId }}-other-apps-ns-egress
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
 spec:
   podSelector:
     matchLabels:
-      egress.networking.platform.tibco.com/internet-all: enable
+      egress.networking.platform.tibco.com/other-apps-ns: enable
   policyTypes:
   - Egress
   egress:
-    - to:
-      - ipBlock:
-          cidr: 0.0.0.0/0
-          except:
-          {{- range .Values.global.privateIpBlockRanges -}}
-          - {{ . }}
-          {{- end -}}
-{{- end -}}
+  - to:
+    {{- range $index, $ns_name := .Values.networkPolicy.otherAppsNamespacesEgress }}
+    - namespaceSelector:
+        matchExpressions:
+        - key: "platform.tibco.com/dataplane-id"
+          operator: In
+          values: [{{ $root.Values.global.tibco.dataPlaneId | quote }}]
+        - key: "kubernetes.io/metadata.name"
+          operator: In
+          values: [{{ $ns_name | quote }}]
+      podSelector: {}
+    {{- end }}
+{{- end }}
 
 ---
 
-# Label based network policy to enable egress communication to internet
+{{/* Label based network policy to enable ingress communication from all pods in other app namespaces labelled with same data plane id on all ports */}}
+{{- $length_ext_ns_ingress := len .Values.networkPolicy.otherAppsNamespacesIngress -}}
+{{- if gt $length_ext_ns_ingress 0 -}}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-egress-external-namespaces
+  name: {{ .Values.global.tibco.dataPlaneId }}-other-apps-ns-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      ingress.networking.platform.tibco.com/other-apps-ns: enable
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    {{- range $index, $ns_name := .Values.networkPolicy.otherAppsNamespacesIngress }}
+    - namespaceSelector:
+        matchExpressions:
+        - key: "platform.tibco.com/dataplane-id"
+          operator: In
+          values: [{{ $root.Values.global.tibco.dataPlaneId | quote }}]
+        - key: "kubernetes.io/metadata.name"
+          operator: In
+          values: [{{ $ns_name | quote }}]
+      podSelector: {}
+    {{- end }}
+{{- end }}
+
+---
+
+
+{{/* Label based network policy to enable egress communication to all pods in external namespaces on all ports */}}
+{{- $length_ext_ns_egress := len .Values.networkPolicy.externalNamespacesLabelsEgress -}}
+{{- if gt $length_ext_ns_egress 0 -}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-external-namespaces-egress
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
@@ -69,56 +235,85 @@ spec:
   policyTypes:
   - Egress
   egress:
-    - to:
-      - namespaceSelector:
-          matchLabels:
-            platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
-        podSelector: {}
+  - to:
+    {{- range $index, $ns_label_key_value := .Values.networkPolicy.externalNamespacesLabelsEgress }}
+    - namespaceSelector:
+        matchLabels:
+          {{ $ns_label_key_value | toYaml }}
+      podSelector: {}
+    {{- end }}
+{{- end }}
 
+---
+
+{{/* Label based network policy to enable ingress communication from all pods in external namespaces on all ports */}}
+{{- $length_ext_ns_egress := len .Values.networkPolicy.externalNamespacesLabelsIngress -}}
+{{- if gt $length_ext_ns_egress 0 -}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-external-namespaces-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      ingress.networking.platform.tibco.com/external-ns: enable
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    {{- range $index, $ns_label_key_value := .Values.networkPolicy.externalNamespacesLabelsIngress }}
+    - namespaceSelector:
+        matchLabels:
+          {{ $ns_label_key_value | toYaml }}
+      podSelector: {}
+    {{- end }}
+{{- end }}
+
+---
+
+{{/* Label based network policy to enable additional specific egress communication on all pods in current namespace */}}
+{{- $length_ext_egress := len .Values.networkPolicy.additionalEgress -}}
+{{- if gt $length_ext_egress 0 -}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-additional-egress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  {{- range $index, $ns_label_key_value := .Values.networkPolicy.additionalEgress }}
+  - to:
+    - {{ toYaml $ns_label_key_value | trim | nindent 6 }}
+  {{- end }}
+{{- end }}
+
+---
+
+{{/* Label based network policy to enable additional specific ingress communication on all pods in current namespace */}}
+{{- $length_ext_ingress := len .Values.networkPolicy.additionalIngress -}}
+{{- if gt $length_ext_ingress 0 -}}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-additional-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  {{- range $index, $ns_label_key_value := .Values.networkPolicy.additionalIngress }}
+  - to:
+    - {{ toYaml $ns_label_key_value | trim | nindent 6 }}
+  {{- end }}
 {{- end -}}
-
---- 
-# {{- if .Values.networkPolicy.createAdditional -}}
-
-# kind: NetworkPolicy
-# apiVersion: networking.k8s.io/v1
-# metadata:
-#   name: {{ .Values.networkPolicy.custom.name }}
-#   namespace: {{ .Release.Namespace }}
-#   {{- if .Values.networkPolicy.custom.labels -}}
-#   labels:
-#     {{- range $key, $value := .Values.networkPolicy.custom.labels }}
-#     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
-#     {{- end }}
-#   {{- end -}}
-#   {{- if .Values.networkPolicy.custom.annotations -}}
-#   annotations:
-#     {{- range $key, $value := .Values.networkPolicy.custom.annotations }}
-#     {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
-#     {{- end }}
-#   {{- end -}}
-# spec:
-#   podSelector:
-#     matchLabels:
-#       {{- include "opentelemetry-collector.selectorLabels" . | nindent 6 }}
-#       {{- include "opentelemetry-collector.component" . | nindent 6 }}
-#   ingress:
-#     - ports:
-#         {{- range $port := .Values.networkPolicy.custom. }}
-#         {{- if $port.enabled }}
-#         - port: {{ $port.containerPort }}
-#           protocol: {{ $port.protocol }}
-#         {{- end }}
-#         {{- end }}
-#       {{- if .Values.networkPolicy.allowIngressFrom }}
-#       from:
-#         {{- toYaml .Values.networkPolicy.allowIngressFrom | nindent 8 }}
-#       {{- end }}
-#     {{- if .Values.networkPolicy.extraIngressRules }}
-#     {{- toYaml .Values.networkPolicy.extraIngressRules | nindent 4 }}
-#     {{- end }}
-#   {{- if .Values.networkPolicy.egressRules }}
-#   egress:
-#     {{- toYaml .Values.networkPolicy.egressRules | nindent 4 }}
-#   {{- end }}
-# {{- end }}

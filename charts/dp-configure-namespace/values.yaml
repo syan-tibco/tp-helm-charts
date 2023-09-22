@@ -15,10 +15,60 @@ createServiceAccount: true
 # Flag to enable or disable default network policies for a namespace
 # Default value is true. Possible values are true, false
 networkPolicy:
-  createDefault: false
-  privateIpBlockRanges: ""
-  externalNamespace:
-    - key1: value1
-    - key2: value2
+  default:
+    create: true
+    privateIpBlockRanges: []
+    nodeCidrIpBlock: ""
+  otherAppsNamespacesEgress:
+    - "finance-namespace"
+    - "audit-namespace"
+  otherAppsNamespacesIngress:
+    - "banking-namespace"
+    - "compliance-namespace"
+  externalNamespacesLabelsEgress:
+    - label_key1: label_value1
+    - label_key2: label_value2
+    - label_key3: label_value3
+  externalNamespacesLabelsIngress:
+    - label_key1: label_value1
+    - label_key2: label_value2
+    - label_key3: label_value3
   # Capture any additional network policies to be created for a namespace
-  additionalNetworkPolicy: {}
+  additionalEgress:
+  - namespaceSelector:
+      matchLabels:
+        ns_abc: ns_xyz
+    podSelector: {}
+    ports:
+    - protocol: tcp
+      port: 1234
+    - protocol: udp
+      port: 4321
+  - namespaceSelector: {}
+    podSelector: 
+      matchLabels:
+        pod_abc: pod_xyz
+    ports:
+    - protocol: tcp
+      port: 1123
+    - protocol: udp
+      port: 3321
+  additionalIngress:
+  - namespaceSelector:
+    matchLabels:
+      ns_abc: ns_xyz
+    podSelector: {}
+    ports:
+    - protocol: tcp
+      port: 1234
+    - protocol: udp
+      port: 4321
+  - namespaceSelector: {}
+    podSelector: 
+      matchLabels:
+        pod_abc: pod_xyz
+    ports:
+    - protocol: tcp
+      port: 1123
+    - protocol: udp
+      port: 3321
