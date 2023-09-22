@@ -160,7 +160,7 @@ config:
   logserver:
     userapp:
       logindex: "tibco-user-app"
-      traceindex: ""
+      traceindex: "dummy"
     services:
       logindex: "tibco-services"
     proxy:
@@ -179,13 +179,13 @@ config:
           username: "elastic"
   promserver:
     proxy:
-      endpoint: ""
-      username: ""
+      endpoint: "dummy"
+      username: "dummy"
     exporter:
-      endpoint: ""
+      endpoint: "dummy"
   jaeger:
     collector:
-      host: ""
+      host: "dummy"
       port: 4317
     es:
      host: "https://elastic.dp1-platform.tcie.pro"
@@ -193,7 +193,7 @@ config:
      username: "elastic"
   finops:
     collector:
-      endpoint: ""
+      endpoint: "dummy"
 secret:
   logserver:
     userapp:
