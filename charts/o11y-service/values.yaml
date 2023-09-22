@@ -160,7 +160,7 @@ config:
   logserver:
     userapp:
       logindex: "tibco-user-app"
-      traceindex: "dummy"
+      traceindex: ""
     services:
       logindex: "tibco-services"
     proxy:
@@ -179,8 +179,8 @@ config:
           username: "elastic"
   promserver:
     proxy:
-      endpoint: "dummy"
-      username: "dummy"
+      endpoint: ""
+      username: ""
     exporter:
       endpoint: "dummy"
   jaeger:

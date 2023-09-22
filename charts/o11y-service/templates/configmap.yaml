@@ -10,7 +10,7 @@ data:
   otel-recvservice-name: {{ .Values.config.otel.receiver.service.name }}
   otel-recvservice-port: {{ quote .Values.config.otel.receiver.service.port }}
   logserver-app-logIndex: {{ .Values.config.logserver.userapp.logindex }}
-  logserver-app-traceIndex: {{ .Values.config.logserver.userapp.traceindex }}
+  logserver-app-traceIndex: {{ quote .Values.config.logserver.userapp.traceindex }}
   logserver-svc-logIndex: {{ .Values.config.logserver.services.logindex }}
   logserver-proxy-app-endpoint: {{ .Values.config.logserver.proxy.userapp.logindex.endpoint }}
   logserver-proxy-app-userName: {{ .Values.config.logserver.proxy.userapp.logindex.username }}
@@ -18,8 +18,8 @@ data:
   logserver-exporter-app-userName: {{ .Values.config.logserver.exporter.userapp.logindex.username }}
   logserver-exporter-svc-endpoint: {{ .Values.config.logserver.exporter.services.logindex.endpoint }}
   logserver-exporter-svc-userName: {{ .Values.config.logserver.exporter.services.logindex.username }}
-  promserver-proxy-endpoint: {{ .Values.config.promserver.proxy.endpoint }}
-  promserver-proxy-userName: {{ .Values.config.promserver.proxy.username }}
+  promserver-proxy-endpoint: {{ quote .Values.config.promserver.proxy.endpoint }}
+  promserver-proxy-userName: {{ quote .Values.config.promserver.proxy.username }}
   jaeger-es-host: {{ .Values.config.jaeger.es.host }}
   jaeger-es-port: {{ quote .Values.config.jaeger.es.port }}
   jaeger-es-username: {{ .Values.config.jaeger.es.username }}
