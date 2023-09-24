@@ -18,7 +18,7 @@ networkPolicy:
   default:
     create: true
     privateIpBlockRanges: []
-    nodeCidrIpBlock: ""
+    nodeCidrIpBlockRanges: ""
   otherAppsNamespacesEgress:
     - "finance-namespace"
     - "audit-namespace"

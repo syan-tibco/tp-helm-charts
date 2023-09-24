@@ -3,21 +3,26 @@
 ## 2. Label Based Egress - access to k8s api server with exception of node CIDR
 ## 3. For primary namespace - allow egress to and ingress from all namespaces with label data plane id
 ## 4. For non-primary namespace - allow egress to and ingress from primary namespace (match expression data plane id and namespace name)
+## 5. Is kube-dns policy required?
 ## Exra label based policies
-## 5. Label Based Other Apps Namespaces Egress - 
+## 6. Label Based Other Apps Namespaces Egress - 
       ## allow egress to all the pods on the all the ports for other data plane id labelled apps namespaces
-## 6. Other Apps Namespaces Ingress 
+## 7. Other Apps Namespaces Ingress 
       ## allow ingress from all the pods on the all the ports for other data plane id labelled apps namespaces
-## 7. External Namespaces Egress 
+## 8. External Namespaces Egress 
       ## allow egress to all the pods on the all the ports for external namespaces with particual label
-## 8. External Namespaces Ingress 
+## 9. External Namespaces Ingress 
       ## allow ingress from all the pods on the all the ports for external namespaces with particual label
 ## Additional than default
-## 9. Additional Egress - Detailed policy required (Annotations?, Names? Labels?)
-## 10. Additional Ingress - Detailed policy required (Annotations?, Names? Labels?)
+## 10. Additional Egress - Detailed policy required (Annotations?, Names? Labels?)
+## 11. Additional Ingress - Detailed policy required (Annotations?, Names? Labels?)
+
+## Questions?
+## 1. where in UI will the customer know the values to provide? Or is it in Documents?
 
 {{ $root := . }}
 {{- if .Values.networkPolicy.default.create -}}
+{{- $length_ip_list := len .Values.networkPolicy.default.privateIpBlockRanges }}
 {{/* Label based network policy to enable egress communication to internet with exception for accessing private IPs on all ports */}}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -36,7 +41,6 @@ spec:
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
-        {{- $length_ip_list := len .Values.networkPolicy.default.privateIpBlockRanges }}
         {{- if gt $length_ip_list 0 }}
         except:
         {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
@@ -66,9 +70,15 @@ spec:
       podSelector:
         matchLabels:
           component: kube-apiserver
-    {{- if .Values.networkPolicy.default.nodeCidrIpBlock }}
+    {{- if (not (empty .Values.networkPolicy.default.nodeCidrIpBlock)) }}
     - ipBlock:
         cidr: {{ .Values.networkPolicy.default.nodeCidrIpBlock }}
+        {{- if gt $length_ip_list 0 }}
+        except:
+        {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
+        - {{ . }}
+        {{- end }}
+        {{- end }}
     {{- end }}
     ports:
     - protocol: TCP
