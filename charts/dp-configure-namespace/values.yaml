@@ -15,6 +15,7 @@ createServiceAccount: true
 # Flag to enable or disable default network policies for a namespace
 # Default value is true. Possible values are true, false
 networkPolicy:
+<<<<<<< HEAD
   default:
     create: true
     privateIpBlockRanges: []
@@ -72,3 +73,12 @@ networkPolicy:
       port: 1123
     - protocol: udp
       port: 3321
+=======
+  createDefault: false
+  privateIpBlockRanges: ""
+  externalNamespace:
+    - key1: value1
+    - key2: value2
+  # Capture any additional network policies to be created for a namespace
+  additionalNetworkPolicy: {}
+>>>>>>> d3bf546ce86ec1de9800faf64358fa070473b9d7
