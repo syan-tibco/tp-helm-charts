@@ -69,6 +69,15 @@ storageClass:
     #   - cache=strict # https://linux.die.net/man/8/mount.cifs
     #   - nosharesock
 
+ingress-nginx:
+  # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+  enabled: true
+  controller:
+    service: # for external-dns
+      type: ClusterIP
+    nodeSelector:
+      kubernetes.io/os: linux
+
 traefik:
   enabled: false
   hub: # for hub
