@@ -78,3 +78,26 @@ platform.tibco.com/workload-type: {{ include "dp-core-distributed-lock-operator.
 {{- define "dp-core-distributed-lock-operator.shared.func.globalResourcePrefix" -}}
 {{ .Values.global.cp.dataplaneId }}-{{ include "dp-core-distributed-lock-operator.consts.appName" . }}-
 {{- end -}}
+
+{{- define "dp-core-distributed-lock-operator.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "dp-core-distributed-lock-operator.const.ecrImageRepo" }}stratosphere{{end}}
+{{- define "dp-core-distributed-lock-operator.const.acrImageRepo" }}stratosphere{{end}}
+{{- define "dp-core-distributed-lock-operator.const.harborImageRepo" }}stratosphere{{end}}
+{{- define "dp-core-distributed-lock-operator.const.defaultImageRepo" }}stratosphere{{end}}
+
+{{- define "dp-core-distributed-lock-operator.image.registry" }}
+  {{- .Values.global.cp.containerRegistry.url }}
+{{- end -}}
+
+{{/* set repository based on the registry url. We will have different repo for each one. */}}
+{{- define "dp-core-distributed-lock-operator.image.repository" -}}
+  {{- if contains "jfrog.io" (include "dp-core-distributed-lock-operator.image.registry" .) }}
+    {{- include "dp-core-distributed-lock-operator.const.jfrogImageRepo" .}}
+  {{- else if contains "amazonaws.com" (include "dp-core-distributed-lock-operator.image.registry" .) }}
+    {{- include "dp-core-distributed-lock-operator.const.ecrImageRepo" .}}
+  {{- else if contains "reldocker.tibco.com" (include "dp-core-distributed-lock-operator.image.registry" .) }}
+    {{- include "dp-core-distributed-lock-operator.const.harborImageRepo" .}}
+  {{- else }}
+    {{- include "dp-core-distributed-lock-operator.const.defaultImageRepo" .}}
+  {{- end }}
+{{- end -}}

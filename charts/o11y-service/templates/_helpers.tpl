@@ -103,3 +103,26 @@ app.cloud.tibco.com/created-by: {{ include "o11y-service.consts.appName" . }}
 helm.sh/chart: {{ include "o11y-service.shared.labels.chartLabelValue" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- end -}}
+
+{{- define "o11y-service.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "o11y-service.const.ecrImageRepo" }}stratosphere{{end}}
+{{- define "o11y-service.const.acrImageRepo" }}stratosphere{{end}}
+{{- define "o11y-service.const.harborImageRepo" }}stratosphere{{end}}
+{{- define "o11y-service.const.defaultImageRepo" }}stratosphere{{end}}
+
+{{- define "o11y-service.image.registry" }}
+  {{- .Values.global.cp.containerRegistry.url }}
+{{- end -}}
+
+{{/* set repository based on the registry url. We will have different repo for each one. */}}
+{{- define "o11y-service.image.repository" -}}
+  {{- if contains "jfrog.io" (include "o11y-service.image.registry" .) }}
+    {{- include "o11y-service.const.jfrogImageRepo" .}}
+  {{- else if contains "amazonaws.com" (include "o11y-service.image.registry" .) }}
+    {{- include "o11y-service.const.ecrImageRepo" .}}
+  {{- else if contains "reldocker.tibco.com" (include "o11y-service.image.registry" .) }}
+    {{- include "o11y-service.const.harborImageRepo" .}}
+  {{- else }}
+    {{- include "o11y-service.const.defaultImageRepo" .}}
+  {{- end }}
+{{- end -}}

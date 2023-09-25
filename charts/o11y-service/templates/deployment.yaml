@@ -31,7 +31,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: tp-o11y-service
-          image: {{ .Values.global.cp.containerRegistry.url }}/stratosphere/o11y-service:{{ .Values.global.o11yservice.image.tag }}
+          image: {{ include "o11y-service.image.registry" .}}{{"/"}}{{ include "o11y-service.image.repository" .}}{{"/"}}o11y-service:{{ .Values.global.o11yservice.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
             requests:
