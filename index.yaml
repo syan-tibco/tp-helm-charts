@@ -243,6 +243,20 @@ entries:
   distributed-lock-operator:
   - apiVersion: v1
     appVersion: 1.0.0
+    created: "2023-09-25T10:42:18.144392614Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: fcdd4d39df06368f7aa253a41f88ca981595c6362c50d9928e62e4c346af7885
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.4/distributed-lock-operator-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v1
+    appVersion: 1.0.0
     created: "2023-09-11T14:29:59.589067657Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
     digest: 57d1b74d67403bf43b1b6f5c120ac5053fc479487a3362907d30c77743798a57
@@ -2362,6 +2376,20 @@ entries:
   o11yservice:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-25T10:42:18.261899957Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
+    digest: 9b6c7b533ecb655e6fd44bb136372c9785cc240623d53160f9a77c918c2945a0
+    home: https://github.com/tibco/tp-o11y-service.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: o11yservice
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/o11yservice-1.0.15/o11yservice-1.0.15.tgz
+    version: 1.0.15
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-25T08:00:41.543937327Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
     digest: 63622264204519ca1dddfc9f7d64684f05260b9f336a5c0c06b5432e069afa94
@@ -3377,4 +3405,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-25T09:48:48.925193529Z"
+generated: "2023-09-25T10:42:18.262356283Z"
