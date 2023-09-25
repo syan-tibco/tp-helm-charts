@@ -1,12 +1,11 @@
 {{ $root := . }}
 {{- if .Values.networkPolicy.default.create -}}
 {{- $length_ip_list := len .Values.networkPolicy.default.privateIpBlockRanges }}
-{{/* Enable egress comminucation to all the pods in the namespace(s) labelled with same dataplane id on all ports */}}
-{{/* Enable ingress comminucation from all the pods in the namespace(s) labelled with same dataplane id on all ports */}}
+{{/* Default network policies applied to the namespace */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-within-dp-communication
+  name: {{ .Values.global.tibco.dataPlaneId }}-default
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
@@ -16,62 +15,25 @@ spec:
   - Egress
   - Ingress
   egress:
+  {{- /* Enable egress to all the pods within all namespaces of same data plane on all ports */}}
   - to:
     - namespaceSelector:
         matchLabels:
           platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
       podSelector: {}
-  ingress:
-  - from:
+  {{- /* Enable egress to all the pods in the current namespace to allow pod-to-pod communication on all ports */}}
+  - to:
     - namespaceSelector:
         matchLabels:
-          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+          kubernetes.io/metadata.name: {{ .Release.Namespace }}
       podSelector: {}
-
----
-
-{{/* Enable egress to external namespaces labelled with matching label on all pods in release namespace on all ports */}}
-{{/* Enable ingress from external namespaces labelled with matching label on all pods in release namespace on all ports */}}
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-external-ns-communication
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
-spec:
-  podSelector: {}
-  policyTypes:
-  - Egress
-  - Ingress
-  egress:
+  {{- /* Enable egress to all the pods in a specifically labelled external namespace on all ports */}}
   - to:
     - namespaceSelector:
         matchLabels:
           networking.platform.tibco.com/external-ns: enable
       podSelector: {}
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          networking.platform.tibco.com/external-ns: enable
-      podSelector: {}
-
----
-
-{{/* Enable egress to kube-dns on all pods in release namespace on ports 53 with TCP and UDP */}}
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-kube-dns
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
-spec:
-  podSelector: {}
-  policyTypes:
-      - Egress
-  egress:
+  {{- /* Enable egress to kube-dns on all pods in release namespace on ports 53 with TCP and UDP */}}
   - to:
     - namespaceSelector: {}
       podSelector:
@@ -82,10 +44,29 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
+  ingress:
+  {{- /* Enable ingress from all the pods within all namespaces of same data plane on all ports */}}
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
+      podSelector: {}
+  {{- /* Enable ingress from all the pods in the current namespace to allow pod-to-pod communication on all ports */}}
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      podSelector: {}
+  {{- /* Enable ingress from all the pods in a specifically labelled external namespace on all ports */}}
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          networking.platform.tibco.com/external-ns: enable
+      podSelector: {}
 
 ---
 
-{{/* Label based policies - pods need to have the labels in order to establish the communication */}}
+{{/* Label based policies - pods need to have this label in order to establish the communication */}}
 {{/* Label based network policy to enable egress communication to internet with exception 
 for accessing private IPs on all ports */}}
 kind: NetworkPolicy
@@ -147,7 +128,8 @@ spec:
 
 ---
 
-{{/* Label based network policy to enable egress communication to kubernetes api server on node cidr on port 443 and 6443 */}}
+{{/* Label based network policy to enable egress and ingress communication to 
+kubernetes api server on node cidr on port 443 and 6443 */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -158,9 +140,10 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      egress.networking.platform.tibco.com/kubernetes-api: enable
+      networking.platform.tibco.com/kubernetes-api: enable
   policyTypes:
   - Egress
+  - Ingress
   egress:
   - to:
     - namespaceSelector: {}
@@ -176,33 +159,19 @@ spec:
       port: 443
     - protocol: TCP
       port: 6443
-
----
-
-{{/* Label based network policy to enable egress communication to kubernetes api server 
-with exception for accessing node cidr on port 443 and 6443 */}}
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-within-ns-communication
-  namespace: {{ .Release.Namespace }}
-  labels:
-    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
-spec:
-  podSelector: {}
-  policyTypes:
-  - Egress
-  - Ingress
-  egress:
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: {{ .Release.Namespace }}
-      podSelector: {}
   ingress:
-  - from:
-    - namespaceSelector:
+  - from: 
+    - namespaceSelector: {}
+      podSelector:
         matchLabels:
-          kubernetes.io/metadata.name: {{ .Release.Namespace }}
-      podSelector: {}
+          component: kube-apiserver
+    {{- if (not (empty .Values.networkPolicy.default.nodeCidrIpBlock)) -}}
+    - ipBlock:
+        cidr: {{ .Values.networkPolicy.default.nodeCidrIpBlock }}
+    {{- end }}
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 6443
 {{- end -}}
