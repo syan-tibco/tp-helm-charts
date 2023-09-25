@@ -24,14 +24,14 @@ tls:
 
 httpIngress:
   enabled: true
-  name: traefik
+  name: nginx
   backend:
-    serviceName: dp-config-aks-traefik
-    servicePort: 443
+    serviceName: dp-config-aks-ingress-nginx-controller
+    servicePort: 80
   # more AGIC annotations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/#appgw-ssl-certificate
   annotations:
     kubernetes.io/ingress.class: azure/application-gateway                          #This will configure the AppGw with this ingressObject
-  #  cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
+#    cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
     external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
 
 # the dns value is actually use pattern:
@@ -70,7 +70,7 @@ storageClass:
     #   - nosharesock
 
 traefik:
-  enabled: true
+  enabled: false
   hub: # for hub
     enabled: false
   service: # for external-dns
@@ -95,3 +95,16 @@ traefik:
         secretName: cic-certificate-production
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
+
+ingress-nginx:
+  # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+  enabled: true
+  controller:
+    service: # for external-dns
+      type: ClusterIP
+    nodeSelector:
+      kubernetes.io/os: linux
+    tlsStore: # for certificate
+      default:
+        defaultCertificate:
+          secretName: cic-certificate-production
