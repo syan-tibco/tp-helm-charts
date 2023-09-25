@@ -19,7 +19,7 @@ data:
       "token_endpoint_auth_method": "client_secret_basic",
       "instance_id": "{{ .Values.global.cp.instanceId }}",
       "redirect_uris": [
-        "https://{{ .Values.global.cp.resources.ingress.fqdn }}/{{ .Values.global.cp.capability.pathPrefix }}/oauth2/callback"
+        "https://{{ .Values.global.cp.resources.ingress.fqdn }}{{ .Values.global.cp.capability.pathPrefix }}/oauth2/callback"
       ]
     }'
 
