@@ -59,8 +59,8 @@ Create chart name and version as used by the chart label.
 
 {{/* Node Cidr for the cluster */}}
 {{- define "dp-configure-namespace.nodeCidr" }}
-{{- if .Values.networkPolicy.default.create }}
-{{- required "If Network Policy is enabled, setting .Values.networkPolicy.default.nodeCidrIpBlock is required" .Values.networkPolicy.default.nodeCidrIpBlock -}}
+{{- if .Values.networkPolicy.create }}
+{{- required (printf "networkPolicy.nodeCidrIpBlock is required if Network Policy is enabled.\nUse --set networkPolicy.nodeCidrIpBlock=<NodeIpCidr>\nNodeIpCidr=<IP range Nodes VPC (CIDR notation)>") .Values.networkPolicy.nodeCidrIpBlock -}}
 {{- end }}
 {{- end }}
 
@@ -124,19 +124,5 @@ platform.tibco.com/dataPlane-id: {{ .Values.global.tibco.dataPlaneId }}
 {{- end -}}
 {{- else -}}
 {{/* no op is ns does not exists. We expect the ns to be already present. We have this to avoid helm templating issue*/}}
-{{- end -}}
-{{- end -}}
-
-{{/* Verify node cidr is set in values.*/}}
-{{- define "dp-configure-namespace.validate-node-cidr" -}}
-{{- if .Values.networkPolicy.default.create -}}
-{{- if (empty .Values.networkPolicy.default.nodeCidrIpBlock) -}}
-{{- printf "Node cidr is required if default network policies are to be created" -}}
-{{- printf "Specify IP with CIDR notation " | fail -}}
-{{- else -}}
-{{- printf "Node cidr specified: %s" .Values.networkPolicy.default.nodeCidrIpBlock -}}
-{{- end -}}
-{{- else -}}
-{{- printf "Create default network policy is disabled" -}}
 {{- end -}}
 {{- end -}}

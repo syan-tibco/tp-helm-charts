@@ -13,18 +13,10 @@ global:
 createServiceAccount: true
 
 networkPolicy:
-  default:
-    # Flag to enable or disable default network policies for a namespace
-    # Default value is true. Possible values are true, false
-    create: true
-    # Allow access to internet, but NOT to any internal network resources
-    # Sample values can be:
-    # privateIpBlockRanges:
-    # - 10.0.0.0/8
-    # - 172.16.0.0/12
-    # - 192.168.0.0/16  
-    privateIpBlockRanges: []
-    # node CIDR IP block
-    # Required value if the network policies are to be enabled
-    nodeCidrIpBlock: ""
+  # Flag to enable or disable creating default network policies for a namespace
+  # Default value is true. Possible values are true, false
+  create: true
+  # node CIDR IP block
+  # Required value if the network policies are to be enabled
+  nodeCidrIpBlock: ""
   

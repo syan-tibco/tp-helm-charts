@@ -1,6 +1,4 @@
-{{ $root := . }}
-{{- if .Values.networkPolicy.default.create -}}
-{{- $length_ip_list := len .Values.networkPolicy.default.privateIpBlockRanges }}
+{{- if .Values.networkPolicy.create -}}
 {{/* Default network policies applied to the namespace */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -16,22 +14,17 @@ spec:
   - Ingress
   egress:
   {{- /* Enable egress to all the pods within all namespaces of same data plane on all ports */}}
+  {{- /* Enable egress to all the pods in the current namespace to allow pod-to-pod communication on all ports */}}
   - to:
     - namespaceSelector:
         matchLabels:
           platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
       podSelector: {}
-  {{- /* Enable egress to all the pods in the current namespace to allow pod-to-pod communication on all ports */}}
-  - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: {{ .Release.Namespace }}
-      podSelector: {}
   {{- /* Enable egress to all the pods in a specifically labelled external namespace on all ports */}}
   - to:
     - namespaceSelector:
         matchLabels:
-          networking.platform.tibco.com/external-ns: enable
+          networking.platform.tibco.com/non-dp-ns: enable
       podSelector: {}
   {{- /* Enable egress to kube-dns on all pods in release namespace on ports 53 with TCP and UDP */}}
   - to:
@@ -46,29 +39,24 @@ spec:
       port: 53
   ingress:
   {{- /* Enable ingress from all the pods within all namespaces of same data plane on all ports */}}
+  {{- /* Enable ingress from all the pods in the current namespace to allow pod-to-pod communication on all ports */}}
   - from:
     - namespaceSelector:
         matchLabels:
           platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
       podSelector: {}
-  {{- /* Enable ingress from all the pods in the current namespace to allow pod-to-pod communication on all ports */}}
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: {{ .Release.Namespace }}
-      podSelector: {}
   {{- /* Enable ingress from all the pods in a specifically labelled external namespace on all ports */}}
   - from:
     - namespaceSelector:
         matchLabels:
-          networking.platform.tibco.com/external-ns: enable
+          networking.platform.tibco.com/non-dp-ns: enable
       podSelector: {}
 
 ---
 
 {{/* Label based policies - pods need to have this label in order to establish the communication */}}
 {{/* Label based network policy to enable egress communication to internet with exception 
-for accessing private IPs on all ports */}}
+for accessing node cidr on all ports */}}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -87,17 +75,12 @@ spec:
     - ipBlock:
         cidr: 0.0.0.0/0
         except:
-        - {{ include "dp-configure-namespace.nodeCidr" $root }}
-        {{- if gt $length_ip_list 0 }}
-        {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
-        - {{ . }}
-        {{- end }}
-        {{- end }}
+        - {{ include "dp-configure-namespace.nodeCidr" . }}
 
 ---
 
 {{/* Label based network policy to enable egress communication to internet 
-with exception for accessing private IPs on port 80 and 443 */}}
+with exception for accessing node cidr on port 80 and 443 */}}
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -116,12 +99,7 @@ spec:
     - ipBlock:
         cidr: 0.0.0.0/0
         except:
-        - {{ include "dp-configure-namespace.nodeCidr" $root }}
-        {{- if gt $length_ip_list 0 }}
-        {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
-        - {{ . }}
-        {{- end }}
-        {{- end }}
+        - {{ include "dp-configure-namespace.nodeCidr" . }}
     ports:
     - protocol: TCP
       port: 80
@@ -153,7 +131,7 @@ spec:
         matchLabels:
           component: kube-apiserver
     - ipBlock:
-        cidr: {{ include "dp-configure-namespace.nodeCidr" $root }}
+        cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
     ports:
     - protocol: TCP
       port: 443
@@ -166,5 +144,5 @@ spec:
         matchLabels:
           component: kube-apiserver
     - ipBlock:
-        cidr: {{ include "dp-configure-namespace.nodeCidr" $root }}
+        cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
 {{- end -}}

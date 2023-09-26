@@ -1,5 +1,4 @@
 {{ include "dp-configure-namespace.validate-namespace" . }}
-{{ include "dp-configure-namespace.validate-node-cidr" . }}
 Release name: {{ .Release.Name }}.
 To learn more about the release, try:
   $ helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
