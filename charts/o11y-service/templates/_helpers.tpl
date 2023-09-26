@@ -91,6 +91,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/part-of: "o11y"
 platform.tibco.com/workload-type: "infra"
 platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- end -}}
 
 {{/*
