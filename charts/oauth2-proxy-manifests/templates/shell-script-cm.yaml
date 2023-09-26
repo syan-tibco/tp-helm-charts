@@ -7,14 +7,11 @@ data:
   iat_to_clienid.sh: |
     #!/bin/sh
 
-    apk update
-    apk add curl
-    apk add jq
+    apk update && apk add curl jq
     set -x
-    echo "generating a secret from IAT"
-
+    echo "Initializing Oauth2 Proxy.."
     body='{
-      "client_name": "OAuth_Proxy_{{ .Values.global.cp.instanceId }}",
+      "client_name": "OAuth2_Proxy_{{ .Values.global.cp.instanceId }}_{{ now | unixEpoch }}",
       "scope": "TSC",
       "token_endpoint_auth_method": "client_secret_basic",
       "instance_id": "{{ .Values.global.cp.instanceId }}",
@@ -28,6 +25,11 @@ data:
       echo $response
       clientId=$(echo -n $response | jq -rj .client_id | base64)
       clientSecret=$(echo -n $response | jq -rj .client_secret | base64)
+      if [ -z "$clientId" ] 
+      then
+        echo "Failed to register client. Existing"
+        exit 1
+      fi
     }
 
     getSecret () {
@@ -83,18 +85,20 @@ data:
         ")
         return $http_code
     }
-    exchangeIatForClientId
     getSecret
     if [ $http_code -eq 200 ]; then
         #echo "Updating oauth2-proxy secret"
+        #exchangeIatForClientId
         #updateSecret
-        echo "Oauth2-proxy secret exists. We will not update it."
+        echo "Oauth2-proxy already initialized. We will not register new client."
     else
-        echo "Creating new oauth2-proxy secret"
+        echo "Registering new client.."
+        exchangeIatForClientId
         createSecret
     fi
     if [ $http_code -ne 200 ]; then
         echo "Client registration failed. Aborting!"
         exit $http_code
     fi
+    echo "Initialized successfully."
     return 0
