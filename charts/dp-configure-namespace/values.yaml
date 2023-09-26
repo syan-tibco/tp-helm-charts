@@ -25,5 +25,6 @@ networkPolicy:
     # - 192.168.0.0/16  
     privateIpBlockRanges: []
     # node CIDR IP block
+    # Required value if the network policies are to be enabled
     nodeCidrIpBlock: ""
   

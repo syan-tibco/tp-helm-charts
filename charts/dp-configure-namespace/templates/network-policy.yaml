@@ -86,8 +86,9 @@ spec:
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
-        {{- if gt $length_ip_list 0 }}
         except:
+        - {{ include "dp-configure-namespace.nodeCidr" $root }}
+        {{- if gt $length_ip_list 0 }}
         {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
         - {{ . }}
         {{- end }}
@@ -114,8 +115,9 @@ spec:
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
-        {{- if gt $length_ip_list 0 }}
         except:
+        - {{ include "dp-configure-namespace.nodeCidr" $root }}
+        {{- if gt $length_ip_list 0 }}
         {{- range .Values.networkPolicy.default.privateIpBlockRanges }}
         - {{ . }}
         {{- end }}
@@ -128,8 +130,8 @@ spec:
 
 ---
 
-{{/* Label based network policy to enable egress and ingress communication to 
-kubernetes api server on node cidr on port 443 and 6443 */}}
+{{/* Label based network policy to enable egress communication on port 443 and 6443 to kubernetes api server
+and ingress communication on all ports from kubernetes api server */}}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -150,10 +152,8 @@ spec:
       podSelector:
         matchLabels:
           component: kube-apiserver
-    {{- if (not (empty .Values.networkPolicy.default.nodeCidrIpBlock)) -}}
     - ipBlock:
-        cidr: {{ .Values.networkPolicy.default.nodeCidrIpBlock }}
-    {{- end }}
+        cidr: {{ include "dp-configure-namespace.nodeCidr" $root }}
     ports:
     - protocol: TCP
       port: 443
@@ -165,13 +165,6 @@ spec:
       podSelector:
         matchLabels:
           component: kube-apiserver
-    {{- if (not (empty .Values.networkPolicy.default.nodeCidrIpBlock)) -}}
     - ipBlock:
-        cidr: {{ .Values.networkPolicy.default.nodeCidrIpBlock }}
-    {{- end }}
-    ports:
-    - protocol: TCP
-      port: 443
-    - protocol: TCP
-      port: 6443
+        cidr: {{ include "dp-configure-namespace.nodeCidr" $root }}
 {{- end -}}
