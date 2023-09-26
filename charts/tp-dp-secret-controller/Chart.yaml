@@ -10,4 +10,4 @@ maintainers:
 - email: compute-dev@tibco.com
   name: TIBCO CIC Compute Dev Team
 name: tp-dp-secret-controller
-version: 1.0.22
+version: 1.0.23
