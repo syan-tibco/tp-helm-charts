@@ -41,7 +41,7 @@ spec:
               name: server
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.global.cp.containerRegistry.url }}/piap/artifactmanager:{{ .Values.global.artifactmanager.image.tag }}
+          image: {{ include "artifactmanager.image.registry" .}}{{"/"}}{{ include "artifactmanager.image.repository" .}}{{"/"}}artifactmanager:{{ .Values.global.artifactmanager.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
             - name: data
@@ -86,31 +86,9 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-        {{- if .Values.global.artifactmanager.deploymanager.enabled }}
-        - name: deploymanager
-          image: {{ .Values.global.cic.data.SYSTEM_DOCKER_REGISTRY }}/tci/tci-app-proxy:{{ .Values.global.artifactmanager.deploymanager.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          resources:
-            {{- toYaml .Values.global.artifactmanager.deploymanager.resources | nindent 12 }}
-          volumeMounts:
-            - name: configs
-              mountPath: /configs
-          env:
-            - name: DEPLOY_MANAGER_SERVICE
-              value: "true"
-            - name: APPS_NAMESPACE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: APPS_NAMESPACE
-          ports:
-            - containerPort: 7830
-              protocol: TCP
-              name: deploymanager
-        {{- end }}
         {{- if .Values.global.artifactmanager.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.artifactmanager.logging.image.registry }}/tci/fluent-bit:{{ .Values.global.artifactmanager.logging.image.registry.tag }}
+          image: {{ .Values.global.artifactmanager.logging.image.registry }}fluent-bit:{{ .Values.global.artifactmanager.logging.image.registry.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
             {{- toYaml .Values.global.artifactmanager.deploymanager.resources | nindent 12 }}

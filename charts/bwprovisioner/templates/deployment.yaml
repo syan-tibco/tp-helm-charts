@@ -43,7 +43,7 @@ spec:
               name: publicapiserver
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.global.cp.containerRegistry.url }}/piap/bw-provisioner:{{ .Values.global.bwprovisioner.image.tag }}
+          image: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.image.repository" .}}{{"/"}}bw-provisioner:{{ .Values.global.bwprovisioner.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           livenessProbe:
             httpGet:
@@ -87,7 +87,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: SOURCE_REGISTRY
-              value: {{ .Values.global.cp.containerRegistry.url }}
+              value: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.image.repository" .}}{{"/"}}
 #            - name: OTEL_SERVICE_NAME
 #              valueFrom:
 #                configMapKeyRef:
@@ -98,31 +98,9 @@ spec:
 #                configMapKeyRef:
 #                  name: {{ include "bwprovisioner.o11yservice.configmap" . }}
 #                  key: otel-recvservice-port
-        {{- if .Values.global.bwprovisioner.deploymanager.enabled }}
-        - name: deploymanager
-          image: {{ .Values.global.cic.data.SYSTEM_DOCKER_REGISTRY }}/tci/tci-app-proxy:{{ .Values.global.bwprovisioner.deploymanager.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          resources:
-            {{- toYaml .Values.global.bwprovisioner.deploymanager.resources | nindent 12 }}
-          volumeMounts:
-            - name: configs
-              mountPath: /configs
-          env:
-            - name: DEPLOY_MANAGER_SERVICE
-              value: "true"
-            - name: APPS_NAMESPACE
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: APPS_NAMESPACE
-          ports:
-            - containerPort: 7830
-              protocol: TCP
-              name: deploymanager
-        {{- end }}
         {{- if .Values.global.bwprovisioner.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.bwprovisioner.logging.image.registry }}/tci/fluent-bit:{{ .Values.global.bwprovisioner.logging.image.registry.tag }}
+          image: {{ .Values.global.bwprovisioner.logging.image.registry }}fluent-bit:{{ .Values.global.bwprovisioner.logging.image.registry.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
             {{- toYaml .Values.global.bwprovisioner.deploymanager.resources | nindent 12 }}

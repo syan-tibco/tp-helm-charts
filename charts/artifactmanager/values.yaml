@@ -37,9 +37,9 @@ global:
         resources: {}
     logging:
       image:
-        enabled: false
-        registry: ""
-        tag: ""
+        enabled: true
+        registry: "cr.fluentbit.io/fluent/"
+        tag: "2.1.6"
         resources: {}
 
 replicaCount: 1

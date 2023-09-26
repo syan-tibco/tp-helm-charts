@@ -69,3 +69,28 @@ Integration storage folder pvc name
 {{- define "artifactmanager.cp.domain" }}cp-proxy.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local{{ end -}}
 
 {{- define "artifactmanager.sa" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-sa{{ end -}}
+
+{{- define "artifactmanager.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "artifactmanager.const.ecrImageRepo" }}piap{{end}}
+{{- define "artifactmanager.const.acrImageRepo" }}piap{{end}}
+{{- define "artifactmanager.const.harborImageRepo" }}piap{{end}}
+{{- define "artifactmanager.const.defaultImageRepo" }}piap{{end}}
+
+{{- define "artifactmanager.image.registry" }}
+  {{- .Values.global.cp.containerRegistry.url }}
+{{- end -}}
+ 
+{{/* set repository based on the registry url. We will have different repo for each one. */}}
+{{- define "artifactmanager.image.repository" -}}
+  {{- if contains "jfrog.io" (include "artifactmanager.image.registry" .) }}
+    {{- include "artifactmanager.const.jfrogImageRepo" .}}
+  {{- else if contains "amazonaws.com" (include "artifactmanager.image.registry" .) }}
+    {{- include "artifactmanager.const.ecrImageRepo" .}}
+  {{- else if contains "azurecr.io" (include "artifactmanager.image.registry" .) }}
+    {{- include "artifactmanager.const.acrImageRepo" .}}
+  {{- else if contains "reldocker.tibco.com" (include "artifactmanager.image.registry" .) }}
+    {{- include "artifactmanager.const.harborImageRepo" .}}
+  {{- else }}
+    {{- include "artifactmanager.const.defaultImageRepo" .}}
+  {{- end }}
+{{- end -}}
