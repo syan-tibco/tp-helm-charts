@@ -1276,6 +1276,33 @@ entries:
     version: 1.0.0
   dp-core-infrastructure:
   - apiVersion: v2
+    appVersion: 1.0.240
+    created: "2023-09-27T13:25:20.2357192Z"
+    dependencies:
+    - condition: tp-tibtunnel.enabled
+      name: tp-tibtunnel
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 1.0.*
+    - condition: tp-provisioner-agent.enabled
+      name: tp-provisioner-agent
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 1.0.*
+    - condition: haproxy-ingress.enabled
+      name: haproxy-ingress
+      repository: ""
+      version: v0.14.0
+    - condition: config.enabled
+      name: config
+      repository: ""
+      version: 1.0.0
+    description: A Helm chart for TIBCO Platform Data Plane Infrastructure
+    digest: 4106c0554ae909450ae433bc4a25595c87766cd42e0fe7e60f00b0247f646c56
+    name: dp-core-infrastructure
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.240/dp-core-infrastructure-1.0.240.tgz
+    version: 1.0.240
+  - apiVersion: v2
     appVersion: 1.0.239
     created: "2023-09-27T12:55:30.22389433Z"
     dependencies:
@@ -3725,4 +3752,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-27T13:22:42.566861147Z"
+generated: "2023-09-27T13:25:20.236185799Z"
