@@ -130,6 +130,20 @@ entries:
   bwprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-27T12:55:30.082623062Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: c7c555cb39a55208d26144625bc53a963958caa64ab090bd4982f95b26a9a4bf
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.11/bwprovisioner-1.0.11.tgz
+    version: 1.0.11
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-26T08:40:40.969915397Z"
     description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
     digest: 52ddc1828e7e014169600e069e844d829da8d1607b078e4c914388e7caf0af93
@@ -1205,6 +1219,33 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-configure-namespace-1.0.0/dp-configure-namespace-1.0.0.tgz
     version: 1.0.0
   dp-core-infrastructure:
+  - apiVersion: v2
+    appVersion: 1.0.239
+    created: "2023-09-27T12:55:30.22389433Z"
+    dependencies:
+    - condition: tp-tibtunnel.enabled
+      name: tp-tibtunnel
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 1.0.*
+    - condition: tp-provisioner-agent.enabled
+      name: tp-provisioner-agent
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 1.0.*
+    - condition: haproxy-ingress.enabled
+      name: haproxy-ingress
+      repository: ""
+      version: v0.14.0
+    - condition: config.enabled
+      name: config
+      repository: ""
+      version: 1.0.0
+    description: A Helm chart for TIBCO Platform Data Plane Infrastructure
+    digest: aabbb2a512b47267d3e8c9baf0fcdeb66319b3d44b0d596070d484ecc72fb069
+    name: dp-core-infrastructure
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.239/dp-core-infrastructure-1.0.239.tgz
+    version: 1.0.239
   - apiVersion: v2
     appVersion: 1.0.238
     created: "2023-09-20T10:29:00.412762527Z"
@@ -3628,4 +3669,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-27T08:54:04.809296446Z"
+generated: "2023-09-27T12:55:30.224569733Z"
