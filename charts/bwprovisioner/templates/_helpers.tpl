@@ -99,3 +99,25 @@ Integration storage folder pvc name
     {{- include "bwprovisioner.const.defaultImageRepo" .}}
   {{- end }}
 {{- end -}}
+
+
+{{- define "bwprovisioner.app-init.const.jfrogImageRepo" }}platform/integration{{end}}
+{{- define "bwprovisioner.app-init.const.ecrImageRepo" }}piap{{end}}
+{{- define "bwprovisioner.app-init.const.acrImageRepo" }}piap{{end}}
+{{- define "bwprovisioner.app-init.const.harborImageRepo" }}piap{{end}}
+{{- define "bwprovisioner.app-init.const.defaultImageRepo" }}piap{{end}}
+
+{{/* set repository based on the registry url. We will have different repo for each one. */}}
+{{- define "bwprovisioner.app-init.image.repository" -}}
+  {{- if contains "jfrog.io" (include "bwprovisioner.image.registry" .) }}
+    {{- include "bwprovisioner.app-init.const.jfrogImageRepo" .}}
+  {{- else if contains "amazonaws.com" (include "bwprovisioner.image.registry" .) }}
+    {{- include "bwprovisioner.app-init.const.ecrImageRepo" .}}
+  {{- else if contains "azurecr.io" (include "bwprovisioner.image.registry" .) }}
+    {{- include "bwprovisioner.app-init.const.acrImageRepo" .}}
+  {{- else if contains "reldocker.tibco.com" (include "bwprovisioner.image.registry" .) }}
+    {{- include "bwprovisioner.app-init.const.harborImageRepo" .}}
+  {{- else }}
+    {{- include "bwprovisioner.app-init.const.defaultImageRepo" .}}
+  {{- end }}
+{{- end -}}

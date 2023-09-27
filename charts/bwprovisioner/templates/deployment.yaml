@@ -86,6 +86,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: IMAGE_PULL_SECRET
+              value: {{ .Values.global.cp.containerRegistry.secret }}
+            - name: APP_INIT_SOURCE_REGISTRY
+              value: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.app-init.image.repository" .}}{{"/"}}
             - name: SOURCE_REGISTRY
               value: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.image.repository" .}}{{"/"}}
 #            - name: OTEL_SERVICE_NAME
