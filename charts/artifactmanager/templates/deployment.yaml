@@ -88,7 +88,7 @@ spec:
                   fieldPath: metadata.name
         {{- if .Values.global.artifactmanager.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.artifactmanager.logging.image.registry }}fluent-bit:{{ .Values.global.artifactmanager.logging.image.registry.tag }}
+          image: {{ .Values.global.artifactmanager.logging.image.registry }}fluent-bit:{{ .Values.global.artifactmanager.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
             {{- toYaml .Values.global.artifactmanager.deploymanager.resources | nindent 12 }}
