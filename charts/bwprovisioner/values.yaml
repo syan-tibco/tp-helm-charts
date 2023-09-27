@@ -33,7 +33,7 @@ global:
         tag: ""
         resources: {}
     logging:
-      enabled: true
+      enabled: false
       image:
         registry: "cr.fluentbit.io/fluent/"
         tag: "2.1.6"
