@@ -3192,6 +3192,27 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/oauth2-proxy-6.17.0-tibx-1/oauth2-proxy-6.17.0-tibx-1.tgz
     version: 6.17.0-tibx-1
+  tibco-hub:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-09-27T13:47:10.787907325Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 11.x.x
+    description: A Helm chart for TIBCO Hub
+    digest: 93adfdc548496b2e7e422c39a0db9244a259d616bc4ce28dc8dd8a0627159499
+    name: tibco-hub
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tibco-hub-0.4.10/tibco-hub-0.4.10.tgz
+    version: 0.4.10
   tp-cp-proxy:
   - apiVersion: v2
     appVersion: 1.0.95
@@ -3780,4 +3801,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-27T13:26:25.330835195Z"
+generated: "2023-09-27T13:47:10.788281427Z"
