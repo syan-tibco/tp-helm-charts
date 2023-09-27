@@ -19,7 +19,7 @@ dns:
 
 tls:
   setup: production
-#  certificateNamespace: ingress-system
+  certificateNamespace: ingress-system
   certificateSecretName: cic-certificate-production
 
 httpIngress:
