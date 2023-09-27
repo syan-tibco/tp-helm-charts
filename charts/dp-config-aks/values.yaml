@@ -19,7 +19,7 @@ dns:
 
 tls:
   setup: production
-  certificateNamespace: traefik-system
+#  certificateNamespace: ingress-system
   certificateSecretName: cic-certificate-production
 
 httpIngress:
@@ -30,8 +30,8 @@ httpIngress:
     servicePort: 80
   # more AGIC annotations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/#appgw-ssl-certificate
   annotations:
-    kubernetes.io/ingress.class: azure/application-gateway                          #This will configure the AppGw with this ingressObject
-#    cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
+    kubernetes.io/ingress.class: "azure/application-gateway"                          #This will configure the AppGw with this ingressObject
+    cert-manager.io/cluster-issuer: "cic-cert-subscription-scope-production"
     external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
 
 # the dns value is actually use pattern:
@@ -101,7 +101,7 @@ traefik:
   tlsStore: # for certificate
     default:
       defaultCertificate:
-        secretName: cic-certificate-production
+        secretName: cic-certificate-production-azure
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
 
@@ -113,7 +113,3 @@ ingress-nginx:
       type: ClusterIP
     nodeSelector:
       kubernetes.io/os: linux
-    tlsStore: # for certificate
-      default:
-        defaultCertificate:
-          secretName: cic-certificate-production

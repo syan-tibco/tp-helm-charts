@@ -19,6 +19,7 @@ spec:
             environment: AzurePublicCloud
             managedIdentity:
               clientID: "{{ .Values.global.azureAwiAsoDnsClientId }}"
+
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -31,5 +32,6 @@ spec:
     name: cic-cert-subscription-scope-production
     kind: ClusterIssuer
   dnsNames:
-    - '*.{{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}'
+  - '*.{{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}'
+
 {{- end }}

@@ -9,6 +9,10 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  tls:
+  - hosts:
+    - "{{ .Values.dns.vanity }}.{{ .Values.dns.domain }}" 
+    secretName: "{{.Values.tls.certificateSecretName}}"
   rules:
     - host: "{{ .Values.dns.vanity }}.{{ .Values.dns.domain }}"
       http:
