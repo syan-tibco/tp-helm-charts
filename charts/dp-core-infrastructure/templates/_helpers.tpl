@@ -72,3 +72,30 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/part-of: {{ include "dp-core-infrastructure.part-of" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
+{{- define "dp-core-infrastructure.validate" -}}
+{{- $ns_name := .Release.Namespace }}
+{{- $ns := (lookup "v1" "Namespace" "" $ns_name) }}
+{{- if $ns }}
+{{- if $ns.metadata.labels }}
+{{- if (hasKey $ns.metadata.labels "platform.tibco.com/dataplane-id" ) }}
+{{- if eq (get $ns.metadata.labels "platform.tibco.com/dataplane-id") .Values.dataplaneId }}
+{{/* check for sa */}}
+{{- $sa := (lookup "v1" "ServiceAccount" $ns_name .Values.global.tibco.serviceAccount) }}
+{{- if $sa }}
+{{- else }} 
+{{- fail (printf "sa %s/%s missing" .Release.Namespace .Values.global.tibco.serviceAccount  )}}
+{{- end }}
+{{- else }}
+{{- fail (printf "%s %s" "invalid label" (get $ns.metadata.labels "platform.tibco.com/dataplane-id")) }}
+{{- end }}
+{{- else }}
+{{- fail "labels platform.tibco.com/dataplane-id does not exists" }}
+{{- end }}   
+{{- else }}
+{{- fail "labels not found"}}
+{{- end }}
+{{- else }}
+{{/* no op is ns does not exists. We expect the ns to be already present. We have this to avoid helm templating issue*/}}
+{{- end }}
+{{- end }}
