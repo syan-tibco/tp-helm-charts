@@ -104,7 +104,7 @@ spec:
 #                  key: otel-recvservice-port
         {{- if .Values.global.bwprovisioner.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.bwprovisioner.logging.image.registry }}fluent-bit:{{ .Values.global.bwprovisioner.logging.image.registry.tag }}
+          image: {{ .Values.global.bwprovisioner.logging.image.registry }}fluent-bit:{{ .Values.global.bwprovisioner.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
             {{- toYaml .Values.global.bwprovisioner.deploymanager.resources | nindent 12 }}
