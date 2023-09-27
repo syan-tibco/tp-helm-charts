@@ -3,6 +3,20 @@ entries:
   artifactmanager:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-09-27T13:26:25.099307983Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: 08141c13f28721a530e6dc6704dcc5a9b52b2f6372b13e52fcd2f79d9d8c566e
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.12/artifactmanager-1.0.12.tgz
+    version: 1.0.12
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-27T13:22:42.341865543Z"
     description: TIBCO Platform Dataplane Core -- Artifact Manager
     digest: 31a0bcce0f8e91f2c7db7754d65a0b627cd5b26b4669f70403e9182aa9fa67b3
@@ -156,6 +170,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.0/artifactmanager-1.0.0.tgz
     version: 1.0.0
   bwprovisioner:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-09-27T13:26:25.330472695Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: 3550f97bd742d2efbd574ec9d6552427d0b6369ce09ef302bb44fcb15b41ac53
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.14/bwprovisioner-1.0.14.tgz
+    version: 1.0.14
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-09-27T13:22:42.566280636Z"
@@ -3752,4 +3780,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-27T13:25:20.236185799Z"
+generated: "2023-09-27T13:26:25.330835195Z"
