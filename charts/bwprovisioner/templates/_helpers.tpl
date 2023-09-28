@@ -41,6 +41,7 @@ app.kubernetes.io/part-of: "bwce"
 platform.tibco.com/workload-type: "capability-service"
 platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
+networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}
 
 {{/*

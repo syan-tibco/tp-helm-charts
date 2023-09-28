@@ -40,12 +40,21 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: authentication-proxy
 app.kubernetes.io/part-of: {{ template "oauth2-proxy.name" . }}
 {{- include "oauth2-proxy.selectorLabels" . }}
+{{- include "oauth2-proxy.platformLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 {{- if .Values.customLabels }}
 {{ toYaml .Values.customLabels }}
 {{- end }}
+{{- end }}
+
+{{/* 
+Platform labels
+*/}}
+{{- define "oauth2-proxy.platformLabels" }}
+egress.networking.platform.tibco.com/internet-web: enable
+networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}
 
 {{/*
