@@ -214,7 +214,7 @@ rules:
   verbs: ["get", "list", "create", "delete", "patch", "update"]
 - apiGroups: ["cert-manager.io"]
   resources: ["certificates","issuers"]
-  verbs: ["create", "get"]
+  verbs: ["create", "get", "update", "patch", "delete"]
 # required by istio for permissions to verify the webhook is ready and rejecting
 - apiGroups: ["networking.istio.io"]
   resources: ["gateways"]
