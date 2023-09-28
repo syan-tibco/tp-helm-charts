@@ -216,7 +216,7 @@ ingress:
 enableLogging: true
 fluentbit:
   image:
-    respository: fluent/fluent-bit
+    registry: cr.fluentbit.io/fluent/fluent-bit
     tag: 2.1.6
 
 config:
