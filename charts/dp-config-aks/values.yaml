@@ -77,9 +77,7 @@ ingress-nginx:
       type: ClusterIP
     nodeSelector:
       kubernetes.io/os: linux
-    useforwardedheaders: "true"
-    allowSnippetAnnotations: "true"
-
+      
 traefik:
   enabled: false
   hub: # for hub
