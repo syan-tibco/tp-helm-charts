@@ -3597,6 +3597,23 @@ entries:
     version: 1.0.0
   tp-dp-secret-controller:
   - apiVersion: v2
+    appVersion: 1.0.24
+    created: "2023-09-28T07:51:08.290308234Z"
+    description: TIBCO Data Plane -- Secret Controller
+    digest: 41c0677bdc653d86dcadf065362c0a89512885b79cbac875cd04e3533fbcf782
+    home: https://github.com/tibco/tp-core-dp-secret-controller
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - secret-controller
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-dp-secret-controller
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.24/tp-dp-secret-controller-1.0.24.tgz
+    version: 1.0.24
+  - apiVersion: v2
     appVersion: 1.0.23
     created: "2023-09-26T08:52:33.026788389Z"
     description: TIBCO Data Plane -- Secret Controller
@@ -3821,4 +3838,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-28T05:42:22.196655733Z"
+generated: "2023-09-28T07:51:08.290620135Z"
