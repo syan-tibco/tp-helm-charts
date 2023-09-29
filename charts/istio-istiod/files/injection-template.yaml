@@ -52,13 +52,6 @@ metadata:
     {{- end }}
     service.istio.io/canonical-name: {{ index .ObjectMeta.Labels `service.istio.io/canonical-name` | default (index .ObjectMeta.Labels `app.kubernetes.io/name`) | default (index .ObjectMeta.Labels `app`) | default .DeploymentMeta.Name  | quote }}
     service.istio.io/canonical-revision: {{ index .ObjectMeta.Labels `service.istio.io/canonical-revision` | default (index .ObjectMeta.Labels `app.kubernetes.io/version`) | default (index .ObjectMeta.Labels `version`) | default "latest"  | quote }}
-    platform.tibco.com/workload-type: "infra"
-    {{ if .Values.global.cp.dataplaneId -}}
-    platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
-    {{- end }}
-    {{ if .Values.global.cp.instanceId -}}
-    platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId  }}
-    {{- end }}
     prometheus.io/scrape: "true"
   annotations: {
     istio.io/rev: {{ .Revision | default "default" | quote }},
