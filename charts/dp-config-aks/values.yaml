@@ -14,13 +14,13 @@ serviceAccount:
   name: ""
 
 dns:
-  domain: "cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
+  domain: "azrtroposdev.azure.tcie.pro"
   vanity: "*"
 
 tls:
   setup: production
   certificateNamespace: ingress-system
-  certificateSecretName: cic-certificate-production
+  certificateSecretName: cic-certificate-production-azure
 
 httpIngress:
   enabled: true
@@ -32,7 +32,7 @@ httpIngress:
   annotations:
     kubernetes.io/ingress.class: "azure/application-gateway"                          #This will configure the AppGw with this ingressObject
     cert-manager.io/cluster-issuer: "cic-cert-subscription-scope-production"
-    external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
+    external-dns.alpha.kubernetes.io/hostname: "*.azrtroposdev.azure.tcie.pro"
 
 # the dns value is actually use pattern:
 # {{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}
