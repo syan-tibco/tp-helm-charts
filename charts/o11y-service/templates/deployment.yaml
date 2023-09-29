@@ -77,7 +77,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.uid
             - name: CONTAINER_NAME
-              value: provisioner-agent
+              value: tp-o11y-service
             - name: HOST_IP
               valueFrom:
                 fieldRef:

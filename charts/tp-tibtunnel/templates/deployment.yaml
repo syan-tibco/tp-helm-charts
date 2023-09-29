@@ -47,7 +47,7 @@ spec:
               fieldRef:
                 fieldPath: metadata.uid
           - name: CONTAINER_NAME
-            value: provisioner-agent
+            value: tibtunnel
           - name: HOST_IP
             valueFrom:
               fieldRef:

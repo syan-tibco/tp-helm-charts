@@ -63,7 +63,7 @@ spec:
               fieldRef:
                 fieldPath: metadata.uid
           - name: CONTAINER_NAME
-            value: provisioner-agent
+            value: cp-proxy
           - name: HOST_IP
             valueFrom:
               fieldRef:
