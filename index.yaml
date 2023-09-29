@@ -382,6 +382,20 @@ entries:
     version: 1.0.0
   distributed-lock-operator:
   - apiVersion: v1
+    appVersion: 1.0.6
+    created: "2023-09-29T12:20:35.387628069Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: 46572304e66e39c98dd5ad0ee4c6357ccab69356820410db8a3c096c4d32c519
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.6/distributed-lock-operator-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
     appVersion: 1.0.5
     created: "2023-09-29T06:49:02.52629846Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
@@ -1355,6 +1369,33 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-configure-namespace-1.0.0/dp-configure-namespace-1.0.0.tgz
     version: 1.0.0
   dp-core-infrastructure:
+  - apiVersion: v2
+    appVersion: 1.0.242
+    created: "2023-09-29T12:20:35.6280201Z"
+    dependencies:
+    - condition: tp-tibtunnel.enabled
+      name: tp-tibtunnel
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 1.0.*
+    - condition: tp-provisioner-agent.enabled
+      name: tp-provisioner-agent
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 1.0.*
+    - condition: haproxy-ingress.enabled
+      name: haproxy-ingress
+      repository: ""
+      version: v0.14.0
+    - condition: config.enabled
+      name: config
+      repository: ""
+      version: 1.0.0
+    description: A Helm chart for TIBCO Platform Data Plane Infrastructure
+    digest: 1ce5582d587a8eb26e6b6ef02227c54e5d4b1489592a691e20682e8c7e461cb5
+    name: dp-core-infrastructure
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-core-infrastructure-1.0.242/dp-core-infrastructure-1.0.242.tgz
+    version: 1.0.242
   - apiVersion: v2
     appVersion: 1.0.241
     created: "2023-09-29T11:38:42.034105579Z"
@@ -2741,6 +2782,20 @@ entries:
     version: 1.0.1
   o11yservice:
   - apiVersion: v2
+    appVersion: 1.0.20
+    created: "2023-09-29T12:20:35.853308083Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
+    digest: ffd3436a56de4647cac6bfb76ced9b4fb2ac7ef4918789783f72f22b665d918b
+    home: https://github.com/tibco/tp-o11y-service.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: o11yservice
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/o11yservice-1.0.20/o11yservice-1.0.20.tgz
+    version: 1.0.20
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-09-28T19:12:21.690298984Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
@@ -3396,6 +3451,23 @@ entries:
     version: 0.4.10
   tp-cp-proxy:
   - apiVersion: v2
+    appVersion: 1.0.97
+    created: "2023-09-29T12:20:36.066876854Z"
+    description: TIBCO Data Plane -- Control Plane Proxy
+    digest: 48f592b88660d0af40a03d944eaffbfde733ff56f89580fd281a6f76853cd7d3
+    home: https://github.com/tibco/tp-core-cp-proxy
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - cp-proxy
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-cp-proxy
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.97/tp-cp-proxy-1.0.97.tgz
+    version: 1.0.97
+  - apiVersion: v2
     appVersion: 1.0.96
     created: "2023-09-29T06:49:02.814559766Z"
     description: TIBCO Data Plane -- Control Plane Proxy
@@ -3775,6 +3847,23 @@ entries:
     version: 1.0.0
   tp-dp-secret-controller:
   - apiVersion: v2
+    appVersion: 1.0.26
+    created: "2023-09-29T12:20:36.3295306Z"
+    description: TIBCO Data Plane -- Secret Controller
+    digest: 28e2d5631cfd7c3164265ff15b9e350703903d7dae964ab70301530247de1df9
+    home: https://github.com/tibco/tp-core-dp-secret-controller
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - secret-controller
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-dp-secret-controller
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.26/tp-dp-secret-controller-1.0.26.tgz
+    version: 1.0.26
+  - apiVersion: v2
     appVersion: 1.0.25
     created: "2023-09-29T06:49:02.955647669Z"
     description: TIBCO Data Plane -- Secret Controller
@@ -4015,6 +4104,24 @@ entries:
     version: 1.0.0
   tp-tibtunnel:
   - apiVersion: v1
+    appVersion: 1.0.73
+    created: "2023-09-29T12:20:36.54716441Z"
+    description: A Helm chart for TIBCO Tibtunnel
+    digest: dc1d1b7a4b62e6baa9f6c60a9f894a93124bda4f925aeeca732c510285536ad0
+    home: https://github.com/tibco/tp-core-tibtunnel
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - tibtunnel
+    - data-plane
+    - hybrid-connectivity
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-tibtunnel
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.73/tp-tibtunnel-1.0.73.tgz
+    version: 1.0.73
+  - apiVersion: v1
     appVersion: 1.0.72
     created: "2023-09-29T06:49:03.236356898Z"
     description: A Helm chart for TIBCO Tibtunnel
@@ -4068,4 +4175,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-29T11:38:42.034887384Z"
+generated: "2023-09-29T12:20:36.548022518Z"
