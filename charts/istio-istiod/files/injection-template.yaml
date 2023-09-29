@@ -1,3 +1,20 @@
+{{- define "servicemesh.proxy.image" }}
+  {{- if contains "jfrog.io" .Values.global.cp.containerRegistry.url }}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}platform/servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- else if contains "amazonaws.com" .Values.global.cp.containerRegistry.url }}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- else if contains "azurecr.io" .Values.global.cp.containerRegistry.url }}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- else if contains "reldocker.tibco.com" .Values.global.cp.containerRegistry.url }}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- else if contains "gcr.io" .Values.global.cp.containerRegistry.url }}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- else if contains "docker.io" .Values.global.cp.containerRegistry.url }}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}istio/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- else }}
+    {{ .Values.pilot.hub | default .Values.global.hub }}{{"/"}}istio/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+  {{- end }}
+{{- end }}
 {{- define "resources"  }}
   {{- if or (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPULimit`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemoryLimit`) }}
     {{- if or (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyCPU`) (isset .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory`) }}
@@ -84,7 +101,7 @@ spec:
   {{- if contains "/" (annotation .ObjectMeta `sidecar.istio.io/proxyImage` .Values.global.proxy_init.image) }}
     image: "{{ annotation .ObjectMeta `sidecar.istio.io/proxyImage` .Values.global.proxy_init.image }}"
   {{- else }}
-    image: "{{ .ProxyImage }}"
+    image: {{ template "servicemesh.proxy.image" . }}
   {{- end }}
     args:
     - istio-iptables
@@ -175,7 +192,7 @@ spec:
   {{- if contains "/" (annotation .ObjectMeta `sidecar.istio.io/proxyImage` .Values.global.proxy_init.image) }}
     image: "{{ annotation .ObjectMeta `sidecar.istio.io/proxyImage` .Values.global.proxy_init.image }}"
   {{- else }}
-    image: "{{ .ProxyImage }}"
+    image: {{ template "servicemesh.proxy.image" . }}
   {{- end }}
     {{with .Values.global.imagePullPolicy }}imagePullPolicy: "{{.}}"{{end}}
     resources:
@@ -200,7 +217,7 @@ spec:
   {{- if contains "/" (annotation .ObjectMeta `sidecar.istio.io/proxyImage` .Values.global.proxy.image) }}
     image: "{{ annotation .ObjectMeta `sidecar.istio.io/proxyImage` .Values.global.proxy.image }}"
   {{- else }}
-    image: "{{ .ProxyImage }}"
+    image: {{ template "servicemesh.proxy.image" . }}
   {{- end }}
     {{ if $nativeSidecar }}restartPolicy: Always{{end}}
     ports:
@@ -530,4 +547,10 @@ spec:
     {{- range .Values.global.imagePullSecrets }}
     - name: {{ . }}
     {{- end }}
+  {{- else }}
+  {{- if not (eq .Values.global.cp.containerRegistry.secret "") }}
+  imagePullSecrets:
+    - name: {{ .Values.global.cp.containerRegistry.secret }}
   {{- end }}
+  {{- end }}
+

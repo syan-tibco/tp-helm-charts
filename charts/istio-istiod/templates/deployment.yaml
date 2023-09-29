@@ -47,6 +47,14 @@ spec:
         {{- range $key, $val := .Values.pilot.podLabels }}
         {{ $key }}: "{{ $val }}"
         {{- end }}
+        platform.tibco.com/workload-type: "infra"
+        {{ if .Values.global.cp.dataplaneId -}}
+        platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+        {{- end }}
+        {{ if .Values.global.cp.instanceId -}}
+        platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId  }}
+        {{- end }}
+        prometheus.io/scrape: "true"
       annotations:
         {{- if .Values.meshConfig.enablePrometheusMerge }}
         prometheus.io/port: "15014"
@@ -85,7 +93,7 @@ spec:
 {{- if contains "/" .Values.pilot.image }}
           image: "{{ .Values.pilot.image }}"
 {{- else }}
-          image: "{{ .Values.pilot.hub | default .Values.global.hub }}/{{ .Values.pilot.image | default "pilot" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}"
+          image: "{{ include "servicemesh.image.registry" .}}{{ include "servicemesh.image.repository" .}}{{"/"}}{{ .Values.pilot.image | default "pilot" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}"
 {{- end }}
 {{- if .Values.global.imagePullPolicy }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
