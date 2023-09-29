@@ -36,3 +36,10 @@ global:
     resources:
       serviceaccount:
         serviceAccountName: ""
+
+enableLogging: true
+
+fluentbit:
+  image:
+    registry: cr.fluentbit.io/fluent/fluent-bit
+    tag: 2.1.6
