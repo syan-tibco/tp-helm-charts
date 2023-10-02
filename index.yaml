@@ -2465,6 +2465,20 @@ entries:
     version: 1.16.1
   - apiVersion: v1
     appVersion: 1.19.0
+    created: "2023-10-02T14:57:10.600435492Z"
+    description: Helm chart for deploying Istio cluster resources and CRDs
+    digest: d343dafa58fd6e1de58b531fb8ed290a69e7ac8d628e5a5a94ff7183dce7787a
+    icon: https://istio.io/latest/favicons/android-192x192.png
+    keywords:
+    - istio
+    name: istio-crd
+    sources:
+    - https://github.com/istio/istio
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-crd-1.0.3/istio-crd-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v1
+    appVersion: 1.19.0
     created: "2023-09-26T03:27:21.309580549Z"
     description: Helm chart for deploying Istio cluster resources and CRDs
     digest: 6ee7c1d0eef145e11cb8f368acb85c0c48a2ceb4abf9e96deb4468b23f1ecbd5
@@ -4191,4 +4205,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-09-29T23:24:13.182094598Z"
+generated: "2023-10-02T14:57:10.600849296Z"
