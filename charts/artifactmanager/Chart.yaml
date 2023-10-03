@@ -1,7 +1,7 @@
 apiVersion: v2
 name: artifactmanager
-version: 1.0.15
-appVersion: "1.0.15"
+version: 1.0.16
+appVersion: "1.0.16"
 description: TIBCO Platform Dataplane Core -- Artifact Manager
 home: https://github.com/tibco/tp-iapp-artifactmanager.git
 icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg

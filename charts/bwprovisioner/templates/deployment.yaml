@@ -117,7 +117,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -128,7 +127,6 @@ spec:
                   fieldPath: metadata.uid
             - name: CONTAINER_NAME
               value: {{ .Chart.Name }}
-
           volumeMounts:
             - name: dockercontainerlogs
               mountPath: /var/lib/docker/containers/
@@ -150,8 +148,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.global.bwprovisioner.logging.enabled }}
       volumes:
-{{- if .Values.global.bwprovisioner.logging.enabled }}
         - name: dockercontainerlogs
           hostPath:
             path: /var/lib/docker/containers/
@@ -163,4 +161,4 @@ spec:
         - name: fluent-bit-config
           configMap:
             name: {{ include "bwprovisioner.fullname" . }}-fluentbit-config
-{{- end }}
+      {{- end }}
