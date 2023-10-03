@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   artifactmanager:
   - apiVersion: v2
+    appVersion: 1.0.13
+    created: "2023-10-03T08:22:50.730269764Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: df3f4e3b1ae573b51f69e91c69ee3d56ac86d76a676d1002fc15cc667bbf7016
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.13/artifactmanager-1.0.13.tgz
+    version: 1.0.13
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-09-27T13:26:25.099307983Z"
     description: TIBCO Platform Dataplane Core -- Artifact Manager
@@ -170,6 +184,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.0/artifactmanager-1.0.0.tgz
     version: 1.0.0
   bwprovisioner:
+  - apiVersion: v2
+    appVersion: 1.0.16
+    created: "2023-10-03T08:22:50.847869018Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: 6a8e8fb1bf87b9f399b695dba1ed005b1415cfb0dab2703802d5d12f51a1c855
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.16/bwprovisioner-1.0.16.tgz
+    version: 1.0.16
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-10-03T04:45:40.468989527Z"
@@ -4284,4 +4312,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-03T06:01:31.334483268Z"
+generated: "2023-10-03T08:22:50.848811132Z"
