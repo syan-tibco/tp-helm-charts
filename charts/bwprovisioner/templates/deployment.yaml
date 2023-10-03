@@ -104,7 +104,7 @@ spec:
 #                  key: otel-recvservice-port
         {{- if .Values.global.bwprovisioner.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.bwprovisioner.logging.image.registry }}fluent-bit:{{ .Values.global.bwprovisioner.logging.image.tag }}
+          image: {{ .Values.global.bwprovisioner.logging.image.registry }}{{ .Values.global.bwprovisioner.logging.image.name }}:{{ .Values.global.bwprovisioner.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           resources:
             {{- toYaml .Values.global.bwprovisioner.deploymanager.resources | nindent 12 }}
@@ -113,35 +113,6 @@ spec:
           ports:
             - containerPort: 2020
           env:
-            - name: ACCOUNT_ID
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: SERVICE_LOGSERVER_HOST
-            - name: SERVICE_LOGSERVER_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: SERVICE_LOGSERVER_HOST
-
-            - name: SERVICE_LOGSERVER_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: SERVICE_LOGSERVER_USER
-
-            - name: LOGSERVER_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: LOGSERVER_PASSWORD
-
-            - name: SERVICE_LOGSERVER_INDEX
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: SERVICE_LOGSERVER_INDEX
-
             - name: POD_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -151,11 +122,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: TIBCO_INTERNAL_INTERCOM_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Release.Name }}-{{ .Chart.Name }}-serviceconfig
-                  key: TIBCO_INTERNAL_INTERCOM_URL
             - name: POD_ID
               valueFrom:
                 fieldRef:
@@ -194,5 +160,5 @@ spec:
             path: /var/log/pods
         - name: fluent-bit-config
           configMap:
-            name: {{ include "bwprovisioner.fluentConf" . }}
+            name: {{ include "bwprovisioner.fullname" . }}-fluentbit-config
       {{- end }}
