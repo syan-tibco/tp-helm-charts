@@ -4104,6 +4104,23 @@ entries:
     version: 1.0.20
   tp-provisioner-agent:
   - apiVersion: v2
+    appVersion: 1.0.186
+    created: "2023-10-03T09:12:02.403170347Z"
+    description: TIBCO Data Plane -- Provisioner Agent
+    digest: 3637627cef09a3acba86d92c934c0a037023cf92509b048e30e17fc4e6583c47
+    home: https://github.com/tibco/tp-core-provisioner-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - provisioner-agent
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-provisioner-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.186/tp-provisioner-agent-1.0.186.tgz
+    version: 1.0.186
+  - apiVersion: v2
     appVersion: 1.0.185
     created: "2023-09-29T06:49:03.101072801Z"
     description: TIBCO Data Plane -- Provisioner Agent
@@ -4241,6 +4258,24 @@ entries:
     version: 1.0.0
   tp-tibtunnel:
   - apiVersion: v1
+    appVersion: 1.0.74
+    created: "2023-10-03T09:12:02.624175605Z"
+    description: A Helm chart for TIBCO Tibtunnel
+    digest: a499c8643351639e79d3cfff70cf8196e2498edbb58dfbff3f874346a5c4e93d
+    home: https://github.com/tibco/tp-core-tibtunnel
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - tibtunnel
+    - data-plane
+    - hybrid-connectivity
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-tibtunnel
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.74/tp-tibtunnel-1.0.74.tgz
+    version: 1.0.74
+  - apiVersion: v1
     appVersion: 1.0.73
     created: "2023-09-29T12:20:36.54716441Z"
     description: A Helm chart for TIBCO Tibtunnel
@@ -4312,4 +4347,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-03T08:22:50.848811132Z"
+generated: "2023-10-03T09:12:02.624741438Z"
