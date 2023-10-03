@@ -57,6 +57,13 @@ Create chart name and version as used by the chart label.
 {{/* Data plane dataPlane id */}}
 {{- define "dp-configure-namespace.dataPlaneId" }}{{ required "global.tibco.dataPlaneId is required" .Values.global.tibco.dataPlaneId }}{{ end -}}
 
+{{/* Node Cidr for the cluster */}}
+{{- define "dp-configure-namespace.nodeCidr" }}
+{{- if .Values.networkPolicy.create }}
+{{- required (printf "networkPolicy.nodeCidrIpBlock is required, if Network Policy is enabled.\nUse --set networkPolicy.nodeCidrIpBlock=<NodeIpCidr>\nNodeIpCidr=<IP range of Nodes VPC or VNet address space (CIDR notation)> e.g. 10.200.0.0/16") .Values.networkPolicy.nodeCidrIpBlock -}}
+{{- end }}
+{{- end }}
+
 {{/*
 ================================================================
                   SECTION LABELS
