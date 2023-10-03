@@ -1,10 +1,8 @@
-{{- if .Values.rbac.create -}}
 {{- if eq .Values.global.cp.resources.serviceaccount.serviceAccountName "" }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ include "flogoprovisioner.sa" . }}
-{{- end }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -29,6 +27,9 @@ rules:
   - apiGroups: [""]
     resources: ["services"]
     verbs: ["get","list","watch","create","delete","patch","update"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get","list","watch","create","delete","patch","update"] 
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -36,13 +37,13 @@ metadata:
   name: {{ include "flogoprovisioner.role-bind" . }}
 subjects:
   - kind: ServiceAccount
-    {{- if eq .Values.global.flogoprovisioner.serviceAccount "" }}
+    {{- if eq .Values.global.cp.resources.serviceaccount.serviceAccountName "" }}
     name: {{ include "flogoprovisioner.sa" . }}
     {{- else }}
-    name: {{ .Values.global.flogoprovisioner.serviceAccount }}
+    name: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName }}
     {{- end }}
 roleRef:
   kind: Role
   name: {{ include "flogoprovisioner.role" . }}
   apiGroup: rbac.authorization.k8s.io
-{{- end }}
+{{- end -}}

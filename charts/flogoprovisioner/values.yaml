@@ -1,4 +1,4 @@
-# Default values for flogoprovisioner.
+# Default values for flogo provisioner.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -11,7 +11,6 @@ global:
   cp:
     dataplaneId: dp-dp1
     instanceId: defaultinstid
-    namespace: tp-dp-dp1
     containerRegistry:
       secret: ""
       url: reldocker.tibco.com
@@ -34,10 +33,10 @@ global:
         tag: ""
         resources: {}
     logging:
+      enabled: false
       image:
-        enabled: false
-        registry: ""
-        tag: ""
+        registry: "cr.fluentbit.io/fluent/"
+        tag: "2.1.6"
         resources: {}
 
 replicaCount: 1
@@ -80,6 +79,11 @@ service:
   port: 7814
   targetPort: 7814
 
+publicApiService:
+  type: ClusterIP
+  port: 7816
+  targetPort: 7816
+
 #ingress:
 #  enabled: false
 #  annotations: {}
@@ -94,7 +98,7 @@ service:
 #  #      - chart-example.local
 
 ingress:
-  # -- Enables configuration of ingress to expose flogoprovisioner. Requires ingress support in the Kubernetes cluster.
+  # -- Enables configuration of ingress to expose flogo provisioner. Requires ingress support in the Kubernetes cluster.
   enabled: true
   hostsOverride: false
   className: haproxy
@@ -189,9 +193,34 @@ extraInitContainers: []
 config:
   #  DP_INTERNAL_URL: "test.tci-env.ap-southeast-2.tcie.pro"
   DP_INTERNAL_URL: "***NOT AVAILABLE***"
-  BWCE_BASE_VERSION: "5-2.8.1-V47.0.1-GA-m1-ext"
   ARTIFACT_MANAGER_PORT: "7813"
-  APP_INIT_IMAGE_TAG: "16-flogo-m1"
+  APP_INIT_IMAGE_TAG: "13"
 
-rbac:
-  create: false
+oauth2proxy:
+  ingress:
+    enabled: false
+    className: nginx
+    hosts:
+      - host: "test.tci-env.ap-southeast-2.tcie.pro"
+        paths:
+          - path: /oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  number: 80
+      # -- Annotations for the ingress object. See documentation for your ingress controller for valid annotations.
+    annotations: {}
+    tls: []
+      #  - secretName: chart-example-tls
+      #    hosts:
+      #      - chart-example.local
+
+publicApi:
+  ingress:
+    controllerName: nginx
+    nginx:
+      className: nginx
+      pathPrefix: /tibco/flogo
+      fqdn: flogo.dp-flogodev.tcie.pro

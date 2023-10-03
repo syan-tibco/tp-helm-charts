@@ -11,5 +11,9 @@ spec:
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
       name: http
+    - port: {{ .Values.publicApiService.port }}
+      targetPort: {{ .Values.publicApiService.targetPort }}
+      protocol: TCP
+      name: publicapihttp
   selector:
     {{- include "flogoprovisioner.selectorLabels" . | nindent 4 }}
