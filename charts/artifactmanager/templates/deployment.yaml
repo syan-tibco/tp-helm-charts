@@ -140,8 +140,8 @@ spec:
             claimName: {{ include "artifactmanager.storage.pvc.name" . }}
         {{- if .Values.global.artifactmanager.logging.enabled }}
         - name: dockercontainerlogs
-            hostPath:
-              path: /var/lib/docker/containers/
+          hostPath:
+            path: /var/lib/docker/containers/
         - name: podlogs
           hostPath:
             path: /var/log/pods

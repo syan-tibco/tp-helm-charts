@@ -153,8 +153,8 @@ spec:
       {{- if .Values.global.bwprovisioner.logging.enabled }}
       volumes:
         - name: dockercontainerlogs
-            hostPath:
-              path: /var/lib/docker/containers/
+          hostPath:
+            path: /var/lib/docker/containers/
         - name: podlogs
           hostPath:
             path: /var/log/pods

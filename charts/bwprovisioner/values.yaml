@@ -25,7 +25,7 @@ global:
       namespace: dp-integration-default
     image:
       registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
-      tag: 38-m1-ext
+      tag: 257
     deploymanager:
       image:
         enabled: false
@@ -195,7 +195,7 @@ config:
   #  DP_INTERNAL_URL: "test.tci-env.ap-southeast-2.tcie.pro"
   DP_INTERNAL_URL: "***NOT AVAILABLE***"
   ARTIFACT_MANAGER_PORT: "7813"
-  APP_INIT_IMAGE_TAG: "13"
+  APP_INIT_IMAGE_TAG: "18"
 
 oauth2proxy:
   ingress:
