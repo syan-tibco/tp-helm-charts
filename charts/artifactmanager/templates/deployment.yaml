@@ -90,12 +90,6 @@ spec:
         - name: fluent-bit
           image: {{ .Values.global.artifactmanager.logging.image.registry }}{{ .Values.global.artifactmanager.logging.image.name }}:{{ .Values.global.artifactmanager.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
-          resources:
-            {{- toYaml .Values.global.artifactmanager.deploymanager.resources | nindent 12 }}
-          securityContext:
-            privileged: true
-          ports:
-            - containerPort: 2020
           env:
             - name: POD_NAMESPACE
               valueFrom:
@@ -118,25 +112,12 @@ spec:
               mountPath: /var/log/pods
             - name: fluent-bit-config
               mountPath: /fluent-bit/etc/
-        terminationGracePeriodSeconds: 10
         {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "artifactmanager.storage.pvc.name" . }}
-        {{- if .Values.global.artifactmanager.logging.enabled }}
+{{- if .Values.global.artifactmanager.logging.enabled }}
         - name: dockercontainerlogs
           hostPath:
             path: /var/lib/docker/containers/
@@ -148,4 +129,4 @@ spec:
         - name: fluent-bit-config
           configMap:
             name: {{ include "artifactmanager.fullname" . }}-fluentbit-config
-        {{- end }}
+{{- end }}
