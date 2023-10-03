@@ -172,6 +172,20 @@ entries:
   bwprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-10-03T04:45:40.468989527Z"
+    description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
+    digest: 513be70a405fc37b03f360c775ea1ee668ffb407aea459d189cd53a1d230b2cb
+    home: https://github.com/tibco/tp-iapp-bw-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: bwprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.15/bwprovisioner-1.0.15.tgz
+    version: 1.0.15
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-27T13:26:25.330472695Z"
     description: TIBCO Platform Dataplane Capabilty -- BW Provisioner
     digest: 3550f97bd742d2efbd574ec9d6552427d0b6369ce09ef302bb44fcb15b41ac53
@@ -3201,6 +3215,46 @@ entries:
               url: https://github.com/oauth2-proxy/manifests/pull/159
     apiVersion: v2
     appVersion: 7.5.0
+    created: "2023-10-03T04:45:41.089357691Z"
+    description: A reverse proxy that provides authentication with Google, Github
+      or other providers
+    digest: 5a134c21fdb78c2319ac2cb67b02366cbd6694fe2e6aca7ea37adbbdbf903871
+    home: https://oauth2-proxy.github.io/oauth2-proxy/
+    keywords:
+    - kubernetes
+    - oauth
+    - oauth2
+    - authentication
+    - google
+    - github
+    - redis
+    kubeVersion: '>=1.9.0-0'
+    maintainers:
+    - email: cedric@desaintmartin.fr
+      name: desaintmartin
+    - name: tlawrie
+    - email: nicholas.meves@gmail.com
+      name: NickMeves
+    - email: joel.speed@hotmail.co.uk
+      name: JoelSpeed
+    - email: pierluigi.lenoci@gmail.com
+      name: pierluigilenoci
+    name: oauth2-proxy
+    sources:
+    - https://github.com/oauth2-proxy/oauth2-proxy
+    - https://github.com/oauth2-proxy/manifests
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/oauth2-proxy-6.17.0-tibx-5/oauth2-proxy-6.17.0-tibx-5.tgz
+    version: 6.17.0-tibx-5
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: securityContext and timeout of the initContainer wait-for-redis configurable via values.
+          links:
+            - name: Github PR
+              url: https://github.com/oauth2-proxy/manifests/pull/159
+    apiVersion: v2
+    appVersion: 7.5.0
     created: "2023-09-26T10:25:09.538232481Z"
     description: A reverse proxy that provides authentication with Google, Github
       or other providers
@@ -3651,6 +3705,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.67/tp-cp-proxy-1.0.67.tgz
     version: 1.0.67
   tp-dp-monitor-agent:
+  - apiVersion: v2
+    appVersion: 1.0.71
+    created: "2023-10-03T04:45:41.463542628Z"
+    description: TIBCO Platform Finops -- Monitoring
+    digest: 604af56e1aa94ad9980276f8976453e8248d905f299391123e9f1140c570fc66
+    home: https://github.com/tibco/tp-dp-monitor-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: cdash-dev@tibco.com
+      name: TIBCO FINOPS Dev Team
+    name: tp-dp-monitor-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-monitor-agent-1.0.71/tp-dp-monitor-agent-1.0.71.tgz
+    version: 1.0.71
   - apiVersion: v2
     appVersion: 1.0.70
     created: "2023-09-20T19:50:05.111448366Z"
@@ -4205,4 +4273,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-02T14:57:10.600849296Z"
+generated: "2023-10-03T04:45:41.937854411Z"
