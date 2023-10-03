@@ -72,6 +72,7 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- define "dp-core-distributed-lock-operator.shared.labels.platform" -}}
 platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/workload-type: {{ include "dp-core-distributed-lock-operator.consts.workloadType" .}}
+networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}
 
 {{/* Global resource prefix. */}}

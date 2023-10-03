@@ -66,6 +66,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- /* platform specific labels. Copy paste these labels after upgrading the haproxy chart.*/}}
 platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
 platform.tibco.com/workload-type: infra
+egress.networking.platform.tibco.com/internet-all: enable
+networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}
 
 {{- define "haproxy-ingress.defaultBackend.labels" -}}

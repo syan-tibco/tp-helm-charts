@@ -43,12 +43,21 @@ platform.tibco.com/workload-type: infra
 platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- include "oauth2-proxy.selectorLabels" . }}
+{{- include "oauth2-proxy.platformLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 {{- if .Values.customLabels }}
 {{ toYaml .Values.customLabels }}
 {{- end }}
+{{- end }}
+
+{{/* 
+Platform labels
+*/}}
+{{- define "oauth2-proxy.platformLabels" }}
+egress.networking.platform.tibco.com/internet-web: enable
+networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}
 
 {{/*
