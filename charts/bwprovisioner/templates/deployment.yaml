@@ -150,15 +150,17 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.bwprovisioner.logging.enabled }}
       volumes:
+{{- if .Values.global.bwprovisioner.logging.enabled }}
         - name: dockercontainerlogs
           hostPath:
             path: /var/lib/docker/containers/
+            type: DirectoryOrCreate
         - name: podlogs
           hostPath:
             path: /var/log/pods
+            type: Directory
         - name: fluent-bit-config
           configMap:
             name: {{ include "bwprovisioner.fullname" . }}-fluentbit-config
-      {{- end }}
+{{- end }}
