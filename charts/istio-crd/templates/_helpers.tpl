@@ -23,3 +23,4 @@ istio-{{ .Release.Namespace }}{{- if not (eq .Values.revision "") }}-{{ .Values.
 istio-{{ .Release.Namespace }}{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}-reader
 {{- end -}}
 {{- end -}}
+

@@ -41,3 +41,10 @@ global:
       # this is used to generate client id and client secret.
       # Client Id and secret are used to generate time bound access token
       iat: "" #initial access token used to generate client credentials
+
+enableLogging: true
+
+fluentbit:
+  image:
+    registry: cr.fluentbit.io/fluent/fluent-bit
+    tag: 2.1.6

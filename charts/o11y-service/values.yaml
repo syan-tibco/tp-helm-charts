@@ -15,6 +15,68 @@ global:
       serviceaccount:
         nameSpace: ""
         serviceAccountName: ""
+      o11y:
+        config:
+          otel:
+            receiver:
+              service:
+                name: "otel-userapp"
+                port: 4317
+          logserver:
+            userapp:
+              logindex: "tibco-user-app"
+              traceindex: "dummy"
+            services:
+              logindex: "tibco-services"
+            proxy:
+              userapp:
+                logindex:
+                  endpoint: "https://elastic.dp1-platform.tcie.pro"
+                  username: "elastic"
+            exporter:
+              userapp:
+                logindex:
+                  endpoint: "https://elastic.dp1-platform.tcie.pro"
+                  username: "elastic"
+              services:
+                logindex:
+                  endpoint: "https://elastic.dp1-platform.tcie.pro"
+                  username: "elastic"
+          promserver:
+            proxy:
+              endpoint: "dummy"
+              username: "dummy"
+            exporter:
+              endpoint: "dummy"
+          jaeger:
+            collector:
+              host: "dummy"
+              port: 4317
+            es:
+              host: "https://elastic.dp1-platform.tcie.pro"
+              port: 9200
+              username: "elastic"
+          finops:
+            collector:
+              endpoint: "dummy"
+        secret:
+          logserver:
+            userapp:
+              proxy:
+                password: "MrZvu5n4m4924FqT48EI9WM7"
+              exporter:
+                password: "MrZvu5n4m4924FqT48EI9WM7"
+            services:
+              exporter:
+                password: "MrZvu5n4m4924FqT48EI9WM7"
+          promserver:
+            proxy:
+              password: "promserver_proxy_dummy"
+            exporter:
+              token: "promserver_exporter_dummy"
+          jaeger:
+            es:
+              password: "MrZvu5n4m4924FqT48EI9WM7"
   o11yservice:
     serviceAccount: ""
     data:
@@ -150,6 +212,12 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+
+enableLogging: true
+fluentbit:
+  image:
+    registry: cr.fluentbit.io/fluent/fluent-bit
+    tag: 2.1.6
 
 config:
   otel:

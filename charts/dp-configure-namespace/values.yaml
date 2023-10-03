@@ -12,8 +12,11 @@ global:
 # Default value is true. Possible values are true, false
 createServiceAccount: true
 
-# Flag to enable or disable default network policies for a namespace
-# Default value is true. Possible values are true, false
-createNetworkPolicy: true
-# Capture any additional network policies to be created for a namespace
-additionalNetworkPolicy: {}
+networkPolicy:
+  # Flag to enable or disable creating default network policies for a namespace
+  # Default value is true. Possible values are true, false
+  create: true
+  # node CIDR IP block
+  # Required value if the network policies are to be enabled
+  nodeCidrIpBlock: ""
+  

@@ -1,5 +1,4 @@
 global:
-  enableLogging: true
   serviceAccount: "" #user provided service account.
   distlockop:
     image:
@@ -28,4 +27,12 @@ settingsConfigmap:
   - key: "LOCK_EXPIRY_DURATION"
     value: "2m"
 
+image:
+  pullPolicy: Always
 
+enableLogging: true
+
+fluentbit:
+  image:
+    registry: cr.fluentbit.io/fluent/fluent-bit
+    tag: 2.1.6

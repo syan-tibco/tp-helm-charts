@@ -39,6 +39,9 @@ helm.sh/chart: {{ include "oauth2-proxy.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: authentication-proxy
 app.kubernetes.io/part-of: {{ template "oauth2-proxy.name" . }}
+platform.tibco.com/workload-type: infra
+platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- include "oauth2-proxy.selectorLabels" . }}
 {{- include "oauth2-proxy.platformLabels" . }}
 {{- if .Chart.AppVersion }}

@@ -36,7 +36,7 @@
 {{- define "o11y-service.promserver-proxy-password" }}promserver-proxy-password{{ end -}}
 {{- define "o11y-service.promserver-exporter-token" }}promserver-exporter-token{{ end -}}
 
-{{- define "o11y-service.jaeger-collector-endpoint" }}jaeger-collector.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local:{{ .Values.config.jaeger.collector.port }}{{ end -}}
+{{- define "o11y-service.jaeger-collector-endpoint" }}jaeger-collector.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local:{{ .Values.global.cp.resources.o11y.config.jaeger.collector.port }}{{ end -}}
 {{- define "o11y-service.finops-collector-endpoint" }}cp-proxy.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local{{ end -}}
 
 

@@ -201,6 +201,7 @@ telemetry:
       # To reduce the number of successful logs, default log window duration is
       # set to 12 hours.
       logWindowDuration: "43200s"
+
 # Revision is set as 'version' label and part of the resource names when installing multiple control planes.
 revision: ""
 
@@ -236,7 +237,7 @@ meshConfig:
   #- name: zipkin
   #  zipkin:
   #    service: opentelemetry-collector.istio-system.svc.cluster.local
-  #    port: 4211
+  #    port: 9411
 
   enablePrometheusMerge: true
 
@@ -274,6 +275,9 @@ global:
     resources:
       serviceaccount:
         serviceAccountName:
+    containerRegistry:
+      url: "docker.io"
+      secret: ""
   # Used to locate istiod.
   istioNamespace: istio-system
 

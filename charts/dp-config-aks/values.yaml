@@ -14,25 +14,25 @@ serviceAccount:
   name: ""
 
 dns:
-  domain: "cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
+  domain: "azrtroposdev.azure.tcie.pro"
   vanity: "*"
 
 tls:
   setup: production
-  certificateNamespace: traefik-system
-  certificateSecretName: cic-certificate-production
+  certificateNamespace: ingress-system
+  certificateSecretName: cic-certificate-production-azure
 
 httpIngress:
   enabled: true
-  name: traefik
+  name: nginx
   backend:
-    serviceName: dp-config-aks-traefik
-    servicePort: 443
+    serviceName: dp-config-aks-ingress-nginx-controller
+    servicePort: 80
   # more AGIC annotations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/#appgw-ssl-certificate
   annotations:
-    kubernetes.io/ingress.class: azure/application-gateway                          #This will configure the AppGw with this ingressObject
-  #  cert-manager.io/cluster-issuer: cic-cert-subscription-scope-production
-    external-dns.alpha.kubernetes.io/hostname: "*.cic20-tsc-dev-eu-rg-01.azrtroposdev.azure.tcie.pro"
+    kubernetes.io/ingress.class: "azure/application-gateway"                          #This will configure the AppGw with this ingressObject
+    cert-manager.io/cluster-issuer: "cic-cert-subscription-scope-production"
+    external-dns.alpha.kubernetes.io/hostname: "*.azrtroposdev.azure.tcie.pro"
 
 # the dns value is actually use pattern:
 # {{ .Values.global.azureResourceGroup }}.{{ .Values.global.dnsSandboxSubdomain }}.{{ .Values.global.dnsGlobalTopDomain }}
@@ -69,8 +69,17 @@ storageClass:
     #   - cache=strict # https://linux.die.net/man/8/mount.cifs
     #   - nosharesock
 
-traefik:
+ingress-nginx:
+  # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
   enabled: true
+  controller:
+    service: # for external-dns
+      type: ClusterIP
+    nodeSelector:
+      kubernetes.io/os: linux
+      
+traefik:
+  enabled: false
   hub: # for hub
     enabled: false
   service: # for external-dns
@@ -92,6 +101,6 @@ traefik:
   tlsStore: # for certificate
     default:
       defaultCertificate:
-        secretName: cic-certificate-production
+        secretName: cic-certificate-production-azure
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
