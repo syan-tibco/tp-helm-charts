@@ -1,3 +1,4 @@
+{{ include "dp-configure-namespace.nodeCidr" . }}
 {{ include "dp-configure-namespace.validate-namespace" . }}
 Release name: {{ .Release.Name }}.
 To learn more about the release, try:
