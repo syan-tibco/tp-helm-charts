@@ -131,7 +131,7 @@ spec:
             - name: fluent-bit-config
               mountPath: /fluent-bit/etc/
         {{- end }}
-{{- if .Values.global.bwprovisioner.logging.enabled }}
+{{- if .Values.global.flogoprovisioner.logging.enabled }}
       volumes:
         - name: dockercontainerlogs
           hostPath:
