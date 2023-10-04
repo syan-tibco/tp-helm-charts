@@ -77,18 +77,18 @@ data:
     -- Function to append all fields under key "msg"
     function update_record(tag, timestamp, record)
       local newLog = record["log"]
-      local newMsg = ""
+      local newMsg = newLog["msg"]
       for key, val in pairs(newLog) do
         if(key ~= "level" and key ~= "caller" and key ~= "msg" and key ~= "stacktrace" and key ~= "error" and key ~= "errorVerbose") then
-          if(key ~= "time") then 
-            newMsg = newLog["msg"] .. ", " .. key .. ": " .. val
+          if(key ~= "time") then
+            print(key)
+            newMsg = newMsg .. ", " .. key .. ": " .. tostring(val)
           end
           newLog[key] = nil
         end
       end
-      if(newMsg ~= "") then
-        newLog["msg"] = newMsg
-      end
+      print(newMsg)
+      newLog["msg"] = newMsg
       record["log"] = newLog
       return 2, timestamp, record
     end
