@@ -79,6 +79,12 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.hostIP
+          - name: NAMESPACE
+            value: {{ .Release.Namespace }}
+          - name: RELEASE_NAME
+            value: {{ .Release.Name }}
+          - name: DATAPLANE_ID
+            value: {{ .Values.global.tibco.dataPlaneId }}
         volumeMounts:
           - name: podlogs
             mountPath: /var/log/pods
