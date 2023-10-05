@@ -1,4 +1,4 @@
-#revision: "platform"
+
 
 serviceAccount:
   create: false
@@ -14,8 +14,12 @@ global:
   istioNamespace: tibco-istio
   cp:
     containerRegistry:
-      secret: ck5mt5gvnmjhmo7kk21g
-      url: 664529841144.dkr.ecr.us-west-2.amazonaws.com
+      url: 894547326815.dkr.ecr.us-east-1.amazonaws.com
+      #url: 664529841144.dkr.ecr.us-west-2.amazonaws.com
+      #url: "us.gcr.io/mashery-cloud-operations"
+      #url: "docker.io"
+      #url: ""
+      secret: "ck5mt5gvnmjhmo7kk21g"
     dataplaneId: "ck5mt5gvnmjhmo7kk21g"
     resources:
       serviceaccount:
@@ -30,20 +34,34 @@ global:
       cpu: 500m
       memory: 512Mi
   defaultPodDisruptionBudget:
-    enabled: true
+    enabled: false
   proxy:
     tracer: "openCensusAgent"
 
 meshConfig:
   accessLogFile: /dev/stdout
-
   defaultConfig:
     tracing:
       zipkin:
         address: "opentelemetry-collector.tibco-istio.svc.cluster.local:9411"
-
   extensionProviders:
   - name: opentelemetry
     opentelemetry:
       service: opentelemetry-collector.tibco-istio.svc.cluster.local
       port: 4317
+
+fluentBit:
+  repository: cr.fluentbit.io/fluent
+  image: fluent-bit
+  tag: 2.1.9
+  pullPolicy: Always
+  output:
+    Name: opensearch
+    Host: 35.202.221.56
+    Port: 9200
+    Index: istio_pilot_envoy_index
+    Type: _envoy
+    HTTP_User: admin
+    HTTP_Passwd: admin
+    tls: on
+    tls.verify: off

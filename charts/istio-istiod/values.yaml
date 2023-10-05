@@ -589,4 +589,10 @@ istio_cni:
   enabled: false
   chained: true
 
+fluentBit:
+  repository: cr.fluentbit.io/fluent
+  image: fluent-bit
+  tag: 2.1.9
+  pullPolicy: Always
+  output: {}
 
