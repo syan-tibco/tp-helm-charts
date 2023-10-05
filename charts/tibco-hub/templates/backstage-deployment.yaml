@@ -124,7 +124,7 @@ spec:
               scheme: HTTP
               path: "/tibco/hub/health"
               port: {{ .Values.backstage.containerPorts.backend }}
-            initialDelaySeconds: 120
+            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 1
@@ -134,7 +134,7 @@ spec:
               scheme: HTTP
               path: "/tibco/hub/health"
               port: {{ .Values.backstage.containerPorts.backend }}
-            initialDelaySeconds: 120
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 1
