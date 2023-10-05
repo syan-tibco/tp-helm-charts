@@ -46,7 +46,7 @@ storageClass:
     default: false
     parameters:
       skuname: StandardSSD_LRS
-    reclaimPolicy: delete
+    reclaimPolicy: Delete
     allowVolumeExpansion: true
     volumeBindingMode: WaitForFirstConsumer
 
@@ -57,7 +57,7 @@ storageClass:
     default: false
     parameters:
       skuName: Standard_LRS
-    reclaimPolicy: delete
+    reclaimPolicy: Delete
     allowVolumeExpansion: true
     volumeBindingMode: WaitForFirstConsumer
     # mountOptions:
