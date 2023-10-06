@@ -78,16 +78,18 @@ data:
     function update_record(tag, timestamp, record)
       local newLog = record["log"]
       local newMsg = newLog["msg"]
-      for key, val in pairs(newLog) do
-        if(key ~= "level" and key ~= "caller" and key ~= "msg" and key ~= "stacktrace" and key ~= "error" and key ~= "errorVerbose") then
-          if(key ~= "time") then
-            newMsg = newMsg .. ", " .. key .. ": " .. tostring(val)
+      if(newLog ~= nil and type(newLog) == "table") then
+        for key, val in pairs(newLog) do
+          if(key ~= "level" and key ~= "caller" and key ~= "msg" and key ~= "stacktrace" and key ~= "error" and key ~= "errorVerbose") then
+            if(key ~= "time") then
+              newMsg = newMsg .. ", " .. key .. ": " .. tostring(val)
+            end
+            newLog[key] = nil
           end
-          newLog[key] = nil
         end
+        newLog["msg"] = newMsg
+        record["log"] = newLog
       end
-      newLog["msg"] = newMsg
-      record["log"] = newLog
       return 2, timestamp, record
     end
 {{- end }}
