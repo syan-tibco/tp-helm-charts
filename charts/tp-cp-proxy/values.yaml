@@ -27,7 +27,7 @@ tolerations: {}
 
 global:
   cp:
-    cpHostName: "acme.local.my.cic2.pro"
+    cpHostname: "acme.local.my.cic2.pro"
     dataplaneId: "abcd"
     subscriptionId : "sub1"
     containerRegistry:

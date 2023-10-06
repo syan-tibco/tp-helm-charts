@@ -37,7 +37,7 @@ spec:
         args:
           - start
           - -o
-          - "https://{{ .Values.global.cp.cpHostName }}"
+          - "https://{{ .Values.global.cp.cpHostname }}"
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10}}
