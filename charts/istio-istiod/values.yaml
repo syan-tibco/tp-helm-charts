@@ -278,6 +278,9 @@ global:
     containerRegistry:
       url: "docker.io"
       secret: ""
+    network:
+      nonDpNS: enable
+      k8sAPI: enable
   # Used to locate istiod.
   istioNamespace: istio-system
 
@@ -589,4 +592,18 @@ istio_cni:
   enabled: false
   chained: true
 
+fluentBit:
+  repository: cr.fluentbit.io/fluent
+  image: fluent-bit
+  tag: 2.1.9
+  pullPolicy: Always
+  output:
+    Name: opentelemetry
+    Host: otel-services.${POD_NAMESPACE}.svc.cluster.local
+    Port: 4318
+    Match: kube.istio-proxy.*
+    Logs_uri: /v1/logs
+    Log_response_payload: True
+    Tls: Off
+    Tls.verify: Off
 
