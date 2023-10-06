@@ -2,8 +2,8 @@
 {{- define "tp-tibtunnel.helpers.command.configure" -}}
 {{- $profile := printf "%s%s" (ternary "--profile " "" (ne .Values.configure.profile "")) .Values.configure.profile  -}}
 {{- $dataPlaneId := printf "%s%s" (ternary "--tibcoDataPlaneId " "" (ne .Values.global.tibco.dataPlaneId "")) .Values.global.tibco.dataPlaneId -}}
-{{-  $accessKey := printf "%s%s" (ternary "-a " "" (ne .Values.configure.accessKey "")) .Values.configure.accessKey -}}
-tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} {{ $accessKey }} --config-dir {{.Values.configDir}}
+{{- /*--access-key is passed as an env variable and resolved at runtime. This is required as we are storing ACCESS_KEY in a k8s secret and the pod reads from env*/ -}}
+tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} --config-dir {{.Values.configDir}} --log-format json
 {{- end -}}
 
 {{/* Generate tibtunnel connect command using values params. Ex: tp-tibtunnel connect -d --config-dir /etc/config/tibtunnel --data-ack-mode=false --remote-debug --network-check-url */}}
@@ -17,5 +17,5 @@ tp-tibtunnel configure {{ $profile }} {{ $dataPlaneId }} {{ $accessKey }} --conf
 {{- $logFile := printf "%s%s" (ternary "--log-file " "" (ne .Values.connect.logFile "")) .Values.connect.logFile }}
 {{- $networkCheckUrl := printf "%s%s" (ternary "--network-check-url " "" (ne .Values.connect.networkCheckUrl "")) .Values.connect.networkCheckUrl }}
 {{- $infiniteRetries := ternary "--infinite-retries" "" .Values.connect.infiniteRetries -}}
-tp-tibtunnel connect {{ $debug }} --config-dir {{.Values.configDir}} {{ $payload }} {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} {{ $networkCheckUrl }} {{ $infiniteRetries }} -s {{ tpl .Values.connect.onPremHost .}}:{{.Values.connect.onPremPort}} {{ .Values.connect.url }}
+tp-tibtunnel connect {{ $debug }} --config-dir {{.Values.configDir}} --log-format json {{ $payload }} {{ $dataChunkSize }} {{ $dataAckMode }} {{ $remoteDebug }}  {{ $logFile }} {{ $profile }} {{ $networkCheckUrl }} {{ $infiniteRetries }} -s {{ tpl .Values.connect.onPremHost .}}:{{.Values.connect.onPremPort}} {{ .Values.connect.url }}
 {{- end -}}
