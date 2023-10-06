@@ -1,0 +1,29 @@
+{{- if .Values.index.enabled -}}
+apiVersion: es.eck.github.com/v1alpha1
+kind: Index
+metadata:
+  name: {{ .Release.Name }}-jaeger-service-index
+  namespace: elastic-system
+spec:
+  targetInstance:
+    name: {{ .Release.Name }}
+  dependencies:
+    indexTemplates:
+      - {{ .Release.Name }}-jaeger-service-index-template
+    indices:
+      - jaeger-service-000001
+  body: |
+    {
+      "aliases" : {
+        "jaeger-service-write": {
+          "is_write_index": "true"
+        }
+      },
+      "settings": {
+        "index": {
+          "number_of_shards": 3,
+          "number_of_replicas": 2
+        }
+      }
+    }
+{{- end }}
