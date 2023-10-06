@@ -597,5 +597,12 @@ fluentBit:
   image: fluent-bit
   tag: 2.1.9
   pullPolicy: Always
-  output: {}
-
+  output:
+    Name:                 opentelemetry
+    Match:                dp.*
+    Host:                 otel-services.${POD_NAMESPACE}.svc.cluster.local
+    Port:                 4318
+    Logs_uri:             /v1/logs
+    Log_response_payload: True
+    Tls:                  Off
+    Tls.verify:           Off
