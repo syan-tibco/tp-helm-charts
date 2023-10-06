@@ -66,8 +66,6 @@ data:
         {{- range $key, $val := .Values.fluentBit.output }}
         {{ $key }} {{ $val }}
         {{- end }}
-        Retry_Limit False
-        Suppress_Type_Name On
 
 
 

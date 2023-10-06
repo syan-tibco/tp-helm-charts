@@ -598,11 +598,12 @@ fluentBit:
   tag: 2.1.9
   pullPolicy: Always
   output:
-    Name:                 opentelemetry
-    Match:                dp.*
-    Host:                 otel-services.${POD_NAMESPACE}.svc.cluster.local
-    Port:                 4318
-    Logs_uri:             /v1/logs
+    Name: opentelemetry
+    Host: otel-services.${POD_NAMESPACE}.svc.cluster.local
+    Port: 4318
+    Match: kube.istio-proxy.*
+    Logs_uri: /v1/logs
     Log_response_payload: True
-    Tls:                  Off
-    Tls.verify:           Off
+    Tls: Off
+    Tls.verify: Off
+
