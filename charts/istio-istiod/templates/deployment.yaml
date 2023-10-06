@@ -54,6 +54,8 @@ spec:
         {{ if .Values.global.cp.instanceId -}}
         platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId  }}
         {{- end }}
+        networking.platform.tibco.com/non-dp-ns: {{ .Values.global.cp.network.nonDpNS  }}
+        networking.platform.tibco.com/kubernetes-api: {{ .Values.global.cp.network.k8sAPI }}
         prometheus.io/scrape: "true"
       annotations:
         {{- if .Values.meshConfig.enablePrometheusMerge }}
@@ -233,7 +235,34 @@ spec:
           {{- with .Values.pilot.volumeMounts }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+        - name: fluent-bit
+          image: "{{ .Values.fluentBit.repository }}/{{ .Values.fluentBit.image }}:{{ .Values.fluentBit.tag }}"
+          imagePullPolicy: "{{ .Values.fluentBit.pullPolicy }}"
+          ports:
+            - name: http
+              containerPort: 2020
+              protocol: TCP
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          volumeMounts:
+            - mountPath: /fluent-bit/etc/fluent-bit.conf
+              name: fluent-bit-config
+              subPath: fluent-bit.conf
+            - mountPath: /fluent-bit/etc/custom_parsers.conf
+              name: fluent-bit-config
+              subPath: custom_parsers.conf
+            - name: log-volume
+              mountPath: /var/log
       volumes:
+      - name: log-volume
+        hostPath:
+          path: /var/log
+      - name: fluent-bit-config
+        configMap:
+          name: {{ .Release.Name }}-fluent-bit-config
       # Technically not needed on this pod - but it helps debugging/testing SDS
       # Should be removed after everything works.
       - emptyDir:

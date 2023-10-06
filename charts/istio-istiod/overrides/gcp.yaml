@@ -1,7 +1,7 @@
-
+revision: "gcp"
 
 serviceAccount:
-  create: false
+  create: true
 
 pilot:
   autoscaleEnabled: true
@@ -11,16 +11,16 @@ pilot:
   traceSampling: 100.0
 
 global:
-  istioNamespace: tibco-istio
+  istioNamespace: apim-gcp
   cp:
     containerRegistry:
-      url: 894547326815.dkr.ecr.us-east-1.amazonaws.com
-      #url: 664529841144.dkr.ecr.us-west-2.amazonaws.com
-      #url: "us.gcr.io/mashery-cloud-operations"
+      #url: "664529841144.dkr.ecr.us-west-2.amazonaws.com"
+      url: "us.gcr.io/mashery-cloud-operations"
       #url: "docker.io"
       #url: ""
-      secret: "ck5mt5gvnmjhmo7kk21g"
-    dataplaneId: "ck5mt5gvnmjhmo7kk21g"
+      secret: ""
+    dataplaneId: "ck13oht6sk00s5815f5g"
+    instanceId: "theInstanceIdFromIstiod"
     resources:
       serviceaccount:
         serviceAccountName: istio-dataplane-service-account
@@ -33,8 +33,6 @@ global:
     limits:
       cpu: 500m
       memory: 512Mi
-  defaultPodDisruptionBudget:
-    enabled: false
   proxy:
     tracer: "openCensusAgent"
 
@@ -43,11 +41,11 @@ meshConfig:
   defaultConfig:
     tracing:
       zipkin:
-        address: "opentelemetry-collector.tibco-istio.svc.cluster.local:9411"
+        address: "opentelemetry-collector.apim-gcp.svc.cluster.local:9411"
   extensionProviders:
-  - name: opentelemetry
+  - name: "opentelemetry"
     opentelemetry:
-      service: opentelemetry-collector.tibco-istio.svc.cluster.local
+      service: opentelemetry-collector.apim-gcp.svc.cluster.local
       port: 4317
 
 fluentBit:
