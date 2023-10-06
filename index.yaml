@@ -1314,6 +1314,29 @@ entries:
           description: "add nginx support"
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-10-06T17:56:49.443543208Z"
+    dependencies:
+    - condition: eck-custom-resources-operator.enabled
+      name: eck-custom-resources-operator
+      repository: https://xco-sk.github.io/eck-custom-resources/
+      version: 0.5.6
+    description: dp-config-es
+    digest: cbea4b4966471e66ae934e75e85acc9fdb36effd6a2454f2019200c975cf090d
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-es
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.12/dp-config-es-1.0.12.tgz
+    version: 1.0.12
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: changed
+          description: "add nginx support"
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-09-21T22:29:20.309922674Z"
     dependencies:
     - condition: eck-custom-resources-operator.enabled
@@ -4994,4 +5017,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-06T16:36:05.368864984Z"
+generated: "2023-10-06T17:56:49.44407161Z"
