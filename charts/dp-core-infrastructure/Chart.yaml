@@ -4,11 +4,11 @@ dependencies:
 - condition: tp-tibtunnel.enabled
   name: tp-tibtunnel
   repository: https://syan-tibco.github.io/tp-helm-charts
-  version: 1.0.*
+  version: 1.0.77
 - condition: tp-provisioner-agent.enabled
   name: tp-provisioner-agent
   repository: https://syan-tibco.github.io/tp-helm-charts
-  version: 1.0.*
+  version: 1.0.189
 - condition: haproxy-ingress.enabled
   name: haproxy-ingress
   repository: ""
