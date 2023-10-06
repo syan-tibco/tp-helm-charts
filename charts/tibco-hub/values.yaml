@@ -302,6 +302,20 @@ postgresql:
   # -- PostgreSQL architecture (`standalone` or `replication`)
   architecture: standalone
 
+## @section PostgreSQL Primary parameters
+##
+primary:  
+  ## PostgreSQL Primary persistence configuration
+  ##
+  persistence:
+    ## @param primary.persistence.storageClass PVC Storage Class for PostgreSQL Primary data volume
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: ""
 # -- Service Account Configuration
 # @default -- See below
 serviceAccount:
