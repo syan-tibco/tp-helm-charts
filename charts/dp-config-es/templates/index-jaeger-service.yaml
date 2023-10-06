@@ -2,7 +2,7 @@
 apiVersion: es.eck.github.com/v1alpha1
 kind: Index
 metadata:
-  name: {{ .Release.Name }}-jaeger-service-index
+  name: jaeger-service-000001
   namespace: elastic-system
 spec:
   targetInstance:
@@ -10,8 +10,6 @@ spec:
   dependencies:
     indexTemplates:
       - {{ .Release.Name }}-jaeger-service-index-template
-    indices:
-      - jaeger-service-000001
   body: |
     {
       "aliases" : {

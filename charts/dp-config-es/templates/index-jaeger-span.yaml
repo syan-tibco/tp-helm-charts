@@ -2,7 +2,7 @@
 apiVersion: es.eck.github.com/v1alpha1
 kind: Index
 metadata:
-  name: {{ .Release.Name }}-jaeger-span-index
+  name: jaeger-span-000001
   namespace: elastic-system
 spec:
   targetInstance:
@@ -10,8 +10,6 @@ spec:
   dependencies:
     indexTemplates:
       - {{ .Release.Name }}-jaeger-span-index-template
-    indices:
-      - jaeger-span-000001
   body: |
     {
       "aliases" : {
