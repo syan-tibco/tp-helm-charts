@@ -125,57 +125,51 @@ spec:
                                     }
                                 }
                             },
-                          "k8s":
+                          "app_tags":
                             {
-                              "properties":
+                              "type": "text",
+                              "fields":
                                 {
-                                  "namespace":
+                                  "keyword":
                                     {
-                                      "properties":
-                                        {
-                                          "name":
-                                            {
-                                              "type": "text",
-                                              "fields":
-                                                {
-                                                  "keyword":
-                                                    {
-                                                      "type": "keyword",
-                                                      "ignore_above": 256
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                  "pod":
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "pod_namespace":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
                                     {
-                                      "properties":
-                                        {
-                                          "name":
-                                            {
-                                              "type": "text",
-                                              "fields":
-                                                {
-                                                  "keyword":
-                                                    {
-                                                      "type": "keyword",
-                                                      "ignore_above": 256
-                                                    }
-                                                }
-                                            },
-                                          "uid":
-                                            {
-                                              "type": "text",
-                                              "fields":
-                                                {
-                                                  "keyword":
-                                                    {
-                                                      "type": "keyword",
-                                                      "ignore_above": 256
-                                                    }
-                                                }
-                                            }
-                                        }
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "pod_name":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
+                                    }
+                                }
+                            },
+                          "pod_uid":
+                            {
+                              "type": "text",
+                              "fields":
+                                {
+                                  "keyword":
+                                    {
+                                      "type": "keyword",
+                                      "ignore_above": 256
                                     }
                                 }
                             }
