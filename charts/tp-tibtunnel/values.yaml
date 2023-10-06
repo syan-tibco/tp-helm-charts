@@ -41,8 +41,8 @@ replicaCount: "1"
 
 image:
   name: tp-tibtunnel
-  pullPolicy: Always
-  tag: 70
+  pullPolicy: IfNotPresent
+  tag: 81
 
 nodeSelector:
   kubernetes.io/os: linux
