@@ -54,6 +54,8 @@ spec:
         {{ if .Values.global.cp.instanceId -}}
         platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId  }}
         {{- end }}
+        networking.platform.tibco.com/non-dp-ns: {{ .Values.global.cp.network.nonDpNS  }}
+        networking.platform.tibco.com/kubernetes-api: {{ .Values.global.cp.network.k8sAPI }}
         prometheus.io/scrape: "true"
       annotations:
         {{- if .Values.meshConfig.enablePrometheusMerge }}

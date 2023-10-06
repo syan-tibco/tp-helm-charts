@@ -278,6 +278,9 @@ global:
     containerRegistry:
       url: "docker.io"
       secret: ""
+    network:
+      nonDpNS: enable
+      k8sAPI: enable
   # Used to locate istiod.
   istioNamespace: istio-system
 
