@@ -15,6 +15,8 @@ spec:
       name: client-credential-creation
       labels:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
+        egress.networking.platform.tibco.com/internet-web: enable
+        networking.platform.tibco.com/kubernetes-api: enable
     spec:
       restartPolicy: Never
       serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}
@@ -56,6 +58,8 @@ spec:
       name: client-credential-secret-deletion
       labels:
         {{- include "tp-cp-proxy.shared.labels.standard" . | nindent 8 }}
+        egress.networking.platform.tibco.com/internet-web: enable
+        networking.platform.tibco.com/kubernetes-api: enable
     spec:
       restartPolicy: Never
       serviceAccountName: {{ .Values.global.cp.resources.serviceaccount.serviceAccountName | default (printf "%s%s" (include "tp-cp-proxy.consts.appName" .) "-job-sa") }}

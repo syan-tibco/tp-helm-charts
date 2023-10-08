@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         {{- include "tp-tibtunnel.shared.labels.standard" . | nindent 8 }}
+        egress.networking.platform.tibco.com/internet-web: enable
     spec:
       containers:
       - name: tibtunnel

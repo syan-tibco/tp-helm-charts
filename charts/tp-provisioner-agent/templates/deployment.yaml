@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         {{- include "tp-provisioner-agent.shared.labels.standard" . | nindent 8 }}
+        networking.platform.tibco.com/kubernetes-api: enable
+        egress.networking.platform.tibco.com/internet-web: enable
     spec:
       {{- if .Values.global.tibco.serviceAccount }}
       serviceAccountName: {{ .Values.global.tibco.serviceAccount }}
