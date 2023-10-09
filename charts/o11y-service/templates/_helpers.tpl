@@ -11,6 +11,12 @@
       - Any change in this file needs to be synchronized with all charts
 */}}
 
+{{/*
+Create image tag value which defaults to .Chart.AppVersion.
+*/}}
+{{- define "o11y-service.image.tag" -}}
+{{- .Values.tag | default .Chart.AppVersion }}
+{{- end -}}
 
 {{/* A fixed short name for the application. Can be different than the chart name */}}
 {{- define "o11y-service.consts.appName" }}o11y-service{{ end -}}
