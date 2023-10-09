@@ -50,6 +50,4 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- define "tp-provisioner-agent.shared.labels.platform" -}}
 platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
 platform.tibco.com/workload-type: {{ include "tp-provisioner-agent.consts.workloadType" .}}
-networking.platform.tibco.com/kubernetes-api: enable
-egress.networking.platform.tibco.com/internet-web: enable
 {{- end }}

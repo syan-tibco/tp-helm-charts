@@ -51,6 +51,4 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/workload-type: {{ include "tp-cp-proxy.consts.workloadType" .}}
 platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
-egress.networking.platform.tibco.com/internet-web: enable
-networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}

@@ -51,5 +51,4 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/workload-type: {{ include "tp-dp-secret-controller.consts.workloadType" .}}
 platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
-networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}

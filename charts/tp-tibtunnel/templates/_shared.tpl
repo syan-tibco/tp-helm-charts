@@ -73,5 +73,4 @@ app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- define "tp-tibtunnel.shared.labels.platform" -}}
 platform.tibco.com/dataplane-id: {{ .Values.global.tibco.dataPlaneId }}
 platform.tibco.com/workload-type: {{ include "tp-tibtunnel.consts.workloadType" .}}
-egress.networking.platform.tibco.com/internet-web: enable
 {{- end }}

@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         {{- include "dp-core-distributed-lock-operator.shared.labels.standard" . | nindent 8 }}
+        networking.platform.tibco.com/kubernetes-api: enable
     spec:
       imagePullSecrets:
       - name: {{ .Values.global.cp.containerRegistry.secret }}
