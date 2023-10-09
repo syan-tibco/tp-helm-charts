@@ -2691,6 +2691,20 @@ entries:
   flogoprovisioner:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-10-09T07:14:43.148298482Z"
+    description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
+    digest: c9f76b11be889c49a17c0f4f6b97e59cc8adecf693d45ffa251ea31f1e8e2db6
+    home: https://github.com/tibco/tp-iapp-flogo-provisioner.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: flogoprovisioner
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/flogoprovisioner-1.0.11/flogoprovisioner-1.0.11.tgz
+    version: 1.0.11
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-10-03T18:27:11.704666331Z"
     description: TIBCO Platform Dataplane Capabilty -- Flogo Provisioner
     digest: 3446840df7b99d701ca9e59f4f8c11ab7dd49b1823fca810af501b009816deff
@@ -5212,4 +5226,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-09T07:05:30.504211411Z"
+generated: "2023-10-09T07:14:43.148752486Z"
