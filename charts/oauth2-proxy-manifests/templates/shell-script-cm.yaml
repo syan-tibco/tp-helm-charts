@@ -17,7 +17,9 @@ data:
       "instance_id": "{{ .Values.global.cp.instanceId }}",
       "redirect_uris": [
         "https://{{ .Values.global.cp.resources.ingress.fqdn }}{{ .Values.global.cp.capability.pathPrefix }}/oauth2/callback"
-      ]
+      ],
+      "backchannel_logout_uri":  "https://{{ .Values.global.cp.resources.ingress.fqdn }}{{ .Values.global.cp.capability.pathPrefix }}/oauth2/sign_out_tibx",
+      "backchannel_logout_secondary_key_required": true
     }'
 
     exchangeIatForClientId () {
