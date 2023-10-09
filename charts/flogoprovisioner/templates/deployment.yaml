@@ -24,6 +24,7 @@ spec:
       {{- end }}
       labels:
         {{- include "flogoprovisioner.selectorLabels" . | nindent 8 }}
+        networking.platform.tibco.com/kubernetes-api: enable
     spec:
       imagePullSecrets:
       - name: {{ .Values.global.cp.containerRegistry.secret }}
@@ -104,14 +105,13 @@ spec:
 #                  key: otel-recvservice-port
         {{- if .Values.global.flogoprovisioner.logging.enabled }}
         - name: fluent-bit
-         image: {{ .Values.global.flogoprovisioner.logging.image.registry }}{{ .Values.global.flogoprovisioner.logging.image.name }}:{{ .Values.global.flogoprovisioner.logging.image.tag }}
+          image: {{ .Values.global.flogoprovisioner.logging.image.registry }}{{ .Values.global.flogoprovisioner.logging.image.name }}:{{ .Values.global.flogoprovisioner.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: POD_NAMESPACE
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-
             - name: POD_NAME
               valueFrom:
                 fieldRef:
@@ -122,7 +122,6 @@ spec:
                   fieldPath: metadata.uid
             - name: CONTAINER_NAME
               value: {{ .Chart.Name }}
-
           volumeMounts:
             - name: dockercontainerlogs
               mountPath: /var/lib/docker/containers/
