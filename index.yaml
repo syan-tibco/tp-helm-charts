@@ -3207,6 +3207,43 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-istiod-1.0.1/istio-istiod-1.0.1.tgz
     version: 1.0.1
+  jaeger:
+  - apiVersion: v2
+    appVersion: 1.45.0
+    created: "2023-10-09T04:30:07.288844377Z"
+    dependencies:
+    - condition: provisionDataStore.cassandra
+      name: cassandra
+      repository: https://charts.helm.sh/incubator
+      version: 0.15.3
+    - condition: provisionDataStore.elasticsearch
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: ^7.11.1
+    - condition: provisionDataStore.kafka
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: ^19.1.5
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.16.0
+    description: A Jaeger Helm chart for Kubernetes
+    digest: 26846a930c4831ca5fecfb91ef7cf03be5758f16ae0871c972e94a5c0cdd8c8a
+    home: https://jaegertracing.io
+    icon: https://camo.githubusercontent.com/afa87494e0753b4b1f5719a2f35aa5263859dffb/687474703a2f2f6a61656765722e72656164746865646f63732e696f2f656e2f6c61746573742f696d616765732f6a61656765722d766563746f722e737667
+    keywords:
+    - jaeger
+    - opentracing
+    - tracing
+    - instrumentation
+    kubeVersion: '>= 1.21-0'
+    name: jaeger
+    sources:
+    - https://hub.docker.com/u/jaegertracing/
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/jaeger-0.71.15/jaeger-0.71.15.tgz
+    version: 0.71.15
   o11yservice:
   - apiVersion: v2
     appVersion: 1.0.23
@@ -3917,6 +3954,25 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/oauth2-proxy-6.17.0-tibx-1/oauth2-proxy-6.17.0-tibx-1.tgz
     version: 6.17.0-tibx-1
+  opentelemetry-collector:
+  - apiVersion: v2
+    appVersion: 0.86.0
+    created: "2023-10-09T04:30:07.499974752Z"
+    description: OpenTelemetry Collector Helm chart for Kubernetes
+    digest: 4e07da5fb6e12dc4d535c1012c96d68ef26909bfe921893ab014719ce835c2f8
+    home: https://opentelemetry.io/
+    icon: https://opentelemetry.io/img/logos/opentelemetry-logo-nav.png
+    maintainers:
+    - name: dmitryax
+    - name: TylerHelmuth
+    name: opentelemetry-collector
+    sources:
+    - https://github.com/open-telemetry/opentelemetry-collector
+    - https://github.com/open-telemetry/opentelemetry-collector-contrib
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/opentelemetry-collector-0.69.2/opentelemetry-collector-0.69.2.tgz
+    version: 0.69.2
   tibco-hub:
   - apiVersion: v2
     appVersion: 0.1.0
@@ -5017,4 +5073,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-06T17:56:49.44407161Z"
+generated: "2023-10-09T04:30:07.500663168Z"
