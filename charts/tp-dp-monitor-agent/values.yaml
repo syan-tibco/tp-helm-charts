@@ -9,6 +9,7 @@ global:
     instanceId: "qwerty"
     containerRegistry:
       url: "reldocker.tibco.com"
+      secret: "test"
     resources:
       serviceaccount:
         serviceAccountName: "monitor-agent-sa"

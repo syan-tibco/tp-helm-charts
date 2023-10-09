@@ -83,7 +83,6 @@ spec:
     metadata:
       labels:
         {{- include "tp-dp-monitor-agent.shared.labels.standard" . | nindent 8 }}
-        networking.platform.tibco.com/kubernetes-api: enable
 {{- if .Values.global.enableLogging }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/fluentbit-configmap.yaml") . | sha256sum }}
@@ -95,7 +94,9 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: {{ include "tp-dp-monitor-agent.consts.appName" . }}
-        image: {{ .Values.global.cp.containerRegistry.url }}/pdp/tp-dp-monitor-agent:{{ include "tp-dp-monitor-agent.generated.buildNumber" . }}
+        image: {{ include "tp-dp-monitor-agent.image.registry" .}}{{"/"}}{{ include "tp-dp-monitor-agent.image.repository" .}}{{"/"}}tp-dp-monitor-agent:{{ include "tp-dp-monitor-agent.generated.buildNumber" . }}
+        imagePullSecrets:
+          - name: {{ .Values.global.cp.containerRegistry.secret }}
         resources:
           requests:
             cpu: 125m
