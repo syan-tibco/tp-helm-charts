@@ -359,3 +359,25 @@ metrics:
     # -- ServiceMonitor endpoint path
     # <br /> Note that the /metrics endpoint is NOT present in a freshly scaffolded Backstage app. To setup, follow the [Prometheus metrics tutorial](https://github.com/backstage/backstage/blob/master/contrib/docs/tutorials/prometheus-metrics.md).
     path: /metrics
+
+# Configuration needed for Fluentbit Sidecar for logging
+enableLogging: true
+
+fluentbit:
+  image:
+    registry: cr.fluentbit.io/fluent/fluent-bit
+    tag: 2.1.6
+    pullPolicy: Always
+    
+autoscaling:
+
+    # -- If enabled, a HorizontalPodAutoscaler is created for the backstage-deployment
+  enabled: true
+
+  minReplicas: 1
+
+  maxReplicas: 3
+
+  targetCPUUtilizationPercentage: 70
+
+  targetMemoryUtilizationPercentage: 70
