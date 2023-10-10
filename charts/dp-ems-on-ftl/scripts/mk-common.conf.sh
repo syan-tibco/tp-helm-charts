@@ -1,6 +1,12 @@
 outfile=${1:-common.conf}
 cat - <<EOF > $outfile
 [FILTER]
+    name             parser
+    match            *
+    key_name         message
+    parser           emstibemsd
+
+[FILTER]
     Name lua
     Match *
     Script datetime.lua
@@ -16,18 +22,11 @@ cat - <<EOF > $outfile
     Name modify
     Alias common.filter
     Match *
-    Add tcm.user ${TCM_USER}
-    Add tcm.domain ${TCM_DNS_DOMAIN}
-    Add kubernetes.container.name ${TCM_CID_NAME}
-    Add cloud.account.name tcm
-    Add cloud.account.id ${SYSTEM_AWS_ACCOUNT_ID}
-    Add cloud.provider ${SYSTEM_WHERE}
-    Add cloud.region ${SYSTEM_REGION}
     Add level info
     Rename message log.msg
     Rename level log.level
-    Rename datetime @timestamp
-
+    Rename caller log.caller
+    Rename datetime time
 
 # standardize log levels to allowed values INFO,ERROR,WARN,DEBUG
 [FILTER]
@@ -105,7 +104,8 @@ cat - <<EOF > $outfile
 [FILTER]
     Name modify
     Match *
-    Condition Key_Value_Equals log.le    Condit    Set log.level DEBUG
+    Condition Key_Value_Equals log.level debug
+    Set log.level DEBUG
 
 [FILTER]
     Name modify
@@ -129,84 +129,41 @@ cat - <<EOF > $outfile
     Name modify
     Match *
     Condition Key_Value_Equals log.level dbg2
-    Condition Key_Value_Equals log.level dbg2
-SfySfySfySfySfySfySfySfyition Key_Value_Equals log.level dbg3
     Set log.level DEBUG
 
-# rewrite the tag for debug and verbose logs so we can re-route them (nowhere)
 [FILTER]
-    Name rewrite_tag
-    Match routable
-    Rule log.level /DEBUG/ non_routable false
-
-# create structured output
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under subscription.tcm
-    Wildcard tcm.*
-    Remove_prefix tcm.
+    Name modify
+    Match *
+    Condition Key_Value_Equals log.level dbg3
+    Set log.level DEBUG
 
 [FILTER]
     Name nest
-    Match routable
-    Nest_Under subscription
-    Wildcard subscription.*
-    Remove_prefix subscription.
-
-[FILTER]
-    Name nest
-    Match routable
+    Match dp.routable
     Nest_Under log
     Wildcard log.*
     Remove_prefix log.
 
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under event
-    Wildcard event.*
-    Remove_prefix event.
+EOF
 
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under kubernetes.pod
-    Wildcard kubernetes.pod.*
-    Remove_prefix kubernetes.pod.
-
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under kubernetes.container
-    Wildcard kubernetes.container.*
-    Remove_prefix kubernetes.container.
-
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under kubernetes
-    Wildcard kubernetes.*
-    Remove_prefix kubernetes.
-
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under cloud.account
-    Wildcard cloud.account.*
-    Remove_prefix cloud.account.
-
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under cloud
-    Wildcard cloud.*
-    Remove_prefix cloud.
-
-[FILTER]
-    Name nest
-    Match routable
-    Nest_Under host
-    Wildcard host.*
-    Remove_prefix host.
+outfile=${1:-datetime.lua}
+cat - <<EOF > $outfile
+-- add an ES compliant datetime to fluentbit record
+-- Use date and time fields when provided, otherwise generate them as needed
+function datetime(tag, timestamp, record)
+    new_record = record
+    -- new_record['event.created'] = os.date("%Y-%m-%dT%H:%M:%S")
+    if record['date'] and record['time'] then
+        new_record['datetime'] = record['date'] .. "T" .. record['time']
+    elseif record['date'] then
+        local time = os.date("%H:%M:%S")
+        new_record['datetime'] = record['date'] .. "T" .. time
+    elseif record['time'] then
+        local date = os.date("%Y-%m-%d")
+        new_record['datetime'] = date .. "T" .. record['time']
+    else
+        new_record['datetime'] = os.date("%Y-%m-%dT%H:%M:%S")
+    end
+    return 1, timestamp, new_record
+end
 EOF

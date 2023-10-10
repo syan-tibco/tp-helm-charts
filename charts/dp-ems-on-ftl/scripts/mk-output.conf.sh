@@ -2,25 +2,21 @@
 # Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
 
 outfile=${1:-output.conf}
-if [ "$SYSTEM_WHERE" = 'aws' ] ; then 
 cat - <<EOF > $outfile
 [OUTPUT]
-    Name es
-    Match routable
-    Host ${SYSTEM_LOGGER_HOST}
-    Port ${SYSTEM_LOGGER_PORT}
-    Index ${TCM_LOGGER_INDEX}
-    tls ${TCM_TLS_FLAG}
-    tls.verify ${TCM_TLSV_FLAG}
-    HTTP_User ${TCM_LOGGER_USER}
-    HTTP_Passwd ${TCM_LOGGER_PASSWD}
-    Trace_Output Off
-    Trace_Error On
+    Name                 opentelemetry
+    Match                dp.*
+    Host                 otel-services.${MY_NAMESPACE}.svc.cluster.local
+    Port                 4318
+    Logs_uri             /v1/logs
+    Log_response_payload True
+    Tls                  Off
+    Tls.verify           Off
 EOF
-else
+
+outfile=${1:-output-stdout.conf}
 cat - <<EOF > $outfile
 [OUTPUT]
     Name stdout
-    Match routable
+    Match dp.routable
 EOF
-fi

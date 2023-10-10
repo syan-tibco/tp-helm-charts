@@ -23,7 +23,9 @@ metadata:
     labels:
       {{ include "msg.dp.labels" . | indent 6 }}
       name: "{{ $stsname }}"
-      app.kubernetes.io/name: "{{ $stsname }}"
+      # app.kubernetes.io/name must match CAP-DB services list for health monitoring
+      # currently this is a fixed list per capability template, not instance customizable
+      app.kubernetes.io/name: "ems"
       app: msg-ems-ftl
       tib-dp-app: msg-ems-ftl
       tib-msg-stsname: "{{ $stsname }}"

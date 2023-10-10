@@ -23,7 +23,9 @@ metadata:
     labels:
       {{ include "msg.dp.labels" . | indent 6 }}
       name: "{{ $stsname }}"
-      app.kubernetes.io/name: "{{ $stsname }}"
+      # Optional and Instance specific services are not currently supported
+      # by the CAP-DB or Health monitoring
+      # app.kubernetes.io/name: "{{ $stsname }}"
       app: msg-ems-ftl
       tib-dp-name: "{{ $emsParams.dp.name }}"
       tib-dp-app: msg-ems-ftl

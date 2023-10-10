@@ -48,15 +48,16 @@ services:
         num: 50
         debugfile: /logs/${MY_POD_NAME}/health-watcher/health.csv
         rotateonfirststart: true
-  # - name: fluentbit
-  #   config:
-  #     cmd: /opt/td-agent-bit/bin/td-agent-bit -c /data/fluentbit.conf
-  #     # cwd must be unique for each service when using shared volumes
-  #     # because services generate lots of metadata (lock files, pid files)
-  #     cwd: /logs/${MY_POD_NAME}/fluentbits
-  #     logger: stdout
-  #     log:
-  #       size: 200
-  #       num: 25
-  #       rotateonfirststart: true
+  - name: fluentbit
+    config:
+      cmd: /opt/fluent-bit/bin/fluent-bit -c /logs/${MY_POD_NAME}/boot/fluentbit.conf
+      # cmd: /opt/td-agent-bit/bin/td-agent-bit -c /data/fluentbit.conf
+      # cwd must be unique for each service when using shared volumes
+      # because services generate lots of metadata (lock files, pid files)
+      cwd: /logs/${MY_POD_NAME}/fluentbits
+      logger: stdout
+      log:
+        size: 200
+        num: 25
+        rotateonfirststart: true
 EOF

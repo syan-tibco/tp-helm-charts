@@ -126,14 +126,14 @@ note: tib-msg-stsname will be added directly in statefulset charts, as it needs 
 */}}
 {{- define "msg.dp.labels" }}
 tib-dp-release: {{ .Release.Name | quote }}
-tib-dp-msgbuild: "1.0.0.12"
+tib-dp-msgbuild: "1.0.0.14"
 tib-dp-chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
 tib-dp-workload-type: "capability-service"
 tib-dp-dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"
 tib-dp-capability-instance-id: "{{ .Values.global.cp.instanceId | default .Release.Name }}"
 platform.tibco.com/workload-type: "capability-service"
-platfrom.tibco.com/capability-instance-id: "{{ .Values.global.cp.instanceId | default .Release.Name }}"
-platfrom.tibco.com/dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"
+platform.tibco.com/capability-instance-id: "{{ .Values.global.cp.instanceId | default .Release.Name }}"
+platform.tibco.com/dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"
 {{- end }}
 
 {{/*
