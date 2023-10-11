@@ -20,7 +20,7 @@ metadata:
     app.kubernetes.io/component: load-balancer
     {{- include "o11y-service.labels" . | nindent 4 }}
   annotations:
-    meta.helm.sh/release-namespace: {{ .Values.global.cp.resources.serviceaccount.nameSpace }}
+    meta.helm.sh/release-namespace: {{ .Values.global.cp.resources.serviceaccount.namespace }}
     meta.helm.sh/release-name: {{ $fullName }}
     {{- with .Values.ingress.annotations }}
       {{- toYaml . | nindent 4 }}
