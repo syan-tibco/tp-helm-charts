@@ -6,10 +6,8 @@ metadata:
 data:
   iat_to_clienid.sh: |
     #!/bin/sh
-
     apk update && apk add curl jq
-    set -x
-    echo "Initializing Oauth2 Proxy.."
+    set +x
     body='{
       "client_name": "OAuth2_Proxy_{{ .Values.global.cp.instanceId }}_{{ now | unixEpoch }}",
       "scope": "TSC",
@@ -24,10 +22,9 @@ data:
 
     exchangeIatForClientId () {
       response=$(curl -s https://{{ .Values.global.cp.cpHostname }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.global.cp.secrets.iat }}" --data "${body}" --header 'Content-Type: application/json')
-      echo $response
-      clientId=$(echo -n $response | jq -rj .client_id | base64)
-      clientSecret=$(echo -n $response | jq -rj .client_secret | base64)
-      if [ -z "$clientId" ] 
+      clientId=$(echo -n "$response" | jq -rj .client_id | base64)
+      clientSecret=$(echo -n "$response" | jq -rj .client_secret | base64)
+      if [ -z "$clientId" ] || [ "$clientId" = "bnVsbA==" ] # bnVsbA== is 'null' base64encoded
       then
         echo "Failed to register client. Existing"
         exit 1
@@ -39,8 +36,9 @@ data:
         --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
         --header "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
         --header 'Content-Type: application/yaml')
-        return $http_code
+        return "$http_code"
     }
+
     updateSecret () {
       http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/{{ template "oauth2-proxy.namespace" $ }}/secrets/{{ template "oauth2-proxy.secretName" $ }} \
         --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
@@ -62,8 +60,9 @@ data:
           client-secret: $clientSecret
           cookie-secret: $(head /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c32 | base64)
         ")
-        return $http_code
+        return "$http_code"
     }
+
     createSecret () {
       http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/{{ template "oauth2-proxy.namespace" $ }}/secrets \
         --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
@@ -85,22 +84,48 @@ data:
           client-secret: $clientSecret
           cookie-secret: $(head /dev/urandom | LC_ALL=C tr -dc A-Za-z0-9 | head -c32 | base64)
         ")
-        return $http_code
     }
-    getSecret
-    if [ $http_code -eq 200 ]; then
-        #echo "Updating oauth2-proxy secret"
-        #exchangeIatForClientId
-        #updateSecret
-        echo "Oauth2-proxy already initialized. We will not register new client."
-    else
-        echo "Registering new client.."
-        exchangeIatForClientId
-        createSecret
-    fi
-    if [ $http_code -ne 200 ]; then
-        echo "Client registration failed. Aborting!"
-        exit $http_code
-    fi
-    echo "Initialized successfully."
-    return 0
+
+    deleteSecret () {
+      http_code=$(curl -s -o /dev/null -w "%{http_code}\\n" https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/namespaces/{{ template "oauth2-proxy.namespace" $ }}/secrets/{{ template "oauth2-proxy.secretName" $ }} \
+        --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt \
+        --header "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+        --header 'Content-Type: application/yaml' \
+        -X DELETE
+        )
+    }
+
+    # creates the secret if it does not exist
+    initialize () {
+      echo "Initializing Oauth2 Proxy.."
+      getSecret
+      if [ "$http_code" -eq 200 ]; then
+          echo "Secret exists. We will not register new client."
+          exit 0
+      else
+          echo "Registering new client.."
+          exchangeIatForClientId
+          createSecret
+      fi
+      if [ "$http_code" -eq 200 ] || [ "$http_code" -eq 201 ]; then
+          echo "Secret created. Initialized successfully."
+          exit 0
+      fi
+      echo "Client registration failed. Aborting!"
+      exit "$http_code"
+    }
+
+    # deletes the secret if it does not exist
+    cleanup () {
+      echo "Uninstalling Oauth2 Proxy.."
+      deleteSecret
+      if [ "$http_code" -eq 200 ]; then
+          echo "Deleted the secret successfully."
+          exit 0
+      fi
+      echo "Error! Could not delete the secret!"
+      exit 0
+    }
+
+
+    
