@@ -17,11 +17,11 @@ annotations:
   artifacthub.io/license: TIBCO
   artifacthub.io/prerelease: "true"
 apiVersion: v2
-appVersion: 10.2.1-4
+appVersion: 10.2.1-6
 description: Data-plane provisioning chart for EMS-on-FTL server group
 keywords:
 - data-plane
 - messaging
 - EMS
 name: dp-ems-on-ftl
-version: 1.0.14
+version: 1.0.15

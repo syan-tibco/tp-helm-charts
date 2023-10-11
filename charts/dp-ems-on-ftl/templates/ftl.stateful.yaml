@@ -57,6 +57,7 @@ spec:
                 tib-msg-stsname: "{{ $stsname }}"
                 name: ems
                 app: msg-ems-ftl
+                app.kubernetes.io/name: "ems"
                 tib-msg-ems-name: "{{ $emsParams.ems.name }}"
                 tib-msg-ems-sizing: "{{ $emsParams.ems.sizing }}"
                 tib-msg-ems-use: "{{ $emsParams.ems.use }}"
