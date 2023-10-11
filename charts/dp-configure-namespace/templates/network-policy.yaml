@@ -182,7 +182,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      ingress.networking.platform.tibco.com/node-cidr-access: enable
+      ingress.networking.platform.tibco.com/cluster-access: enable
   policyTypes:
   - Ingress
   ingress:
