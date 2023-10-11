@@ -66,7 +66,7 @@ Integration storage folder pvc name
 {{- include "artifactmanager.persistentVolumeClaim.claimName" (dict "existingClaim" .Values.volumes.artifactmanager.existingClaim "releaseName" ( include "artifactmanager.fullname" . ) "volumeName" "integration" ) -}}
 {{- end -}}
 
-{{- define "artifactmanager.cp.domain" }}cp-proxy.{{ .Values.global.cp.resources.serviceaccount.nameSpace }}.svc.cluster.local{{ end -}}
+{{- define "artifactmanager.cp.domain" }}cp-proxy.{{ .Values.global.cp.resources.serviceaccount.namespace }}.svc.cluster.local{{ end -}}
 
 {{- define "artifactmanager.sa" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-sa{{ end -}}
 
