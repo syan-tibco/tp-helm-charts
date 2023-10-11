@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   artifactmanager:
   - apiVersion: v2
+    appVersion: 1.0.18
+    created: "2023-10-11T10:43:13.793839703Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: a474a829d797c359aa19183dafb80dd2791f8789ee5722e6b4453e55a23671d9
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.18/artifactmanager-1.0.18.tgz
+    version: 1.0.18
+  - apiVersion: v2
     appVersion: 1.0.17
     created: "2023-10-03T13:11:26.670244363Z"
     description: TIBCO Platform Dataplane Core -- Artifact Manager
@@ -563,6 +577,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.0/bwprovisioner-1.0.0.tgz
     version: 1.0.0
   distributed-lock-operator:
+  - apiVersion: v1
+    appVersion: 1.0.12
+    created: "2023-10-11T10:43:14.027014596Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: f49197df6c26b43ab8443a104eca0ec5901013c938864b68967fc2ac8e02f1b6
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.12/distributed-lock-operator-1.0.12.tgz
+    version: 1.0.12
   - apiVersion: v1
     appVersion: 1.0.11
     created: "2023-10-09T06:52:31.312056007Z"
@@ -5495,4 +5523,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-11T10:16:42.900598623Z"
+generated: "2023-10-11T10:43:14.027737755Z"
