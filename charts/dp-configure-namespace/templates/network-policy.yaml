@@ -145,4 +145,49 @@ spec:
           component: kube-apiserver
     - ipBlock:
         cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
+
+---
+
+{{/* Label based network policy to enable ingress communication on all ports to pods from internet */}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-internet-access
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      ingress.networking.platform.tibco.com/internet-access: enable
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - {{ include "dp-configure-namespace.nodeCidr" . }}
+
+---
+
+{{/* Label based network policy to enable ingress communication on all ports to pods from node cidr */}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ .Values.global.tibco.dataPlaneId }}-node-cidr-access
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "dp-configure-namespace.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      ingress.networking.platform.tibco.com/node-cidr-access: enable
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
+
 {{- end -}}
