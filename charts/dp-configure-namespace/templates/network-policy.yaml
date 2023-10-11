@@ -175,7 +175,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: {{ .Values.global.tibco.dataPlaneId }}-node-cidr-access
+  name: {{ .Values.global.tibco.dataPlaneId }}-cluster-access
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
