@@ -82,6 +82,7 @@ spec:
   template:
     metadata:
       labels:
+        networking.platform.tibco.com/kubernetes-api: enable
         {{- include "tp-dp-monitor-agent.shared.labels.standard" . | nindent 8 }}
 {{- if .Values.global.enableLogging }}
       annotations:
