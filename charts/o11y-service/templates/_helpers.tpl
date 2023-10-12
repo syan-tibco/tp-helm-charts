@@ -15,7 +15,7 @@
 Create image tag value which defaults to .Chart.AppVersion.
 */}}
 {{- define "o11y-service.image.tag" -}}
-{{- .Values.tag | default .Chart.AppVersion }}
+{{- .Values.tag | default .Chart.AppVersion | trimPrefix "0.0." }}
 {{- end -}}
 
 {{/* A fixed short name for the application. Can be different than the chart name */}}
