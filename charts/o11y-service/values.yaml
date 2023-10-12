@@ -13,7 +13,7 @@ global:
     environmentType: ""
     resources:
       serviceaccount:
-        nameSpace: ""
+        namespace: ""
         serviceAccountName: ""
       o11y:
         config:
@@ -22,61 +22,68 @@ global:
               service:
                 name: "otel-userapp"
                 port: 4317
-          logserver:
-            userapp:
-              logindex: "tibco-user-app"
-              traceindex: "dummy"
-            services:
-              logindex: "tibco-services"
-            proxy:
-              userapp:
-                logindex:
-                  endpoint: "https://elastic.dp1-platform.tcie.pro"
-                  username: "elastic"
+          finops:
+            collector:
+              endpoint: "finops-collector-endpoint"
+        logsServer:
+          kind: "elasticSearch"
+          config:
             exporter:
-              userapp:
-                logindex:
-                  endpoint: "https://elastic.dp1-platform.tcie.pro"
-                  username: "elastic"
               services:
                 logindex:
-                  endpoint: "https://elastic.dp1-platform.tcie.pro"
-                  username: "elastic"
-          promserver:
+                  endpoint: "logsServer-config-exporter-services-logindex-endpoint"
+                  username: "logsServer-config-exporter-services-logindex-username"
+              userapp:
+                logindex:
+                  endpoint: "logsServer-config-exporter-userapp-logindex-endpoint"
+                  username: "logsServer-config-exporter-userapp-logindex-username"
             proxy:
-              endpoint: "dummy"
-              username: "dummy"
+              userapp:
+                logindex:
+                  endpoint: "logsServer-config-proxy-userapp-logindex-endpoint"
+                  username: "logsServer-config-proxy-userapp-logindex-endpoint"
+            services:
+              logindex: "logsServer-config-services-logindex"
+            userapp:
+              logindex: "logsServer-config-userapp-logindex"
+          secret:
             exporter:
-              endpoint: "dummy"
-          jaeger:
+              services:
+                logindex:
+                  password: "logsServer-secret-exporter-services-logindex-password"
+              userapp:
+                logindex:
+                  password: "logsServer-secret-exporter-userapp-logindex-password"
+            proxy:
+              userapp:
+                logindex:
+                  password: "logsServer-secret-proxy-userapp-logindex-password"
+        tracesServer:
+          kind: "jaeger"
+          config:
             collector:
               host: "dummy"
               port: 4317
             es:
-              host: "https://elastic.dp1-platform.tcie.pro"
+              host: "tracesServer-config-es-host"
               port: 9200
-              username: "elastic"
-          finops:
-            collector:
-              endpoint: "dummy"
-        secret:
-          logserver:
-            userapp:
-              proxy:
-                password: "MrZvu5n4m4924FqT48EI9WM7"
-              exporter:
-                password: "MrZvu5n4m4924FqT48EI9WM7"
-            services:
-              exporter:
-                password: "MrZvu5n4m4924FqT48EI9WM7"
-          promserver:
-            proxy:
-              password: "promserver_proxy_dummy"
-            exporter:
-              token: "promserver_exporter_dummy"
-          jaeger:
+              username: "tracesServer-config-es-username"
+          secret:
             es:
-              password: "MrZvu5n4m4924FqT48EI9WM7"
+              password: "tracesServer-secret-es-password"
+        metricsServer:
+          kind: "prometheus"
+          config:
+            exporter:
+              endpoint: "metricsServer-config-exporter-endpoint"
+            proxy:
+              endpoint: "metricsServer-config-proxy-endpoint"
+              username: "metricsServer-config-proxy-username"
+          secret:
+            exporter:
+              token: "metricsServer-secret-exporter-token"
+            proxy:
+              password: "metricsServer-secret-proxy-password"
   o11yservice:
     serviceAccount: ""
     data:
@@ -245,6 +252,7 @@ fluentbit:
     registry: cr.fluentbit.io/fluent/fluent-bit
     tag: 2.1.6
 
+#NOT IN USE (Will be REMOVED)
 config:
   otel:
     receiver:
