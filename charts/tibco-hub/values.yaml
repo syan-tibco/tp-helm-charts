@@ -271,8 +271,6 @@ postgresql:
   # -- Switch to enable or disable the PostgreSQL helm chart
   enabled: false
 
-  serviceAccount: 
-
   commonLabels: '{{- include "tibcohub.platform.commonLabels" . -}}'
 
   # -- The authentication details of the Postgres database
@@ -318,6 +316,7 @@ primary:
     storageClass: ""
 # -- Service Account Configuration
 # @default -- See below
+
 serviceAccount:
 
   # -- Enable the creation of a ServiceAccount for Backstage pods
