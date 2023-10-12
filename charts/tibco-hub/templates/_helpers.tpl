@@ -25,10 +25,14 @@ Return the proper image name
 {{- end -}}
 # here we are overridding the helper function used in postgresql charts to set the serviceaccount.name based on user provided value from CP.
 {{- define "postgresql.serviceAccountName" -}}
-{{- if .Values.global.cp -}}
-{{ default "default" .Values.global.cp.resources.serviceaccount.serviceAccountName  }}
+{{- if (.Values.serviceAccount.create) -}}
+    {{ default (include "common.names.fullname" .) .Values.serviceAccount.name }}
 {{- else -}}
-{{ default "default" .Values.serviceAccount.name }}
+    {{- if .Values.global.cp -}}
+    {{ default "default" .Values.global.cp.resources.serviceaccount.serviceAccountName  }}
+    {{- else -}}
+    {{ default "default" .Values.serviceAccount.name }}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 
