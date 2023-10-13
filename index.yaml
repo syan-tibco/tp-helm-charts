@@ -4575,6 +4575,23 @@ entries:
     version: 0.4.10
   tp-cp-proxy:
   - apiVersion: v2
+    appVersion: 1.0.104
+    created: "2023-10-13T09:50:33.27555532Z"
+    description: TIBCO Data Plane -- Control Plane Proxy
+    digest: 8356369dc9fdaa1ec230a68ee55772d62a22f100b8483964ed218743320f2257
+    home: https://github.com/tibco/tp-core-cp-proxy
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - cp-proxy
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-cp-proxy
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.104/tp-cp-proxy-1.0.104.tgz
+    version: 1.0.104
+  - apiVersion: v2
     appVersion: 1.0.103
     created: "2023-10-11T11:13:27.832849743Z"
     description: TIBCO Data Plane -- Control Plane Proxy
@@ -5745,4 +5762,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-13T09:06:17.559037213Z"
+generated: "2023-10-13T09:50:33.276215426Z"
