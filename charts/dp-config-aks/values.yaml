@@ -25,12 +25,12 @@ tls:
 httpIngress:
   enabled: true
   name: nginx
+  ingressClassName: azure-application-gateway # see: https://github.com/kubernetes-sigs/external-dns/blob/master/docs/faq.md
   backend:
     serviceName: dp-config-aks-ingress-nginx-controller
     servicePort: 80
   # more AGIC annotations: https://azure.github.io/application-gateway-kubernetes-ingress/annotations/#appgw-ssl-certificate
   annotations:
-    kubernetes.io/ingress.class: "azure/application-gateway"                          #This will configure the AppGw with this ingressObject
     cert-manager.io/cluster-issuer: "cic-cert-subscription-scope-production"
     external-dns.alpha.kubernetes.io/hostname: "*.azrtroposdev.azure.tcie.pro"
 
