@@ -90,7 +90,7 @@ backstage:
     repository: pdx/tibco-hub
 
     # -- Backstage image tag (immutable tags are recommended)
-    tag: "228"
+    tag: "234"
 
     # -- Specify a imagePullPolicy.
     # Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
