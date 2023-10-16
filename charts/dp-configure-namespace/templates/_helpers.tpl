@@ -60,7 +60,7 @@ Create chart name and version as used by the chart label.
 {{/* Node Cidr for the cluster */}}
 {{- define "dp-configure-namespace.nodeCidr" }}
 {{- if .Values.networkPolicy.create }}
-{{- required (printf "networkPolicy.nodeCidrIpBlock is required, if Network Policy is enabled.\nIf Node CIDR and Pod CIDR are different, both need to be passed from values.\nOtherwise same values will be used for .networkPolicy.nodeCidrIpBlock and .networkPolicy.podCidrIpBlock.\n\nUse --set networkPolicy.nodeCidrIpBlock=<NodeIpCidr>\nNodeIpCidr=<IP range of Nodes VPC or VNet address space (CIDR notation)> e.g. 10.200.0.0/16\n\nUse --set networkPolicy.podCidrIpBlock=<PodIpCidr>\nPodIpCidr=<IP range of Pod IP CIDR (CIDR notation)> e.g. 10.192.0.0/16") .Values.networkPolicy.nodeCidrIpBlock -}}
+{{- required (printf "networkPolicy.nodeCidrIpBlock is required, if Network Policy is enabled.\nIf Node CIDR and Pod CIDR are different, both need to be passed from values.\nOtherwise same values will be used for .networkPolicy.nodeCidrIpBlock and .networkPolicy.podCidrIpBlock.\n\nUse --set networkPolicy.nodeCidrIpBlock=<NodeIpCidr>\nNodeIpCidr=<IP range of Nodes VPC or VNet address space (CIDR notation)> e.g. 10.200.0.0/16\n\nUse --set networkPolicy.podCidrIpBlock=<PodIpCidr>\nPodIpCidr=<IP range of Pod IP CIDR (CIDR notation)> e.g. 192.168.0.0/16") .Values.networkPolicy.nodeCidrIpBlock -}}
 {{- end }}
 {{- end }}
 
