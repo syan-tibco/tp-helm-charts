@@ -1681,6 +1681,17 @@ entries:
   dp-configure-namespace:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-10-16T18:09:57.253273033Z"
+    description: A Helm chart for creating service account, cluster-role, cluster-role-binding,
+      role-binding & network-policies
+    digest: ee6296fda6e871303a0222243c659f472dabf084b25fdf556fb3c9caf446663a
+    name: dp-configure-namespace
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-configure-namespace-1.0.12/dp-configure-namespace-1.0.12.tgz
+    version: 1.0.12
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-10-11T16:12:06.920159553Z"
     description: A Helm chart for creating service account, cluster-role, cluster-role-binding,
       role-binding & network-policies
@@ -5975,4 +5986,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-16T12:22:47.144970256Z"
+generated: "2023-10-16T18:09:57.253931735Z"
