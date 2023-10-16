@@ -60,7 +60,7 @@ spec:
           periodSeconds: 10
 {{- if .Values.enableLogging }}
       - name: fluentbit
-        image: {{ .Values.fluentbit.image.registry }}:{{ .Values.fluentbit.image.tag }}
+        image: {{ include "tp-provisioner-agent.image.registry" .}}{{"/"}}{{ include "tp-provisioner-agent.image.repository" .}}{{"/"}}fluentbit:{{ .Values.fluentbit.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: POD_NAMESPACE

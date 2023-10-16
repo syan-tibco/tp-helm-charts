@@ -56,7 +56,7 @@ spec:
             mountPath: "/etc/config"
 {{- if .Values.enableLogging }}
       - name: fluentbit
-        image: {{ .Values.fluentbit.image.registry }}:{{ .Values.fluentbit.image.tag }}
+        image: {{ include "dp-core-distributed-lock-operator.image.registry" .}}{{"/"}}{{ include "dp-core-distributed-lock-operator.image.repository" .}}{{"/"}}fluentbit:{{ .Values.fluentbit.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: POD_NAMESPACE
