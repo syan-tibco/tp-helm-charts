@@ -32,7 +32,7 @@ spec:
               value: {{ .Values.global.cp.dataplaneId }}
 {{- if .Values.enableLogging }}
         - name: fluentbit
-          image: {{ .Values.fluentbit.image.registry }}:{{ .Values.fluentbit.image.tag }}
+          image: {{ include "tp-dp-secret-controller.image.registry" .}}{{"/"}}{{ include "tp-dp-secret-controller.image.repository" .}}{{"/"}}fluentbit:{{ .Values.fluentbit.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POD_NAMESPACE

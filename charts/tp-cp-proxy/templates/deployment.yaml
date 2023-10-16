@@ -49,7 +49,7 @@ spec:
           name: proxy
 {{- if .Values.enableLogging }}
       - name: fluentbit
-        image: {{ .Values.fluentbit.image.registry }}:{{ .Values.fluentbit.image.tag }}
+        image: {{ include "tp-cp-proxy.image.registry" .}}{{"/"}}{{ include "tp-cp-proxy.image.repository" .}}{{"/"}}fluentbit:{{ .Values.fluentbit.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           - name: POD_NAMESPACE
