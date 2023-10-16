@@ -1,0 +1,20 @@
+global:
+  cic:
+    data:
+      #SYSTEM_DOCKER_REGISTRY: "reldocker.tibco.com"
+      SYSTEM_DOCKER_REGISTRY: "664529841144.dkr.ecr.us-west-2.amazonaws.com"
+      #SYSTEM_IMAGE_EXTRACTOR_DOCKER_IMAGE_FULL: "reldocker.tibco.com/stratosphere/container-image-extractor:latest"
+      SYSTEM_IMAGE_EXTRACTOR_DOCKER_IMAGE_FULL: "664529841144.dkr.ecr.us-west-2.amazonaws.com/stratosphere/container-image-extractor:latest"
+      #SYSTEM_WHERE: local
+      SYSTEM_WHERE: aws
+      CP_VOLUME_CLAIM: provider-cp-fs-store
+
+capability:
+  name: tibco-hub
+
+source:
+  imageName: "pdx/tibco-hub:cp-contrib"
+  directory: /app
+
+target:
+  directory: /efs/tibco-hub
