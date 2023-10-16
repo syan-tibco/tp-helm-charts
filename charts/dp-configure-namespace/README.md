@@ -1,13 +1,13 @@
 ## Use-case 1:
 
-Customer has created new namespace and applied the Tibco platform dataPlane labels.
-Customer now wants to create new service-account, cluster-role, cluster-role-binding and role-binding
+Customer has created new primary namespace and applied the Tibco platform dataPlane label.
+Customer now wants to create new service-account, cluster-role, cluster-role-binding, role-binding & (optional) network policies.
 
 #  Release Namespace and Primary Namespace
 .Release.Namespace is same as .Values.global.tibco.primaryNamespaceName.
-So, service-account is created in this namespace, which will be referred in the subsequent application namespace configuration.
+So, service-account is created in this namespace, which will be referred in the subsequent application namespace(s) configuration.
 
-# sample payload
+# Sample values
 global:
   tibco:
     dataPlaneId: "abcd" # Mandatory
@@ -16,26 +16,28 @@ global:
 
 createServiceAccount: true # Default true
 
-createNetworkPolicy: true # Default true
-additionalNetworkPolicy: {}
+createNetworkPolicy: false # Default false, set to true to enable network policies
+nodeCidrIpBlock: "" # If createNetworkPolicy above is true, node CIDR IP block is required
+podCidrIpBlock: "" # If createNetworkPolicy above is true & pod CIDR IP block is different from nodeCidrIpBlock, then podCidrIpBlock is required. Otherwise, it will be set equal to nodeCidrIpBlock
 
 ## Use-case 2:
 
 Customer has created new application namespace and applied the Tibco platform dataPlane labels.
 The cluster-roles, cluster-role-binidng are present and service-account in primary namespace is to be used.
-To enable application deployment Customer needs to create role-binding in the new namespace.
+To enable application deployment Customer needs to create role-binding and network policies in the new namespace.
 
 #  Release Namespace and Primary Namespace
 .Release.Namespace is NOT same as .Values.global.tibco.primaryNamespaceName.
-So, only role-binding is created in this namespace.
+So, only role-binding and (optional) network policies are created in this namespace.
 Service Account is used from the primaryNamespaceName.
 
-# set of global values to obtain the details of service account, dataPlane id and primary namespace
+# Sample values
 global:
   tibco:
     dataPlaneId: "abcd" # Mandatory
     primaryNamespaceName: "dp-namespace" # Mandatory
     serviceAccount: "sa" # Mandatory
 
-createNetworkPolicy: true # Default true
-additionalNetworkPolicy: {}
+createNetworkPolicy: false # Default false, set to true to enable network policies
+nodeCidrIpBlock: "" # If createNetworkPolicy above is true, node CIDR IP block is required
+podCidrIpBlock: "" # If createNetworkPolicy above is true & pod CIDR IP block is different from nodeCidrIpBlock, then podCidrIpBlock is required. Otherwise, it will be set equal to nodeCidrIpBlock
