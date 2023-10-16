@@ -76,6 +76,9 @@ spec:
         cidr: 0.0.0.0/0
         except:
         - {{ include "dp-configure-namespace.nodeCidr" . }}
+        {{- if ne (include "dp-configure-namespace.nodeCidr" . ) (include "dp-configure-namespace.podCidr" . ) }}
+        - {{ include "dp-configure-namespace.podCidr" . }}
+        {{- end }}
 
 ---
 
@@ -100,6 +103,9 @@ spec:
         cidr: 0.0.0.0/0
         except:
         - {{ include "dp-configure-namespace.nodeCidr" . }}
+        {{- if ne (include "dp-configure-namespace.nodeCidr" . ) (include "dp-configure-namespace.podCidr" . ) }}
+        - {{ include "dp-configure-namespace.podCidr" . }}
+        {{- end }}
     ports:
     - protocol: TCP
       port: 80
@@ -132,6 +138,10 @@ spec:
           component: kube-apiserver
     - ipBlock:
         cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
+    {{- if ne (include "dp-configure-namespace.nodeCidr" . ) (include "dp-configure-namespace.podCidr" . ) }}
+    - ipBlock:
+        cidr: {{ include "dp-configure-namespace.podCidr" . }}
+    {{- end }}
     ports:
     - protocol: TCP
       port: 443
@@ -145,6 +155,10 @@ spec:
           component: kube-apiserver
     - ipBlock:
         cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
+    {{- if ne (include "dp-configure-namespace.nodeCidr" . ) (include "dp-configure-namespace.podCidr" . ) }}
+    - ipBlock:
+        cidr: {{ include "dp-configure-namespace.podCidr" . }}
+    {{- end }}
 
 ---
 
@@ -168,6 +182,9 @@ spec:
         cidr: 0.0.0.0/0
         except:
         - {{ include "dp-configure-namespace.nodeCidr" . }}
+        {{- if ne (include "dp-configure-namespace.nodeCidr" . ) (include "dp-configure-namespace.podCidr" . ) }}
+        - {{ include "dp-configure-namespace.podCidr" . }}
+        {{- end }}
 
 ---
 
@@ -189,5 +206,8 @@ spec:
   - from:
     - ipBlock:
         cidr: {{ include "dp-configure-namespace.nodeCidr" . }}
-
+    {{- if ne (include "dp-configure-namespace.nodeCidr" . ) (include "dp-configure-namespace.podCidr" . ) }}
+    - ipBlock:
+        cidr: {{ include "dp-configure-namespace.podCidr" . }}
+    {{- end }}
 {{- end -}}
