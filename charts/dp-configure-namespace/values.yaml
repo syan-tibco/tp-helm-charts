@@ -14,9 +14,11 @@ createServiceAccount: true
 
 networkPolicy:
   # Flag to enable or disable creating default network policies for a namespace
-  # Default value is true. Possible values are true, false
-  create: true
-  # node CIDR IP block
+  # Default value is false. Possible values are true, false
+  create: false
   # Required value if the network policies are to be enabled
+  # node CIDR IP block
   nodeCidrIpBlock: ""
+  # pod CIDR IP block
+  podCidrIpBlock: ""
   
