@@ -1,2 +1,1 @@
-TIBCO Platform Data Plane Infrastructure. 
-{{- include "dp-o11y-infrastructure.validate" . }}
+TIBCO Platform Data Plane Infrastructure.
