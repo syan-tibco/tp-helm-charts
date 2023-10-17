@@ -1,0 +1,15 @@
+# Default values for dp-o11y-infrastructure.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  tibco:
+    dataPlaneId: "abcd"
+    subscriptionId: "sub1"
+    controlPlaneUrl: "https://account.local.cic2.pro" # Control Plane DNS domain
+    serviceAccount: ""                                # customer provided service account
+    containerRegistry:
+      url: "reldocker.tibco.com" 
+      # username: "test" # [optional] Create a imagePullSecret named <dpId> for private container registry.
+      # password: "test"
+      # email: "tibco-plt@cloud.com"
