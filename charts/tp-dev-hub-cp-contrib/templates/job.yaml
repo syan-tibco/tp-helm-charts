@@ -45,7 +45,7 @@ spec:
         volumeMounts:
         - mountPath: /efs
           name: store-vol
-          subPath: tsc/static-{{ .Values.capability.name }}
+          subPath: tsc/contributors
 {{- if eq .Values.global.cic.data.SYSTEM_WHERE "local" }}
         - mountPath: /kaniko/ssl/certs/docker_registry_proxy.pem
           name: registry-proxy-cert
