@@ -17,4 +17,4 @@ source:
   directory: /app
 
 target:
-  directory: /efs/tibco-hub
+  directory: /efs/tibcohub
