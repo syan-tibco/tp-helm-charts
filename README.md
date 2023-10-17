@@ -30,7 +30,7 @@ helm upgrade --install --create-namespace -n <namespace> <release name> tibco-pl
 
 ## helm charts
 
-[dp-config-aka](charts/dp-config-aks) is used to create
+[dp-config-aks](charts/dp-config-aks) is used to create
 * aks ingress
 * aks certificate
 
