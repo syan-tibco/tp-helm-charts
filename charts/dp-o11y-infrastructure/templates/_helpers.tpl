@@ -79,7 +79,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if $ns }}
 {{- if $ns.metadata.labels }}
 {{- if (hasKey $ns.metadata.labels "platform.tibco.com/dataplane-id" ) }}
-{{- if eq (get $ns.metadata.labels "platform.tibco.com/dataplane-id") .Values.global.cp.resources.serviceaccount.namespace }}
+{{- if eq (get $ns.metadata.labels "platform.tibco.com/dataplane-id") .Values.global.cp.dataplaneId }}
 {{/* check for sa */}}
 {{- $sa := (lookup "v1" "ServiceAccount" $ns_name .Values.global.cp.resources.serviceaccount.serviceAccountName) }}
 {{- if $sa }}
