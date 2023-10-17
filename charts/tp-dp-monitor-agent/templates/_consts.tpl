@@ -20,7 +20,7 @@
 
 {{/* Team we're a part of. */}}
 {{- define "tp-dp-monitor-agent.consts.team" }}tp-finops{{ end -}}
-{{- define "tp-dp-monitor-agent.consts.fluentbit.buildNumber" }}1.9.4{{ end -}}
+{{- define "tp-dp-monitor-agent.consts.fluentbit.buildNumber" }}2.1.6{{ end -}}
 
 {{- define "tp-dp-monitor-agent.const.jfrogImageRepo" }}platform/finops{{end}}
 {{- define "tp-dp-monitor-agent.const.ecrImageRepo" }}pdp{{end}}

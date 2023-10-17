@@ -93,11 +93,11 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: {{ .Values.global.cp.containerRegistry.secret }}
       containers:
       - name: {{ include "tp-dp-monitor-agent.consts.appName" . }}
         image: {{ include "tp-dp-monitor-agent.image.registry" .}}{{"/"}}{{ include "tp-dp-monitor-agent.image.repository" .}}{{"/"}}tp-dp-monitor-agent:{{ include "tp-dp-monitor-agent.generated.buildNumber" . }}
-        imagePullSecrets:
-          - name: {{ .Values.global.cp.containerRegistry.secret }}
         resources:
           requests:
             cpu: 125m
@@ -143,7 +143,7 @@ spec:
           value: {{ .Values.global.cp.subscriptionId }}
 {{- if .Values.global.enableLogging }}
       - name: fluentbit
-        image: {{ .Values.global.cp.containerRegistry.url }}/stratosphere/fluentbit:{{ include "tp-dp-monitor-agent.consts.fluentbit.buildNumber" . }}
+        image: {{ include "tp-dp-monitor-agent.image.registry" .}}{{"/"}}{{ include "tp-dp-monitor-agent.image.repository" .}}{{"/"}}tp-dp-monitor-fluentbit:{{ include "tp-dp-monitor-agent.consts.fluentbit.buildNumber" . }}
         env:
           - name: POD_NAMESPACE
             valueFrom:
