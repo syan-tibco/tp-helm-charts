@@ -2739,6 +2739,29 @@ entries:
     version: 1.0.0
   dp-o11y-infrastructure:
   - apiVersion: v2
+    appVersion: 1.0.2
+    created: "2023-10-17T09:17:48.389743061Z"
+    dependencies:
+    - alias: otel-userapp
+      name: opentelemetry-collector
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 0.69.2
+    - alias: otel-finops
+      name: opentelemetry-collector
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 0.69.2
+    - alias: otel-services
+      name: opentelemetry-collector
+      repository: https://syan-tibco.github.io/tp-helm-charts
+      version: 0.69.2
+    description: A Helm chart for TIBCO Platform Data Plane Infrastructure
+    digest: 3cdc216e602593603d04a88c8ff545a8be67ad3fbdeb91a8357ae3cbb6d220f2
+    name: dp-o11y-infrastructure
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-o11y-infrastructure-1.0.2/dp-o11y-infrastructure-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v2
     appVersion: 1.0.1
     created: "2023-10-17T09:07:08.061931281Z"
     dependencies:
@@ -6047,4 +6070,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-17T09:07:08.062433983Z"
+generated: "2023-10-17T09:17:48.390233463Z"
