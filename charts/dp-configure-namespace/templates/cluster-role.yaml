@@ -36,9 +36,12 @@ rules:
   resources: ["events"]
   verbs: ["get", "list", "watch"]
 # required by istio for multicluster secret reading, possibly ingress certs in the future
+# required by istio for storing CA secret
+# required by EMS
+# required by data plane secret controller - across cluster
 - apiGroups: [""]
   resources: ["secrets"]
-  verbs: ["get", "list", "watch"]
+  verbs: ["get", "list", "watch", "create", "delete", "patch", "update", "deletecollection"]
 # required by istio for discover and routing
 - apiGroups: [""]
   resources: ["services"]
@@ -173,11 +176,6 @@ rules:
 # required by EMS
 - apiGroups: [""]
   resources: ["configmaps"]
-  verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
-# required by istio for storing CA secret
-# required by EMS
-- apiGroups: [""]
-  resources: ["secrets"]
   verbs: ["get", "list", "watch", "create", "delete", "patch", "update"]
 - apiGroups: ["autoscaling"]
   resources: ["horizontalpodautoscalers"]
