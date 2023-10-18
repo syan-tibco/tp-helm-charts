@@ -3675,6 +3675,42 @@ entries:
   jaeger:
   - apiVersion: v2
     appVersion: 1.45.0
+    created: "2023-10-18T18:14:59.025900553Z"
+    dependencies:
+    - condition: provisionDataStore.cassandra
+      name: cassandra
+      repository: https://charts.helm.sh/incubator
+      version: 0.15.3
+    - condition: provisionDataStore.elasticsearch
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: ^7.11.1
+    - condition: provisionDataStore.kafka
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: ^19.1.5
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.16.0
+    description: A Jaeger Helm chart for Kubernetes
+    digest: 3507633e644eb980f5018c52f4fc6197df1885b03c735e4955cce2751560d915
+    home: https://jaegertracing.io
+    icon: https://camo.githubusercontent.com/afa87494e0753b4b1f5719a2f35aa5263859dffb/687474703a2f2f6a61656765722e72656164746865646f63732e696f2f656e2f6c61746573742f696d616765732f6a61656765722d766563746f722e737667
+    keywords:
+    - jaeger
+    - opentracing
+    - tracing
+    - instrumentation
+    kubeVersion: '>= 1.21-0'
+    name: jaeger
+    sources:
+    - https://hub.docker.com/u/jaegertracing/
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/jaeger-0.71.17/jaeger-0.71.17.tgz
+    version: 0.71.17
+  - apiVersion: v2
+    appVersion: 1.45.0
     created: "2023-10-18T13:47:20.394050932Z"
     dependencies:
     - condition: provisionDataStore.cassandra
@@ -6309,4 +6345,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-18T13:47:20.394619839Z"
+generated: "2023-10-18T18:14:59.026587454Z"
