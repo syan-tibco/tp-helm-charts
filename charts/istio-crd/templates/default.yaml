@@ -3,13 +3,14 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
   name: istio{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}-{{ .Values.global.istioNamespace }}-validating-webhook
+  namespace: {{ .Release.Namespace }}
   labels:
     app: istiod
     release: {{ .Release.Name }}
     istio: istiod
     istio.io/rev: {{ .Values.defaultRevision }}
 webhooks:
-  - name: validation.istio.io
+  - name: validation.istio.io-{{ .Values.global.istioNamespace }}
     clientConfig:
       {{- if .Values.base.validationURL }}
       url: {{ .Values.base.validationURL }}
