@@ -14,8 +14,9 @@ spec:
   replicas: {{ .Values.query.replicaCount }}
   selector:
     matchLabels:
-      {{- include "jaeger.query.selectorLabels" . | nindent 6 }}
+      {{- include "jaeger.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: query
+      app.kubernetes.io/name: "jaeger-query"
   template:
     metadata:
 {{- if or .Values.query.config .Values.query.podAnnotations }}
@@ -28,8 +29,13 @@ spec:
       {{- end }}
 {{- end }}
       labels:
-        {{- include "jaeger.query.selectorLabels" . | nindent 8 }}
+        {{- include "jaeger.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: query
+        app.kubernetes.io/name: "jaeger-query"
+        app.kubernetes.io/part-of: "o11y"
+        platform.tibco.com/workload-type: "infra"
+        platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+        platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- if .Values.query.podLabels }}
         {{- toYaml .Values.query.podLabels | nindent 8 }}
 {{- end }}

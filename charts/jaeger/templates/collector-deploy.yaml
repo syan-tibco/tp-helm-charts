@@ -16,8 +16,9 @@ spec:
 {{- end }}
   selector:
     matchLabels:
-      {{- include "jaeger.collector.selectorLabels" . | nindent 6 }}
+      {{- include "jaeger.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: collector
+      app.kubernetes.io/name: "jaeger-collector"
   template:
     metadata:
       annotations:
@@ -26,8 +27,13 @@ spec:
         {{- toYaml .Values.collector.podAnnotations | nindent 8 }}
 {{- end }}
       labels:
-        {{- include "jaeger.collector.selectorLabels" . | nindent 8 }}
+        {{- include "jaeger.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: collector
+        app.kubernetes.io/name: "jaeger-collector"
+        app.kubernetes.io/part-of: "o11y"
+        platform.tibco.com/workload-type: "infra"
+        platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+        platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- if .Values.collector.podLabels }}
         {{- toYaml .Values.collector.podLabels | nindent 8 }}
 {{- end }}
