@@ -1,19 +1,27 @@
 apiVersion: v2
-appVersion: 1.0.3
+appVersion: 1.0.4
 dependencies:
+- name: o11yservice
+  repository: https://syan-tibco.github.io/tp-helm-charts
+  version: ">=1.0.30"
+  alias: o11yservice
 - name: opentelemetry-collector
   repository: https://syan-tibco.github.io/tp-helm-charts
-  version: 0.69.2
+  version: ">=0.69.4"
   alias: otel-userapp
 - name: opentelemetry-collector
   repository: https://syan-tibco.github.io/tp-helm-charts
-  version: 0.69.2
+  version: ">=0.69.4"
   alias: otel-finops
 - name: opentelemetry-collector
   repository: https://syan-tibco.github.io/tp-helm-charts
-  version: 0.69.2
+  version: ">=0.69.4"
   alias: otel-services
+- name: jaeger
+  repository: https://syan-tibco.github.io/tp-helm-charts
+  version: ">=0.71.15"
+  alias: jaeger
 description: A Helm chart for TIBCO Platform Data Plane Infrastructure
 name: dp-o11y-infrastructure
 type: application
-version: 1.0.3
+version: 1.0.4
