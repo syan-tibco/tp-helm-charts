@@ -42,6 +42,8 @@ spec:
                 fieldPath: metadata.namespace
           - name: WATCH_NAMESPACE_PREFIX
             value: ""
+          - name: DATAPLANE_ID
+            value: {{ .Values.global.cp.dataplaneId }}
           - name: ENABLE_WEBHOOKS
             value: "{{ .Values.enableWebHooks }}"
           - name: SETTINGS_PROPERTIES_VOLUME_PATH
