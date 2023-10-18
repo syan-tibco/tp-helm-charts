@@ -4638,6 +4638,24 @@ entries:
   opentelemetry-collector:
   - apiVersion: v2
     appVersion: 0.86.0
+    created: "2023-10-18T07:55:12.288893263Z"
+    description: OpenTelemetry Collector Helm chart for Kubernetes
+    digest: a58f183d9b43f37b1dde677d526690350ade36f39cb648ee7548f6a068ecca33
+    home: https://opentelemetry.io/
+    icon: https://opentelemetry.io/img/logos/opentelemetry-logo-nav.png
+    maintainers:
+    - name: dmitryax
+    - name: TylerHelmuth
+    name: opentelemetry-collector
+    sources:
+    - https://github.com/open-telemetry/opentelemetry-collector
+    - https://github.com/open-telemetry/opentelemetry-collector-contrib
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/opentelemetry-collector-0.69.4/opentelemetry-collector-0.69.4.tgz
+    version: 0.69.4
+  - apiVersion: v2
+    appVersion: 0.86.0
     created: "2023-10-18T07:35:19.288621371Z"
     description: OpenTelemetry Collector Helm chart for Kubernetes
     digest: 9830abc17fde55a8f6cbc300710c62876421aed6d2cc15d767e1b6d02f1bee1a
@@ -6210,4 +6228,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-18T07:35:19.289436714Z"
+generated: "2023-10-18T07:55:12.289978265Z"
