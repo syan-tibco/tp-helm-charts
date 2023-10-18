@@ -13,6 +13,17 @@ metadata:
 {{- range $key, $val := .Values.pilot.deploymentLabels }}
     {{ $key }}: "{{ $val }}"
 {{- end }}
+    platform.tibco.com/workload-type: "infra"
+    {{ if .Values.global.cp.dataplaneId -}}
+    platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
+    {{ if .Values.global.cp.instanceId -}}
+    platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId  }}
+    {{- end }}
+    prometheus.io/scrape: "true"
+    app.kubernetes.io/name: {{ .Release.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.global.cp.instanceId }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
 {{- if not .Values.pilot.autoscaleEnabled }}
 {{- if .Values.pilot.replicaCount }}
@@ -47,16 +58,12 @@ spec:
         {{- range $key, $val := .Values.pilot.podLabels }}
         {{ $key }}: "{{ $val }}"
         {{- end }}
-        platform.tibco.com/workload-type: "infra"
-        {{ if .Values.global.cp.dataplaneId -}}
-        platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
-        {{- end }}
-        {{ if .Values.global.cp.instanceId -}}
-        platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId  }}
-        {{- end }}
         networking.platform.tibco.com/non-dp-ns: {{ .Values.global.cp.network.nonDpNS  }}
         networking.platform.tibco.com/kubernetes-api: {{ .Values.global.cp.network.k8sAPI }}
         prometheus.io/scrape: "true"
+        app.kubernetes.io/name: {{ .Release.Name }}
+        app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Values.global.cp.instanceId }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
       annotations:
         {{- if .Values.meshConfig.enablePrometheusMerge }}
         prometheus.io/port: "15014"
