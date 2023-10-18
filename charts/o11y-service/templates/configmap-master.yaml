@@ -5,11 +5,12 @@ metadata:
     use-subpath: "true"
   labels:
     {{- include "o11y-service.labels" . | nindent 4 }}
-  name: {{ include "o11y-service.fullname" . }}-master
+  name: {{ include "o11y-service.fullname" . }}
 data:
   otel-recvservice-name: {{ .Values.global.cp.resources.o11y.config.otel.receiver.service.name }}
   otel-recvservice-port: {{ quote .Values.global.cp.resources.o11y.config.otel.receiver.service.port }}
   logserver-app-logIndex: {{ .Values.global.cp.resources.o11y.config.logserver.userapp.logindex }}
+  ES_EXPORTER_LOG_INDEX_NAME: {{ .Values.global.cp.resources.o11y.config.logserver.userapp.logindex }}
   logserver-app-traceIndex: {{ .Values.global.cp.resources.o11y.config.logserver.userapp.traceindex }}
   logserver-svc-logIndex: {{ .Values.global.cp.resources.o11y.config.logserver.services.logindex }}
   logserver-proxy-app-endpoint: {{ .Values.global.cp.resources.o11y.config.logserver.proxy.userapp.logindex.endpoint }}
@@ -24,7 +25,6 @@ data:
   jaeger-es-port: {{ quote .Values.global.cp.resources.o11y.config.jaeger.es.port }}
   jaeger-es-username: {{ .Values.global.cp.resources.o11y.config.jaeger.es.username }}
   ES_SERVER_EXPORTER_ENDPOINT: {{ .Values.global.cp.resources.o11y.config.logserver.exporter.userapp.logindex.endpoint }}
-  ES_EXPORTER_LOG_INDEX_NAME: {{ .Values.global.cp.resources.o11y.config.logserver.exporter.userapp.logindex.username }}
   ES_EXPORTER_LOG_INDEX_USERNAME: {{ .Values.global.cp.resources.o11y.config.logserver.proxy.userapp.logindex.username }}
   ES_SERVER_SERVICE_ENDPOINT: {{ .Values.global.cp.resources.o11y.config.logserver.exporter.services.logindex.endpoint }}
   ES_SERVICE_LOG_INDEX_NAME: {{ .Values.global.cp.resources.o11y.config.logserver.services.logindex }}
