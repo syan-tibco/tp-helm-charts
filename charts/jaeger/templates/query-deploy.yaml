@@ -14,7 +14,7 @@ spec:
   replicas: {{ .Values.query.replicaCount }}
   selector:
     matchLabels:
-      {{- include "jaeger.selectorLabels" . | nindent 6 }}
+      {{- include "jaeger.query.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: query
   template:
     metadata:
@@ -28,7 +28,7 @@ spec:
       {{- end }}
 {{- end }}
       labels:
-        {{- include "jaeger.selectorLabels" . | nindent 8 }}
+        {{- include "jaeger.query.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: query
 {{- if .Values.query.podLabels }}
         {{- toYaml .Values.query.podLabels | nindent 8 }}
