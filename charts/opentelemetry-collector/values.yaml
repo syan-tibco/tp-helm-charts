@@ -98,20 +98,20 @@ configMap:
 # Base collector configuration.
 # Supports templating. To escape existing instances of {{ }}, use {{` <original content> `}}.
 # For example, {{ REDACTED_EMAIL }} becomes {{` {{ REDACTED_EMAIL }} `}}.
-config: {}
-#  exporters:
-#    debug: {}
-#  extensions:
-#    # The health_check extension is mandatory for this chart.
-#    # Without the health_check extension the collector will fail the readiness and liveliness probes.
-#    # The health_check extension can be modified, but should never be removed.
-#    health_check: {}
-#    memory_ballast: {}
-#  processors:
-#    batch: {}
-#    # If set to null, will be overridden with values based on k8s resource limits
-#    memory_limiter: null
-#  receivers:
+config:
+  exporters:
+    debug: {}
+  extensions:
+    # The health_check extension is mandatory for this chart.
+    # Without the health_check extension the collector will fail the readiness and liveliness probes.
+    # The health_check extension can be modified, but should never be removed.
+    health_check: {}
+    memory_ballast: {}
+  processors:
+    batch: {}
+    # If set to null, will be overridden with values based on k8s resource limits
+    memory_limiter: null
+  receivers:
 #    jaeger:
 #      protocols:
 #        grpc:
@@ -136,7 +136,7 @@ config: {}
 #                  - ${env:MY_POD_IP}:8888
 #    zipkin:
 #      endpoint: ${env:MY_POD_IP}:9411
-#  service:
+  service:
 #    telemetry:
 #      metrics:
 #        address: ${env:MY_POD_IP}:8888
