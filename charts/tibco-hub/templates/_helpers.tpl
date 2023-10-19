@@ -2,9 +2,13 @@
 Return the proper image name
 */}}
 {{- define "backstage.image" -}}
-{{- $CPImageValues := dict "registry" "reldocker.tibco.com" -}}
+{{- $CPImageValues := dict "registry" "reldocker.tibco.com" "repository" "pdx/tibco-hub" -}}
 {{- if .Values.global.cp -}}
-    {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") -}}
+{{- if hasSuffix "jfrog.io" .Values.global.cp.containerRegistry.url -}}
+    {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") "repository" "platform/dx/tibco-hub" -}}
+{{- else -}}
+{{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") "repository" "pdx/tibco-hub" -}}
+{{- end -}}
 {{- end -}}
 {{ include "common.images.image" (dict "imageRoot" (merge .Values.backstage.image $CPImageValues) "global" .Values.global) }}
 {{- end -}}
