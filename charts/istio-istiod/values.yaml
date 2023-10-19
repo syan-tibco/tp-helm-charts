@@ -450,6 +450,9 @@ global:
     # Base name for the proxy_init container, used to configure iptables.
     image: proxyv2
 
+  #If set to true, enable validating webhook
+  configValidation: true
+
   # configure remote pilot and istiod service and endpoint
   remotePilotAddress: ""
 
