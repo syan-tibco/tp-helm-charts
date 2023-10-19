@@ -7,7 +7,7 @@ metadata:
   labels:
     helm.sh/chart: fluent-bit-0.36.0
     app.kubernetes.io/name: fluent-bit
-    app.kubernetes.io/instance: fluent-bit
+    app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/version: "2.1.7"
     app.kubernetes.io/managed-by: Helm
 data:
