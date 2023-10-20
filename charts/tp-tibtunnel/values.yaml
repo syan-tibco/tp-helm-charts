@@ -42,7 +42,7 @@ replicaCount: "1"
 image:
   name: tp-tibtunnel
   pullPolicy: IfNotPresent
-  tag: 81
+  tag: 92
 
 nodeSelector:
   kubernetes.io/os: linux
@@ -62,3 +62,5 @@ fluentbit:
 provisionerAgentProbe:
   enable: true
   url: "http://{{ tpl .Values.connect.onPremHost . }}/tibco/agent/infra/provisioner-agent/version"
+  interval: 3 #interval between two probes in seconds
+  retries: 15 # retry attempts
