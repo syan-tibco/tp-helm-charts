@@ -7,13 +7,14 @@ Return the proper image name
     {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") -}}
     {{- $imageRoot := merge .Values.backstage.image $CPImageValues -}}
         {{ if (hasSuffix ".jfrog.io" $imageRoot.registry) }}
-        {{- $imageRoot = merge (dict "repository" "platform/dx/tibco-hub") $imageRoot -}}
+        {{- $imageRoot = merge (dict "repository" .Values.backstage.image.jfrogRepository) $imageRoot -}}
         {{ include "common.images.image" (dict "imageRoot" $imageRoot  "global" .Values.global) }}
         {{- else -}}
         {{ include "common.images.image" (dict "imageRoot" $imageRoot "global" .Values.global) }}
         {{- end -}}
     {{- end -}}
 {{- end -}}
+
 {{/*
  Create the name of the service account to use
  */}}
