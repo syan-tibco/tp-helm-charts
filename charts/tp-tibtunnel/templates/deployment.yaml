@@ -79,6 +79,16 @@ spec:
         volumeMounts:
         - name: config-dir
           mountPath: /etc/config
+      {{ if .Values.provisionerAgentProbe.enable -}}
+      - name: provisioner-agent-probe
+        image: {{ include "tp-tibtunnel.image.registry" .}}{{"/"}}{{ include "tp-tibtunnel.image.repository" .}}{{"/"}}{{ .Values.image.name }}:{{ .Values.image.tag}}
+        command: ["tp-tibtunnel","probe","--http","{{ tpl .Values.provisionerAgentProbe.url . }}","--interval","3","--retries","15"]
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10}}
+        {{- end }}
+      {{- end }}
       imagePullSecrets:
         {{- if .Values.global.tibco.containerRegistry.username }}{{if .Values.global.tibco.containerRegistry.password }}
         - name: {{ .Values.global.tibco.dataPlaneId }} {{/* optional imagePullSecret for private repo. no op if secret does not exist */}}
