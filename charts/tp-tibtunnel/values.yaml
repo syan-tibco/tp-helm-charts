@@ -61,4 +61,4 @@ fluentbit:
 #probe provisioner-agent health. Only start tibtunnel if provisioner agent is accepting traffic
 provisionerAgentProbe:
   enable: true
-  url: "{{ tpl .Values.connect.onPremHost . }}/tibco/agent/infra/provisioner-agent/version"
+  url: "http://{{ tpl .Values.connect.onPremHost . }}/tibco/agent/infra/provisioner-agent/version"
