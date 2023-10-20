@@ -1,4 +1,4 @@
-{{- $imageRepository := .Values.backstage.image.repository | default "pdx/tibco-hub" | required "The repository name of the image is required (e.g. my-backstage:tag | docker.io/my-backstage:tag) !" -}}
+{{- $imageRepository := .Values.backstage.image.repository | required "The repository name of the image is required (e.g. my-backstage:tag | docker.io/my-backstage:tag) !" -}}
 {{- $installDir := .Values.backstage.installDir -}}
 ---
 apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}

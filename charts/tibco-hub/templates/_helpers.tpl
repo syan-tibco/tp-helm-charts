@@ -2,17 +2,18 @@
 Return the proper image name
 */}}
 {{- define "backstage.image" -}}
-{{- $CPImageValues := dict "registry" "reldocker.tibco.com" "repository" "pdx/tibco-hub" -}}
-{{- if .Values.global.cp -}}
-{{- if hasSuffix "jfrog.io" .Values.global.cp.containerRegistry.url -}}
-    {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") "repository" "platform/dx/tibco-hub" -}}
-{{- else -}}
-{{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") "repository" "pdx/tibco-hub" -}}
+{{- $CPImageValues := dict "registry" "reldocker.tibco.com" -}}
+    {{- if .Values.global.cp -}}
+    {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") -}}
+    {{- $imageRoot := merge .Values.backstage.image $CPImageValues -}}
+        {{ if (hasSuffix ".jfrog.io" $imageRoot.registry) }}
+        {{- $imageRoot = merge (dict "repository" "platform/dx/tibco-hub") $imageRoot -}}
+        {{ include "common.images.image" (dict "imageRoot" $imageRoot  "global" .Values.global) }}
+        {{- else -}}
+        {{ include "common.images.image" (dict "imageRoot" $imageRoot "global" .Values.global) }}
+        {{- end -}}
+    {{- end -}}
 {{- end -}}
-{{- end -}}
-{{ include "common.images.image" (dict "imageRoot" (merge .Values.backstage.image $CPImageValues) "global" .Values.global) }}
-{{- end -}}
-
 {{/*
  Create the name of the service account to use
  */}}

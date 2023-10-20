@@ -87,7 +87,7 @@ backstage:
     registry: ""
 
     # -- Backstage image repository
-    repository: ""
+    repository: pdx/tibco-hub
 
     # -- Backstage image tag (immutable tags are recommended)
     tag: "234"
