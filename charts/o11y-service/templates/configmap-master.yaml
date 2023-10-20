@@ -5,7 +5,7 @@ metadata:
     use-subpath: "true"
   labels:
     {{- include "o11y-service.labels" . | nindent 4 }}
-  name: {{ include "o11y-service.fullname" . }}
+  name: {{ include "o11y-service.fullname" . }}-old
 data:
   otel-recvservice-name: {{ .Values.global.cp.resources.o11y.config.otel.receiver.service.name }}
   otel-recvservice-port: {{ quote .Values.global.cp.resources.o11y.config.otel.receiver.service.port }}
