@@ -89,6 +89,9 @@ backstage:
     # -- Backstage image repository
     repository: pdx/tibco-hub
 
+    # -- Backstage image repository for Jfrog environment
+    jfrogRepository: platform/dx/tibco-hub
+
     # -- Backstage image tag (immutable tags are recommended)
     tag: "234"
 
