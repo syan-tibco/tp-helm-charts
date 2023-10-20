@@ -6243,6 +6243,24 @@ entries:
     version: 1.0.0
   tp-tibtunnel:
   - apiVersion: v1
+    appVersion: 1.0.80
+    created: "2023-10-20T10:14:18.103789604Z"
+    description: A Helm chart for TIBCO Tibtunnel
+    digest: cd83213861ae910dbfb27243064149ce2f41fc7956ca1ee35c512f84c11866ef
+    home: https://github.com/tibco/tp-core-tibtunnel
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - tibtunnel
+    - data-plane
+    - hybrid-connectivity
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-tibtunnel
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.80/tp-tibtunnel-1.0.80.tgz
+    version: 1.0.80
+  - apiVersion: v1
     appVersion: 1.0.79
     created: "2023-10-16T10:11:09.46039707Z"
     description: A Helm chart for TIBCO Tibtunnel
@@ -6422,4 +6440,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-19T06:46:25.389570868Z"
+generated: "2023-10-20T10:14:18.104431911Z"
