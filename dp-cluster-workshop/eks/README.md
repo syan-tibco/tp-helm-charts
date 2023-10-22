@@ -1,0 +1,335 @@
+# TIBCO Data Plane Cluster Workshop
+
+The goal of this workshop is to provide a hands-on experience to deploy a TIBCO Data Plane cluster in AWS. This is the prerequisite for the TIBCO Data Plane.
+
+## Introduction
+
+In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and install the necessary tools. This workshop will guide you to create a Kubernetes cluster in AWS and install the necessary tools.
+
+## Command Line Tools needed
+
+We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
+* envsubst
+* yq (v4.35.2)
+* bash (5.2.15)
+* aws (aws-cli/2.13.27)
+* eksctl (0.162.0)
+* kubectl (v1.28.3)
+* helm (v3.13.1)
+
+## Create EKS cluster
+
+In this section, we will use [eksctl tool](https://eksctl.io/) to create an EKS cluster. This tool is recommended by AWS as the official tool to create EKS cluster.
+
+In the context of eksctl tool; they have a yaml file called `ClusterConfig object`. 
+This yaml file contains all the information needed to create an EKS cluster. 
+We have created a yaml file [eksctl-recipe.yaml](eksctl-recipe.yaml) for our workshop to bring up an EKS cluster for TIBCO data plane.
+We can use the following command to create an EKS cluster in your AWS account. 
+
+```bash 
+export DP_CLUSTER_NAME=dp-cluster
+export DP_VPC_CIDR="10.200.0.0/16"
+export AWS_REGION=us-west-2
+cat eksctl-recipe.yaml | envsubst | eksctl create cluster -f -
+```
+
+It will take around 30 minutes to create an empty EKS cluster. 
+
+## Generate kubeconfig to connect to EKS cluster
+
+We can use the following command to generate kubeconfig file.
+```bash
+export AWS_REGION=us-west-2
+export DP_CLUSTER_NAME=dp-cluster
+aws eks update-kubeconfig --region ${AWS_REGION} --name ${DP_CLUSTER_NAME} --kubeconfig ${DP_CLUSTER_NAME}.yaml
+```
+
+And check the connection to EKS cluster.
+```bash
+export KUBECONFIG=${DP_CLUSTER_NAME}.yaml
+kubectl get nodes
+```
+
+## Install common third party tools
+
+Before we deploy ingress or observability tools on an empty EKS cluster; we need to install some basic tools. 
+* [cert-manager](https://cert-manager.io/docs/installation/helm/)
+* [external-dns](https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns)
+* [aws-load-balancer-controller](https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller)
+* [metrics-server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server)
+
+We can use the following commands to install these tools.
+```bash
+# install cert-manager
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n cert-manager cert-manager cert-manager \
+  --repo "https://charts.jetstack.io" --version "v1.12.3" -f - <<EOF
+installCRDs: true
+serviceAccount:
+  create: false
+  name: cert-manager
+EOF
+
+# install external-dns
+export MAIN_INGRESS_CONTROLLER=alb
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n external-dns-system external-dns external-dns \
+  --repo "https://kubernetes-sigs.github.io/external-dns" --version "1.13.0" -f - <<EOF
+serviceAccount:
+  create: false
+  name: external-dns 
+extraArgs:
+  # add filter to only sync only public Ingresses with this annotation
+  - "--annotation-filter=kubernetes.io/ingress.class=${MAIN_INGRESS_CONTROLLER}"
+EOF
+
+# install aws-load-balancer-controller
+export DP_CLUSTER_NAME=dp-cluster
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n kube-system aws-load-balancer-controller aws-load-balancer-controller \
+  --repo "https://aws.github.io/eks-charts" --version "1.6.0" -f - <<EOF
+clusterName: ${DP_CLUSTER_NAME}
+serviceAccount:
+  create: false
+  name: aws-load-balancer-controller
+EOF
+
+# install metrics-server
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n kube-system metrics-server metrics-server \
+  --repo "https://kubernetes-sigs.github.io/metrics-server" --version "3.11.0" -f - <<EOF
+clusterName: ${DP_CLUSTER_NAME}
+serviceAccount:
+  create: true
+  name: metrics-server
+EOF
+```
+
+Here is the full list of third party helm charts that we have installed in the EKS cluster.
+```bash
+$ helm ls -A -a
+NAME                        	NAMESPACE          	REVISION	UPDATED                             	STATUS  	CHART                             	APP VERSION
+aws-load-balancer-controller	kube-system        	1       	2023-10-23 12:17:13.149673 -0500 CDT	deployed	aws-load-balancer-controller-1.6.0	v2.6.0
+cert-manager                	cert-manager       	2       	2023-10-23 12:10:33.504296 -0500 CDT	deployed	cert-manager-v1.12.3              	v1.12.3
+external-dns                	external-dns-system	1       	2023-10-23 12:13:04.39863 -0500 CDT 	deployed	external-dns-1.13.0               	0.13.5
+metrics-server              	kube-system        	1       	2023-10-23 12:19:14.648056 -0500 CDT	deployed	metrics-server-3.11.0             	0.6.4
+```
+
+## Install Ingress Controller, Storage class 
+
+In this section, we will install ingress controller and storage class. We have made a helm chart called `dp-config-aws` that encapsulates the installation of ingress controller and storage class. 
+It will create the following resources:
+* a main ingress object which will be able to create AWS alb and act as a main ingress for DP cluster
+* annotation for external-dns to create DNS record for the main ingress
+* a storage class for EBS
+* a storage class for EFS
+
+### Setup DNS
+For this workshop we will use `dp-workshop.dataplanes.pro` as the domain name. We will use `*.dp1.dp-workshop.dataplanes.pro` as the wildcard domain name for all the DP capabilities.
+We are using the following services in this workshop:
+* [Amazon Route 53](https://aws.amazon.com/route53/): to manage DNS. We register `dp-workshop.dataplanes.pro` in Route 53. And give permission to external-dns to add new record.
+* [AWS Certificate Manager (ACM)](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html): to manage SSL certificate. We will create a wildcard certificate for `*.dp1.dp-workshop.dataplanes.pro` in ACM.
+* aws-load-balancer-controller: to create AWS ALB. It will automatically create AWS ALB and add SSL certificate to ALB.
+* external-dns: to create DNS record in Route 53. It will automatically create DNS record for ingress objects.
+
+For this workshop work; you will need to 
+* register a domain name in Route 53. You can follow this [link](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html) to register a domain name in Route 53.
+* create a wildcard certificate in ACM. You can follow this [link](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html) to create a wildcard certificate in ACM.
+
+### Setup EFS
+Before deploy `dp-config-aws`; we need to set up AWS EFS. For more information about EFS, please refer: 
+* workshop to create EFS: [link](https://archive.eksworkshop.com/beginner/190_efs/launching-efs/)
+* create EFS in AWS console: [link](https://docs.aws.amazon.com/efs/latest/ug/gs-step-two-create-efs-resources.html)
+* create EFS with scripts: [link](https://github.com/kubernetes-sigs/aws-efs-csi-driver/blob/master/docs/efs-create-filesystem.md)
+
+We provide an [EFS creation script](create-efs.sh) to create EFS. 
+```bash
+export DP_CLUSTER_NAME=dp-cluster
+./create-efs.sh ${DP_CLUSTER_NAME}
+```
+
+After running above script; we will get an EFS ID output like `fs-0ec1c745c10d523f6`. We will need to use this value to deploy `dp-config-aws` helm chart.
+
+```bash
+export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
+export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
+export DP_EBS_ENABLED=true
+export DP_EFS_ENABLED=true
+export DP_EFS_ID="fs-0ec1c745c10d523f6"
+
+helm upgrade --install --wait --timeout 1h --create-namespace \
+  -n ingress-system dp-config-aws dp-config-aws \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
+dns:
+  domain: "${DP_DOMAIN}"
+httpIngress:
+  annotations:
+    alb.ingress.kubernetes.io/group.name: "${DP_DOMAIN}"
+    external-dns.alpha.kubernetes.io/hostname: "*.${DP_DOMAIN}"
+    # this will be used for external-dns annotation filter
+    kubernetes.io/ingress.class: alb
+storageClass:
+  ebs:
+    enabled: ${DP_EBS_ENABLED}
+  efs:
+    enabled: ${DP_EFS_ENABLED}
+    parameters:
+      fileSystemId: "${DP_EFS_ID}"
+EOF  
+```
+
+Use the following command to get the ingress class name.
+```bash
+$ kubectl get ingressclass
+NAME    CONTROLLER             PARAMETERS   AGE
+alb     ingress.k8s.aws/alb    <none>       7h12m
+nginx   k8s.io/ingress-nginx   <none>       7h11m
+```
+
+The `nginx` ingress class is the main ingress that DP will use. The `alb` ingress class is used by AWS ALB ingress controller.
+
+> [!IMPORTANT]
+> You will need to provide this ingress class name to TIBCO Control Plane when you deploy capability.
+
+### Storage class
+
+Use the following command to get the storage class name.
+
+```bash
+$ kubectl get storageclass
+NAME            PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+ebs-gp3         ebs.csi.aws.com         Retain          WaitForFirstConsumer   true                   7h17m
+efs-sc          efs.csi.aws.com         Delete          Immediate              false                  7h17m
+gp2 (default)   kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  7h41m
+```
+
+We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` helm chart will create all these storage classes.
+* `ebs-gp3` is the storage class for EBS. This is used for
+  * storage class for data when provision EMS capability
+* `efs-sc` is the storage class for EFS. This is used for
+  * artifactmanager when we provision BWCE capability
+  * storage class for log when we provision EMS capability
+* `gp2` is the default storage class for EKS. AWS create it by default and don't recommend to use it.
+
+> [!IMPORTANT]
+> You will need to provide this storage class name to TIBCO Control Plane when you deploy capability.
+
+## Install Observability tools
+
+### Install Elastic stack
+
+```bash
+# install eck-operator
+helm upgrade --install --wait --timeout 1h --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
+
+# install dp-config-es
+export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
+export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
+export DP_ES_RELEASE_NAME=dp-config-es
+export DP_INGRESS_CLASS=nginx
+export DP_STORAGE_CLASS=ebs-gp3
+
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.11" -f - <<EOF
+domain: ${DP_DOMAIN}
+es:
+  version: "8.9.1"
+  ingress:
+    ingressClassName: ${DP_INGRESS_CLASS}
+    service: ${DP_ES_RELEASE_NAME}-es-http
+  storage:
+    name: ${DP_STORAGE_CLASS}
+kibana:
+  version: "8.9.1"
+  ingress:
+    ingressClassName: ${DP_INGRESS_CLASS}
+    service: ${DP_ES_RELEASE_NAME}-kb-http
+apm:
+  enabled: true
+  version: "8.9.1"
+  ingress:
+    ingressClassName: ${DP_INGRESS_CLASS}
+    service: ${DP_ES_RELEASE_NAME}-apm-http
+EOF
+```
+
+Use this command to get the host URL for Kibana
+```bash
+kubectl get ingress -n elastic-system dp-config-es-kibana -oyaml | yq eval '.spec.rules[0].host'
+```
+
+The username is normally `elastic`. We can use the following command to get the password.
+```bash
+kubectl get secret dp-config-es-es-elastic-user -n elastic-system -o jsonpath="{.data.elastic}" | base64 --decode; echo
+```
+
+### Install Prometheus stack
+
+```bash
+# install prometheus stack
+export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
+export DP_INGRESS_CLASS=nginx
+
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
+  --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f <(envsubst '${DP_DOMAIN}, ${DP_INGRESS_CLASS}' <<'EOF'
+grafana:
+  plugins:
+    - grafana-piechart-panel
+  ingress:
+    enabled: true
+    ingressClassName: ${DP_INGRESS_CLASS}
+    hosts:
+    - grafana.${DP_DOMAIN}
+prometheus:
+  prometheusSpec:
+    enableRemoteWriteReceiver: true
+    remoteWriteDashboards: true
+    additionalScrapeConfigs:
+    - job_name: otel-collector
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: keep
+        regex: "true"
+        source_labels:
+        - __meta_kubernetes_pod_label_prometheus_io_scrape
+      - action: keepequal
+        source_labels: [__meta_kubernetes_pod_container_port_number]
+        target_label: __meta_kubernetes_pod_label_prometheus_io_port
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_pod_label_prometheus_io_port
+        target_label: __address__
+      - source_labels: [__meta_kubernetes_pod_label_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+        replacement: /$1
+  ingress:
+    enabled: true
+    ingressClassName: ${DP_INGRESS_CLASS}
+    hosts:
+    - prometheus-internal.${DP_DOMAIN}
+EOF
+)
+```
+
+Use this command to get the host URL for Kibana
+```bash
+kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host'
+```
+
+The username is `admin`. And Prometheus Operator use fixed password: `prom-operator`.
+
+## Clean up
+
+Use the following command to delete the EKS cluster.
+```bash
+export DP_CLUSTER_NAME=dp-cluster
+./clean-up.sh ${DP_CLUSTER_NAME}
+```
