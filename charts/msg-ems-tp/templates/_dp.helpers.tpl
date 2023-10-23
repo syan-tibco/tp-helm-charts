@@ -42,6 +42,7 @@ dp:
             {{- $repo = .Values.global.cp.containerRegistry.repo -}}
           {{- else if contains "ghcr.io" $registry -}}
             {{- $repo = "tibco/msg-platform-cicd" -}}
+            {{- $pullSecret = "cic2-tcm-ghcr-secret" -}}
           {{- else if contains "jfrog.io" $registry -}}
             {{- $repo = include "msgdp.jfrogImageRepo" . -}}
           {{- else if contains "amazonaws.com" $registry -}}
@@ -126,7 +127,7 @@ note: tib-msg-stsname will be added directly in statefulset charts, as it needs 
 */}}
 {{- define "msg.dp.labels" }}
 tib-dp-release: {{ .Release.Name | quote }}
-tib-dp-msgbuild: "1.0.0.16"
+tib-dp-msgbuild: "1.0.0.17"
 tib-dp-chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
 tib-dp-workload-type: "capability-service"
 tib-dp-dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"
