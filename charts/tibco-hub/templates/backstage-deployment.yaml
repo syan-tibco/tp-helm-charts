@@ -26,6 +26,7 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: backstage
+        egress.networking.platform.tibco.com/internet-all: enable  
         {{- include "tibcohub.platform.commonLabels" . | nindent 8 }}
       annotations:
         checksum/app-config: {{ include "common.tplvalues.render" ( dict "value" .Values.backstage.appConfig "context" $) | sha256sum }}
