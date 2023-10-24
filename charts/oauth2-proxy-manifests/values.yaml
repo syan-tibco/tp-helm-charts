@@ -262,7 +262,13 @@ securityContext:
 
 deploymentAnnotations: {}
 podAnnotations: {}
-podLabels: {}
+
+#hack because PDP-1199 is not being fixed in the upper layer to pass correct properties in the recipe
+podLabels: {
+  egress.networking.platform.tibco.com/internet-web: enable,
+  networking.platform.tibco.com/kubernetes-api: enable
+}
+
 replicaCount: 1
 revisionHistoryLimit: 10
 
