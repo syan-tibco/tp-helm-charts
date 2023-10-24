@@ -21,9 +21,9 @@ cat - <<EOF > $outfile
     rule     "cont"          "/^[\S]+\s+(?![0-9-]+\s)\S+/"            "cont"
 
 [PARSER]
-    Name emstibemsd
+    Name ems
     Format regex
     # level, caller, msg, stacktrace, error, errorVerbose
-    Regex   /^(?<caller>[^ ]+)\s+(?<date>[0-9-]+)\s(?<time>[0-9:.]+)\s+(?:(?<level>[a-z]+|[A-Z]+):?\s+)?(?<message>(?:\s+\w+?:\s+)?.*)/m
+    Regex   /^(?<caller>\S+)\s+(?<date>[0-9-]+)\s(?<time>[0-9:.]+)\s+(?:(?<level>[a-z]+|[A-Z]+):?\s+)?(?<message>(?:\s+\w+?:\s+)?.*)/m
 
 EOF

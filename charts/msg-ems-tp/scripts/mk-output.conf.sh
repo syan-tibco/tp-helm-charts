@@ -5,7 +5,7 @@ outfile=${1:-output.conf}
 cat - <<EOF > $outfile
 [OUTPUT]
     Name                 opentelemetry
-    Match                dp.*
+    Match                dp.routable
     Host                 otel-services.${MY_NAMESPACE}.svc.cluster.local
     Port                 4318
     Logs_uri             /v1/logs

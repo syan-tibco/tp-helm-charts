@@ -69,7 +69,8 @@ spec:
           subPath: iat_to_clienid.sh            
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:v{{ include "oauth2-proxy.version" . }}"
+        image: "{{ template "tibco.image.repository.oauth2proxy" .}}:v{{ include "oauth2-proxy.version" . }}"
+
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args:
         {{- if .Values.alphaConfig.enabled }}

@@ -4,7 +4,7 @@ cat - <<EOF > $outfile
     name             parser
     match            *
     key_name         message
-    parser           emstibemsd
+    parser           ems
 
 [FILTER]
     Name lua
@@ -136,6 +136,12 @@ cat - <<EOF > $outfile
     Match *
     Condition Key_Value_Equals log.level dbg3
     Set log.level DEBUG
+
+# rewrite the tag for debug and verbose logs so we can re-route them (nowhere)
+[FILTER]
+    Name rewrite_tag
+    Match dp.routable
+    Rule log.level /DEBUG/ dp.non_routable false
 
 [FILTER]
     Name nest
