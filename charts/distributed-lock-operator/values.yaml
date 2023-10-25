@@ -3,7 +3,7 @@ global:
   distlockop:
     image:
       registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
-      tag: 71
+      tag: 72
   cp:
     dataplaneId: ""
     containerRegistry:
