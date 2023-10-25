@@ -93,6 +93,8 @@ spec:
               value: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.appinit.image.repository" .}}{{"/"}}
             - name: SOURCE_REGISTRY
               value: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.image.repository" .}}{{"/"}}
+            - name: FLUENT_BIT_SIDECAR_IMAGE
+              value: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.appinit.image.repository" .}}{{"/"}}{{ .Values.global.bwprovisioner.logging.image.name }}:{{ .Values.global.bwprovisioner.logging.image.tag }}
             - name: OTEL_SERVICE_NAME
               valueFrom:
                 configMapKeyRef:
@@ -107,7 +109,7 @@ spec:
                   optional: true
         {{- if .Values.global.bwprovisioner.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.bwprovisioner.logging.image.registry }}{{ .Values.global.bwprovisioner.logging.image.name }}:{{ .Values.global.bwprovisioner.logging.image.tag }}
+          image: {{ include "bwprovisioner.image.registry" .}}{{"/"}}{{ include "bwprovisioner.appinit.image.repository" .}}{{"/"}}{{ .Values.global.bwprovisioner.logging.image.name }}:{{ .Values.global.bwprovisioner.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: POD_NAMESPACE
