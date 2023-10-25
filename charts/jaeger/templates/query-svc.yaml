@@ -30,6 +30,7 @@ spec:
   selector:
     {{- include "jaeger.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: query
+    app.kubernetes.io/name: "jaeger-query"
   type: {{ .Values.query.service.type }}
 {{- template "loadBalancerSourceRanges" .Values.query }}
 {{- end -}}
