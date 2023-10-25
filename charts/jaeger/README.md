@@ -205,39 +205,6 @@ provisionDataStore:
   cassandra: false
 ```
 
-Content of the `jaeger-tls-cassandra-secret.yaml` file:
-
-```YAML
-apiVersion: v1
-kind: Secret
-metadata:
-  name: cassandra-tls-secret
-data:
-  commonName: <SERVER NAME>
-  ca-cert.pem: |
-    -----BEGIN CERTIFICATE-----
-    <CERT>
-    -----END CERTIFICATE-----
-  client-cert.pem: |
-    -----BEGIN CERTIFICATE-----
-    <CERT>
-    -----END CERTIFICATE-----
-  client-key.pem: |
-    -----BEGIN RSA PRIVATE KEY-----
-    -----END RSA PRIVATE KEY-----
-  cqlshrc: |
-    [ssl]
-    certfile = ~/.cassandra/ca-cert.pem
-    userkey = ~/.cassandra/client-key.pem
-    usercert = ~/.cassandra/client-cert.pem
-
-```
-
-```console
-kubectl apply -f jaeger-tls-cassandra-secret.yaml
-helm install jaeger jaegertracing/jaeger --values values.yaml
-```
-
 ### Ingester Configuration
 
 #### Installing the Chart with Ingester enabled
