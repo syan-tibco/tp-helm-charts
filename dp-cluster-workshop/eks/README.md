@@ -58,7 +58,10 @@ Before we deploy ingress or observability tools on an empty EKS cluster; we need
 * [aws-load-balancer-controller](https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller)
 * [metrics-server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server)
 
-We can use the following commands to install these tools.
+<details>
+
+<summary>We can use the following commands to install these tools......</summary>
+
 ```bash
 # install cert-manager
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
@@ -104,8 +107,12 @@ serviceAccount:
   name: metrics-server
 EOF
 ```
+</details>
 
-Here is the full list of third party helm charts that we have installed in the EKS cluster.
+<details>
+
+<summary>Sample output of third party helm charts that we have installed in the EKS cluster...</summary>
+
 ```bash
 $ helm ls -A -a
 NAME                        	NAMESPACE          	REVISION	UPDATED                             	STATUS  	CHART                             	APP VERSION
@@ -114,6 +121,7 @@ cert-manager                	cert-manager       	2       	2023-10-23 12:10:33.50
 external-dns                	external-dns-system	1       	2023-10-23 12:13:04.39863 -0500 CDT 	deployed	external-dns-1.13.0               	0.13.5
 metrics-server              	kube-system        	1       	2023-10-23 12:19:14.648056 -0500 CDT	deployed	metrics-server-3.11.0             	0.6.4
 ```
+</details>
 
 ## Install Ingress Controller, Storage class 
 
@@ -218,6 +226,10 @@ We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` 
 
 ### Install Elastic stack
 
+<details>
+
+<summary>Use the following command to install Elastic stack...</summary>
+
 ```bash
 # install eck-operator
 helm upgrade --install --wait --timeout 1h --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
@@ -253,6 +265,7 @@ apm:
     service: ${DP_ES_RELEASE_NAME}-apm-http
 EOF
 ```
+</details>
 
 Use this command to get the host URL for Kibana
 ```bash
@@ -265,6 +278,10 @@ kubectl get secret dp-config-es-es-elastic-user -n elastic-system -o jsonpath="{
 ```
 
 ### Install Prometheus stack
+
+<details>
+
+<summary>Use the following command to install Prometheus stack...</summary>
 
 ```bash
 # install prometheus stack
@@ -318,6 +335,7 @@ prometheus:
 EOF
 )
 ```
+</details>
 
 Use this command to get the host URL for Kibana
 ```bash
@@ -326,9 +344,229 @@ kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | 
 
 The username is `admin`. And Prometheus Operator use fixed password: `prom-operator`.
 
+### Install Opentelemetry Collector for metrics
+
+<details>
+
+<summary>Use the following command to install Opentelemetry Collector for metrics...</summary>
+
+```bash
+export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
+export DP_INGRESS_CLASS=nginx
+
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.11" -f - <<EOF
+mode: "daemonset"
+fullnameOverride: otel-kubelet-stats
+podLabels:
+  platform.tibco.com/workload-type: "infra"
+  networking.platform.tibco.com/kubernetes-api: enable
+  egress.networking.platform.tibco.com/internet-all: enable
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "metrics"
+  prometheus.io/port: "4319"
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 15
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+serviceAccount:
+  create: false
+  name: sanofisa
+extraEnvs:
+  - name: KUBE_NODE_NAME
+    valueFrom:
+      fieldRef:
+        apiVersion: v1
+        fieldPath: spec.nodeName
+ports:
+  metrics:
+    enabled: true
+    containerPort: 8888
+    servicePort: 8888
+    hostPort: 8888
+    protocol: TCP
+  prometheus:
+    enabled: true
+    containerPort: 4319
+    servicePort: 4319
+    hostPort: 4319
+    protocol: TCP
+config:
+  receivers:
+    k8s_cluster/all_settings:
+      collection_interval: 20s
+      allocatable_types_to_report: [ "cpu","memory" ]
+      metadata_collection_interval: 30m
+    kubeletstats/user-app:
+      collection_interval: 20s
+      auth_type: "serviceAccount"
+      endpoint: "https://${env:KUBE_NODE_NAME}:10250"
+      insecure_skip_verify: true
+      metric_groups:
+        - pod
+      extra_metadata_labels:
+        - container.id
+      metrics:
+        k8s.pod.cpu_limit_utilization:
+          enabled: true
+        k8s.pod.memory_limit_utilization:
+          enabled: true
+        k8s.pod.filesystem.available:
+          enabled: false
+        k8s.pod.filesystem.capacity:
+          enabled: false
+        k8s.pod.filesystem.usage:
+          enabled: false
+        k8s.pod.memory.major_page_faults:
+          enabled: false
+        k8s.pod.memory.page_faults:
+          enabled: false
+        k8s.pod.memory.rss:
+          enabled: false
+        k8s.pod.memory.working_set:
+          enabled: false
+  processors:
+    memory_limiter:
+      check_interval: 5s
+      limit_percentage: 80
+      spike_limit_percentage: 25
+    batch: {}
+    k8sattributes/kubeletstats:
+      auth_type: "serviceAccount"
+      passthrough: false
+      extract:
+        metadata:
+          - k8s.pod.name
+          - k8s.pod.uid
+          - k8s.namespace.name
+        annotations:
+          - tag_name: connectors
+            key: platform.tibco.com/connectors
+            from: pod
+        labels:
+          - tag_name: app_id
+            key: platform.tibco.com/app-id
+            from: pod
+          - tag_name: app_type
+            key: platform.tibco.com/app-type
+            from: pod
+          - tag_name: dataplane_id
+            key: platform.tibco.com/dataplane-id
+            from: pod
+          - tag_name: workload_type
+            key: platform.tibco.com/workload-type
+            from: pod
+          - tag_name: app_name
+            key: platform.tibco.com/app-name
+            from: pod
+          - tag_name: app_version
+            key: platform.tibco.com/app-version
+            from: pod
+          - tag_name: app_tags
+            key: platform.tibco.com/tags
+            from: pod
+      pod_association:
+        - sources:
+            - from: resource_attribute
+              name: k8s.pod.uid
+    filter/user-app:
+      metrics:
+        include:
+          match_type: strict
+          resource_attributes:
+            - key: workload_type
+              value: user-app
+    transform/metrics:
+      metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["pod_name"], resource.attributes["k8s.pod.name"])
+          - set(attributes["pod_namespace"], resource.attributes["k8s.namespace.name"])
+          - set(attributes["app_id"], resource.attributes["app_id"])
+          - set(attributes["app_type"], resource.attributes["app_type"])
+          - set(attributes["dataplane_id"], resource.attributes["dataplane_id"])
+          - set(attributes["workload_type"], resource.attributes["workload_type"])
+          - set(attributes["app_tags"], resource.attributes["app_tags"])
+          - set(attributes["app_name"], resource.attributes["app_name"])
+          - set(attributes["app_version"], resource.attributes["app_version"])
+          - set(attributes["connectors"], resource.attributes["connectors"])
+    filter/include:
+      metrics:
+        include:
+          match_type: regexp
+          metric_names:
+            - .*memory.*
+            - .*cpu.*
+  exporters:
+    prometheus/user:
+      endpoint: 0.0.0.0:4319
+      enable_open_metrics: true
+      resource_to_telemetry_conversion:
+        enabled: true
+  extensions:
+    health_check: {}
+    memory_ballast:
+      size_in_percentage: 40
+  service:
+    telemetry:
+      logs: {}
+      metrics:
+        address: :8888
+    extensions:
+      - health_check
+      - memory_ballast
+    pipelines:
+      logs: null
+      traces: null
+      metrics:
+        receivers:
+          - k8s_cluster/all_settings
+          - kubeletstats/user-app
+        processors:
+          - k8sattributes/kubeletstats
+          - filter/user-app
+          - filter/include
+          - transform/metrics
+          - batch
+        exporters:
+          - prometheus/user
+EOF
+```
+</details>
+
+## Information needed to be set on TIBCO Control Plane
+
+You can get base FQDN by running the following command:
+```bash
+kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
+```
+
+| Name                 | Sample value                                                                     | Notes                                                                     |
+|:---------------------|:---------------------------------------------------------------------------------|:--------------------------------------------------------------------------|
+| VPC_CIDR             | 10.200.0.0/16                                                                    | you can find this from eks recipe                                         |
+| ingress class name   | nginx                                                                            | this is used for BWCE                                                     |
+| EFS storage class    | efs-sc                                                                           | this is used for BWCE EFS storage                                         |
+| EBS storage class    | ebs-gp3                                                                          | this is used for EMS messaging                                            |
+| BW FQDN              | bwce.\<base FQDN\>                                                               | this is the main domain plus any name you want to use for this capability |
+| User app log index   | user-app-1                                                                       | this comes from dp-config-es index template                               |
+| service ES index     | service-1                                                                        | this comes from dp-config-es index template                               |
+| ES internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | this comes from ES service                                                |
+| ES public endpoint   | https://elastic.\<base FQDN\>                                                    | this comes from ES ingress                                                |
+| ES password          | xxx                                                                              | see above ES password                                                     |
+| tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | same as elastic internal endpoint                                         |
+| Prometheus endpoint  | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | this comes from Prometheus service                                        |
+
 ## Clean up
 
-Use the following command to delete the EKS cluster.
+We provide a helper [clean-up](clean-up.sh) to delete the EKS cluster.
 ```bash
 export DP_CLUSTER_NAME=dp-cluster
 ./clean-up.sh ${DP_CLUSTER_NAME}
