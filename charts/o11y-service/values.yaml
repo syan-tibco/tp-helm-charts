@@ -122,20 +122,20 @@ global:
           logserver:
             userapp:
               proxy:
-                password: "MrZvu5n4m4924FqT48EI9WM7"
+                password: "pwd-userapp-proxy"
               exporter:
-                password: "MrZvu5n4m4924FqT48EI9WM7"
+                password: "pwd-userapp-exporter"
             services:
               exporter:
-                password: "MrZvu5n4m4924FqT48EI9WM7"
+                password: "pwd-svc-exporter"
           promserver:
             proxy:
-              password: "promserver_proxy_dummy"
+              password: "pwd-promserver-proxy"
             exporter:
-              token: "promserver_exporter_dummy"
+              token: "token-promserver-exporter"
           jaeger:
             es:
-              password: "MrZvu5n4m4924FqT48EI9WM7"
+              password: "pwd-jaeger-es"
   o11yservice:
     serviceAccount: ""
     data:

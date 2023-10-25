@@ -8,7 +8,13 @@ metadata:
     app: istiod
     release: {{ .Release.Name }}
     istio: istiod
-    istio.io/rev: {{ .Values.revision | default "default" }}
+    # causing repeated loop when more then one istiod are deployed to a cluster in multiple namespaces.
+    #istio.io/rev: {{ .Values.revision | default "default" }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{ if .Values.global.cp.dataplaneId -}}
+    platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
+    {{- end }}
 webhooks:
   # Webhook handling per-revision validation. Mostly here so we can determine whether webhooks
   # are rejecting invalid configs on a per-revision basis.
@@ -20,7 +26,7 @@ webhooks:
       {{- else }}
       service:
         name: istiod{{- if not (eq .Values.revision "") }}-{{ .Values.revision }}{{- end }}
-        namespace: {{ .Values.global.istioNamespace }}
+        namespace: {{ .Release.Namespace }}
         path: "/validate"
       {{- end }}
     rules:
@@ -45,6 +51,12 @@ webhooks:
     failurePolicy: Ignore
     sideEffects: None
     admissionReviewVersions: ["v1beta1", "v1"]
+    namespaceSelector:
+      matchExpressions:
+      - key: "platform.tibco.com/dataplane-id"
+        operator: In
+        values:
+        - {{ .Values.global.cp.dataplaneId }}
     objectSelector:
       matchExpressions:
         - key: istio.io/rev
@@ -55,11 +67,6 @@ webhooks:
           {{- else }}
           - "{{ .Values.revision }}"
           {{- end }}
-        {{- if ((.Values.global).cp).dataplaneId }}
-        - key: platform.tibco.com/dataplane-id
-          operator: In
-          values:
-          - {{ .Values.global.cp.dataplaneId }}
-        {{- end }}
 ---
 {{- end }}
+

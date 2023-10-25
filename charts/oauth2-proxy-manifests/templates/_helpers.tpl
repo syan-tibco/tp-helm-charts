@@ -56,8 +56,6 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 Platform labels
 */}}
 {{- define "oauth2-proxy.platformLabels" }}
-egress.networking.platform.tibco.com/internet-web: enable
-networking.platform.tibco.com/kubernetes-api: enable
 {{- end }}
 
 {{/*
