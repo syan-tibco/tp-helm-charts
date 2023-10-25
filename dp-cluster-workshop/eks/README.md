@@ -1,3 +1,25 @@
+Table of Contents
+=================
+<!-- TOC -->
+* [Table of Contents](#table-of-contents)
+* [TIBCO Data Plane Cluster Workshop](#tibco-data-plane-cluster-workshop)
+  * [Introduction](#introduction)
+  * [Command Line Tools needed](#command-line-tools-needed)
+  * [Create EKS cluster](#create-eks-cluster)
+  * [Generate kubeconfig to connect to EKS cluster](#generate-kubeconfig-to-connect-to-eks-cluster)
+  * [Install common third party tools](#install-common-third-party-tools)
+  * [Install Ingress Controller, Storage class](#install-ingress-controller-storage-class-)
+    * [Setup DNS](#setup-dns)
+    * [Setup EFS](#setup-efs)
+    * [Storage class](#storage-class)
+  * [Install Observability tools](#install-observability-tools)
+    * [Install Elastic stack](#install-elastic-stack)
+    * [Install Prometheus stack](#install-prometheus-stack)
+    * [Install Opentelemetry Collector for metrics](#install-opentelemetry-collector-for-metrics)
+  * [Information needed to be set on TIBCO Control Plane](#information-needed-to-be-set-on-tibco-control-plane)
+  * [Clean up](#clean-up)
+<!-- TOC -->
+
 # TIBCO Data Plane Cluster Workshop
 
 The goal of this workshop is to provide a hands-on experience to deploy a TIBCO Data Plane cluster in AWS. This is the prerequisite for the TIBCO Data Plane.
