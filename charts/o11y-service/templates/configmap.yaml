@@ -46,3 +46,6 @@ data:
   JAEGER_COLLECTOR_ENDPOINT: {{ include "o11y-service.jaeger-collector-endpoint" . }}
   #finops
   FINOPS_OTLP_COLLECTOR_ENDPOINT: {{ include "o11y-service.finops-collector-endpoint" . }}
+  jaeger-ui-config.json: '{"monitor":{"menuEnabled":false},"dependencies":{"menuEnabled":false},"menu":[{"label":"
+    Control Panel","items":[{"label":"Home","url":"../../../../cp"},{"label":"Data
+    Planes","url":"../../../../cp/app/subscription"},{"label":"Observability","url":"../../../../cp/metrics"}]}],"linkPatterns":[{"type":"tags","key":"app_id","url":"../../../../cp/#{app_type}/appdetails/processes?dp_id=#{dataplane_id}&capability_instance_id=#{capability_instance_id}&app_id=#{app_id}","text":"Open app details #{app_name}"}]}'
