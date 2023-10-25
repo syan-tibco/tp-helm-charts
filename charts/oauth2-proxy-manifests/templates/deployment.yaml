@@ -345,10 +345,9 @@ spec:
       - name: shell-script-volume
         configMap:
           name: {{ template "oauth2-proxy.fullname" . }}-shell-script-cm
-      {{- if .Values.imagePullSecrets }}
-      imagePullSecrets:
-{{ toYaml .Values.imagePullSecrets | indent 8 }}
-      {{- end }}
+{{- if .Values.global.cp.containerRegistry.secret }}
+      imagePullSecrets: [ name: {{ .Values.global.cp.containerRegistry.secret }} ]
+{{- end }}
     {{- if .Values.affinity }}
       affinity:
 {{ toYaml .Values.affinity | indent 8 }}
