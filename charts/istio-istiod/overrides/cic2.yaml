@@ -19,8 +19,8 @@ global:
       #url: "us.gcr.io/mashery-cloud-operations"
       #url: "docker.io"
       #url: ""
-      secret: "ck5mt5gvnmjhmo7kk21g"
-    dataplaneId: "ck5mt5gvnmjhmo7kk21g"
+      secret: ""
+    dataplaneId: ""
     resources:
       serviceaccount:
         serviceAccountName: istio-dataplane-service-account
