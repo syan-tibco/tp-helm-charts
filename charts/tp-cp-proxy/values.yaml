@@ -15,7 +15,7 @@ replicaCount: "1"
 
 image:
   name: tp-cp-proxy
-  tag: 103
+  tag: 107
   pullPolicy: IfNotPresent
 
 nodeSelector:
