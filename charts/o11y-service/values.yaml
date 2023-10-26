@@ -136,12 +136,17 @@ global:
           jaeger:
             es:
               password: "pwd-jaeger-es"
+  otel:
+    finops:
+      exporters:
+        metricsendpoint: "http://cp-proxy/finops/finops-service/api/v1/proxy"
   o11yservice:
     serviceAccount: ""
     data:
       namespace: dp-integration-default
     image:
       registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
+
 
 replicaCount: 1
 
@@ -303,4 +308,3 @@ fluentbit:
   image:
     registry: cr.fluentbit.io/fluent/fluent-bit
     tag: 2.1.6
-
