@@ -4,8 +4,8 @@
 
 global:
   tibco:
-    dataPlaneId: "abcd"
-    subscriptionId: "sub1"
+    dataPlaneId: "dpId1"
+    subscriptionId: "subId1"
     controlPlaneUrl: "https://account.local.cic2.pro" # Control Plane DNS domain
     serviceAccount: ""                                # customer provided service account
     containerRegistry:
