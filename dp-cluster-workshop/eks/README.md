@@ -373,12 +373,9 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 <summary>Use the following command to install Opentelemetry Collector for metrics...</summary>
 
 ```bash
-export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
-export DP_INGRESS_CLASS=nginx
-
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-  -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.11" -f - <<EOF
+  -n prometheus-system otel-collector-daemon opentelemetry-collector \
+  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<EOF
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
@@ -400,8 +397,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   targetMemoryUtilizationPercentage: 80
 serviceAccount:
-  create: false
-  name: sanofisa
+  create: true
 extraEnvs:
   - name: KUBE_NODE_NAME
     valueFrom:
