@@ -419,6 +419,10 @@ extraObjects: []
   #       secretName: oauth2-proxy-secrets-store
   #       type: Opaque
 
+tibco:
+  initContainer:
+    image: alpine
+    tag: 3.18
 
 global:
   cp:
