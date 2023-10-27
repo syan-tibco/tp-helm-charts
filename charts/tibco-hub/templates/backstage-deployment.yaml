@@ -77,7 +77,7 @@ spec:
       {{- if .Values.global.cp.containerRegistry.secret }}
         - name: {{ .Values.global.cp.containerRegistry.secret }}
       {{- end }}
-      {{- if or .Values.backstage.image.pullSecrets }}
+      {{- if .Values.backstage.image.pullSecrets }}
       {{- range .Values.backstage.image.pullSecrets }}
         - name: {{ . }}
       {{- end }}
