@@ -103,13 +103,7 @@ cat - <<EOF > $outfile
       "description":"Administrators",
       "members":[
         {
-          "name":"qa-admin"
-        },
-        {
           "name":"admin"
-        },
-        {
-          "name":"tcm-admin"
         }
       ],
       "name":"\$admin"
@@ -191,16 +185,6 @@ cat - <<EOF > $outfile
     {
       "description":"Administrator",
       "name":"admin",
-      "password":null
-    },
-    {
-      "description":"Admin user",
-      "name":"tcm-admin",
-      "password":null
-    },
-    {
-      "description":"Admin user",
-      "name":"qa-admin",
       "password":null
     },
     {

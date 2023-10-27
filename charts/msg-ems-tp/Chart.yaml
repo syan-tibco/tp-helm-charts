@@ -7,13 +7,13 @@ annotations:
       description: "Added image support for python, java, prometheus endpoints"
   artifacthub.io/images: |
     - name: msg-ems-all
-       image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-7"
+       image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-8"
        platforms:
          - linux/amd64
   artifacthub.io/license: TIBCO
   artifacthub.io/prerelease: "true"
 apiVersion: v2
-appVersion: 10.2.1-7
+appVersion: 10.2.1-8
 description: Data-plane provisioning chart for EMS-on-FTL server group
 keywords:
 - tibco-platform
@@ -21,4 +21,4 @@ keywords:
 - messaging
 - EMS
 name: msg-ems-tp
-version: 1.0.17
+version: 1.0.18

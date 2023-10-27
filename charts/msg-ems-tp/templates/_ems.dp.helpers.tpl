@@ -8,7 +8,7 @@ need.msg.ems.params
 */}}
 {{ define "need.msg.ems.params" }}
 {{-  $dpParams := include "need.msg.dp.params" . | fromYaml -}}
-{{-  $emsDefaultFullImage := printf "%s/%s/msg-ems-all:10.2.1-7" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $emsDefaultFullImage := printf "%s/%s/msg-ems-all:10.2.1-8" $dpParams.dp.registry $dpParams.dp.repo -}}
 {{-  $opsDefaultFullImage := printf "%s/%s/msg-dp-ops:1.0.0-2" $dpParams.dp.registry $dpParams.dp.repo -}}
 # Set EMS defaults
 {{- $name := ternary .Release.Name .Values.ems.name ( not .Values.ems.name ) -}}
@@ -59,6 +59,16 @@ need.msg.ems.params
     {{- $cpuLim = "8" -}}
     {{- $memReq = "8Gi" -}}
     {{- $memLim = "20Gi" -}}
+  {{- else if eq $sizing "xlarge" -}}
+    {{- $msgStorageSize = "100Gi" -}}
+    {{- $logStorageSize = "100Gi" -}}
+    {{- $cpuReq = "4" -}}
+    {{- $cpuLim = "16" -}}
+    {{- $memReq = "16Gi" -}}
+    {{- $memLim = "30Gi" -}}
+  {{- else if ne $sizing "small" -}}
+    {{- $sizeError := printf "Config error, size of %s not supported. " $sizing -}}
+    {{- fail $sizeError -}}
   {{ end }}
   {{- if $isProduction -}}
     {{- $cpuReq = $cpuLim -}}
