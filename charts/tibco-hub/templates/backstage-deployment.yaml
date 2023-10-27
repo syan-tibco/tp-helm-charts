@@ -26,7 +26,7 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: backstage
-        egress.networking.platform.tibco.com/internet-all: enable  
+        egress.networking.platform.tibco.com/internet-all: enable
         {{- include "tibcohub.platform.commonLabels" . | nindent 8 }}
       annotations:
         checksum/app-config: {{ include "common.tplvalues.render" ( dict "value" .Values.backstage.appConfig "context" $) | sha256sum }}
@@ -72,10 +72,15 @@ spec:
           configMap:
             name: tibco-hub-fluentbit-config
   {{- end }}
-      {{- if .Values.backstage.image.pullSecrets }}
+      {{- if or .Values.backstage.image.pullSecrets .Values.global.cp.containerRegistry.secret }}
       imagePullSecrets:
+      {{- if .Values.global.cp.containerRegistry.secret }}
+        - name: {{ .Values.global.cp.containerRegistry.secret }}
+      {{- end }}
+      {{- if or .Values.backstage.image.pullSecrets }}
       {{- range .Values.backstage.image.pullSecrets }}
-          - name: {{ . }}
+        - name: {{ . }}
+      {{- end }}
       {{- end }}
       {{- end }}
       {{- if .Values.backstage.initContainers }}
