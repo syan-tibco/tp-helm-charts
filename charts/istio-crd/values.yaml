@@ -16,7 +16,6 @@ global:
   istiod:
     enableAnalysis: false
 
-  configValidation: true
   externalIstiod: false
   remotePilotAddress: ""
 
