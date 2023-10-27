@@ -2,7 +2,7 @@ dataplaneId: cj8nibajvtkr83ega0n0
 
 # service account
 serviceAccount:
-  create: true
+  create: false
   annotations: {}
   name: istio
 
@@ -602,8 +602,8 @@ fluentBit:
   pullPolicy: Always
   output:
     Name: opentelemetry
-    Host: otel-userapp.${POD_NAMESPACE}.svc.cluster.local
-    Port: 4317
+    Host: otel-services.${POD_NAMESPACE}.svc.cluster.local
+    Port: 4318
     Match: kube.istio-proxy.*
     Logs_uri: /v1/logs
     Log_response_payload: True
