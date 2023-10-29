@@ -607,11 +607,11 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 | User app log index   | user-app-1                                                                       | this comes from dp-config-es index template                               |
 | service ES index     | service-1                                                                        | this comes from dp-config-es index template                               |
 | ES internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | this comes from ES service                                                |
-| ES public endpoint   | https://elastic.\<base FQDN\>                                                    | this comes from ES ingress                                                |
+| ES public endpoint   | https://elastic./<base FQDN>                                                    | this comes from ES ingress                                                |
 | ES password          | xxx                                                                              | see above ES password                                                     |
 | tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | same as elastic internal endpoint                                         |
 | Prometheus endpoint  | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | this comes from Prometheus service                                        |
-| Grafana endpoint  | https://grafana.dp1.dp-workshop.dataplanes.pro | this comes from Grafana service                                        |
+| Grafana endpoint  | https://grafana./<base FQDN> | this comes from Grafana service                                        |
 
 ## Clean up
 
