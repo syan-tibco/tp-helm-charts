@@ -603,7 +603,7 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 | ingress class name   | nginx                                                                            | this is used for BWCE                                                     |
 | EFS storage class    | efs-sc                                                                           | this is used for BWCE EFS storage                                         |
 | EBS storage class    | ebs-gp3                                                                          | this is used for EMS messaging                                            |
-| BW FQDN              | bwce./<base FQDN\>                                                               | this is the main domain plus any name you want to use for this capability |
+| BW FQDN              | bwce.\<base FQDN\>                                                               | this is the main domain plus any name you want to use for this capability |
 | User app log index   | user-app-1                                                                       | this comes from dp-config-es index template                               |
 | service ES index     | service-1                                                                        | this comes from dp-config-es index template                               |
 | ES internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | this comes from ES service                                                |
