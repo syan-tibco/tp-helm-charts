@@ -25,8 +25,8 @@ spec:
             },
             "number_of_shards": "6",
             "number_of_replicas": "1",
-            "index.lifecycle.name": {{ .Release.Name }}-jaeger-index-lifecycle-policy,
-            "index.lifecycle.rollover_alias": "jaeger-span-write"
+            "lifecycle.name": "{{ .Release.Name }}-jaeger-index-30d-lifecycle-policy",
+            "lifecycle.rollover_alias": "jaeger-span-write"
           }
         },
         "mappings": {
