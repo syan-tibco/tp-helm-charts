@@ -109,3 +109,14 @@ ingress-nginx:
       type: ClusterIP
     nodeSelector:
       kubernetes.io/os: linux
+
+# this is used for calico settings
+tigera-operator:
+  enabled: false
+  installation:
+    enabled: true
+    kubernetesProvider: EKS
+    cni:
+      type: AmazonVPC
+    calicoNetwork:
+      bgp: Disabled
