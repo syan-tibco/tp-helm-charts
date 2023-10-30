@@ -189,8 +189,8 @@ export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
 export DP_EBS_ENABLED=true
 export DP_EFS_ENABLED=true
 export DP_EFS_ID="fs-0ec1c745c10d523f6"
-## following variable is required to send traces using nginx-proxy
-## uncomment the below commented line and provide the value for DP Namespace
+## following section is required to send traces using nginx
+## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
 #export DP_NAMESPACE=""
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
@@ -211,12 +211,13 @@ storageClass:
     enabled: ${DP_EFS_ENABLED}
     parameters:
       fileSystemId: "${DP_EFS_ID}"
-## following section is required to send traces using nginx-proxy
-## uncomment the below commented section to enable it
-# ingress-nginx:
-#   controller:
-#     config:
-#       use-forwarded-headers: "true"
+ingress-nginx:
+  controller:
+    config:
+      # required by apps swagger
+      use-forwarded-headers: "true"
+## following section is required to send traces using nginx
+## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
 #       enable-opentelemetry: "true"
 #       log-level: debug
 #       opentelemetry-config: /etc/nginx/opentelemetry.toml
