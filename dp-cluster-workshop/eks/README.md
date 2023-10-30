@@ -189,6 +189,9 @@ export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
 export DP_EBS_ENABLED=true
 export DP_EFS_ENABLED=true
 export DP_EFS_ID="fs-0ec1c745c10d523f6"
+## following variable is required to send traces using nginx-proxy
+## uncomment the below commented line and provide the value for DP Namespace
+#export DP_NAMESPACE=""
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aws dp-config-aws \
@@ -208,26 +211,28 @@ storageClass:
     enabled: ${DP_EFS_ENABLED}
     parameters:
       fileSystemId: "${DP_EFS_ID}"
-ingress-nginx:
-  controller:
-    config:
-      use-forwarded-headers: "true"
-      enable-opentelemetry: "true"
-      log-level: debug
-      opentelemetry-config: /etc/nginx/opentelemetry.toml
-      opentelemetry-operation-name: HTTP $request_method $service_name $uri
-      opentelemetry-trust-incoming-span: "true"
-      otel-max-export-batch-size: "512"
-      otel-max-queuesize: "2048"
-      otel-sampler: AlwaysOn
-      otel-sampler-parent-based: "false"
-      otel-sampler-ratio: "1.0"
-      otel-schedule-delay-millis: "5000"
-      otel-service-name: nginx-proxy
-      otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
-      otlp-collector-port: "4317"
-    opentelemetry:
-      enabled: true
+## following section is required to send traces using nginx-proxy
+## uncomment the below commented section to enable it
+# ingress-nginx:
+#   controller:
+#     config:
+#       use-forwarded-headers: "true"
+#       enable-opentelemetry: "true"
+#       log-level: debug
+#       opentelemetry-config: /etc/nginx/opentelemetry.toml
+#       opentelemetry-operation-name: HTTP $request_method $service_name $uri
+#       opentelemetry-trust-incoming-span: "true"
+#       otel-max-export-batch-size: "512"
+#       otel-max-queuesize: "2048"
+#       otel-sampler: AlwaysOn
+#       otel-sampler-parent-based: "false"
+#       otel-sampler-ratio: "1.0"
+#       otel-schedule-delay-millis: "5000"
+#       otel-service-name: nginx-proxy
+#       otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
+#       otlp-collector-port: "4317"
+#     opentelemetry:
+#       enabled: true
 EOF  
 ```
 
