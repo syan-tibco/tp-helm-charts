@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 1.0.248
+appVersion: 1.0.253
 dependencies:
 - condition: tp-tibtunnel.enabled
   name: tp-tibtunnel
@@ -20,4 +20,4 @@ dependencies:
 description: A Helm chart for TIBCO Platform Data Plane Infrastructure
 name: dp-core-infrastructure
 type: application
-version: 1.0.248
+version: 1.0.253
