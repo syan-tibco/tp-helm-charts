@@ -1,6 +1,6 @@
-# O11Y Service Helm Chart
+# dp-otel-collectors Helm Chart
 
-This repository hosts the official **[O11Y Service](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/o11y-service) Helm Charts** for deploying **O11Y Service** products to [Kubernetes](https://kubernetes.io/)
+This repository hosts the official **[dp-otel-collectors](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/dp-otel-collectors) Helm Charts** for deploying **dp-otel-collectors** products to [Kubernetes](https://kubernetes.io/)
 
 ## Install Helm (only V3 is supported)
 
@@ -8,25 +8,25 @@ Get the latest [Helm release](https://github.com/helm/helm#install).
 
 ## Install Charts
 
-### Add O11Y Service Helm repository
+### Add dp-otel-collectors Helm repository
 
-Before installing O11Y Service helm charts, you need to add the [O11Y Service helm repository](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/o11y-service) to your helm client.
+Before installing dp-otel-collectors helm charts, you need to add the [dp-otel-collectors helm repository](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/dp-otel-collectors) to your helm client.
 
 ```bash
-helm repo add o11y-service https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/o11y-service
+helm repo add dp-otel-collectors https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/dp-otel-collectors
 helm repo update
 ```
 ### Install locally with override values
 
 ```bash
-helm upgrade --install o11y-service [--namespace <namespace>] --values <new file name>.yaml
+helm upgrade --install dp-otel-collectors [--namespace <namespace>] --values <new file name>.yaml
 Or
-helm upgrade --install o11y-service [--namespace <namespace>] -f <new file name>.yaml
+helm upgrade --install dp-otel-collectors [--namespace <namespace>] -f <new file name>.yaml
 ```
 
 **Note:** For instructions on how to install a chart follow instructions in its _README.md_.
 
-## Contributing to O11Y Service Charts
+## Contributing to dp-otel-collectors Charts
 
 Fork the `repo`, make changes and then please run `helm lint` to lint charts locally, and at least install the chart to see it is working. :)
 

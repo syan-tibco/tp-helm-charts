@@ -1,6 +1,7 @@
 {{/* 
    Copyright (c) 2019 Cloud Software Group Inc.
-   All Rights Reserved.
+   This file is subject to the license terms contained
+   in the license file that is distributed with this file.
 
    File       : _helpers.tpl
    Version    : 1.0.0
