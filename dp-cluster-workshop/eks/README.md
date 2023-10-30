@@ -294,7 +294,7 @@ export DP_STORAGE_CLASS=ebs-gp3
 
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.12" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
