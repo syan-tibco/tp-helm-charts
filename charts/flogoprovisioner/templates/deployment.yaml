@@ -107,7 +107,7 @@ spec:
 #                  key: otel-recvservice-port
         {{- if .Values.global.flogoprovisioner.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.flogoprovisioner.logging.image.registry }}{{ .Values.global.flogoprovisioner.logging.image.name }}:{{ .Values.global.flogoprovisioner.logging.image.tag }}
+          image: {{ include "flogoprovisioner.image.registry" .}}{{"/"}}{{ include "flogoprovisioner.appinit.image.repository" .}}{{"/"}}{{ .Values.global.flogoprovisioner.logging.image.name }}:{{ .Values.global.flogoprovisioner.logging.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: POD_NAMESPACE
