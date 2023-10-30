@@ -5,6 +5,7 @@ Table of Contents
 * [TIBCO Data Plane Cluster Workshop](#tibco-data-plane-cluster-workshop)
   * [Introduction](#introduction)
   * [Command Line Tools needed](#command-line-tools-needed)
+  * [Recommended IAM Policies](#recommended-iam-policies)
   * [Create EKS cluster](#create-eks-cluster)
   * [Generate kubeconfig to connect to EKS cluster](#generate-kubeconfig-to-connect-to-eks-cluster)
   * [Install common third party tools](#install-common-third-party-tools)
@@ -39,6 +40,8 @@ We are running the steps in a MacBook Pro. The following tools are installed usi
 * kubectl (v1.28.3)
 * helm (v3.13.1)
 
+## Recommended IAM Policies
+It is recommeded to have the [Minimum IAM Policies](https://eksctl.io/usage/minimum-iam-policies/ attached to the role which is being used for the cluster creation.
 ## Create EKS cluster
 
 In this section, we will use [eksctl tool](https://eksctl.io/) to create an EKS cluster. This tool is recommended by AWS as the official tool to create EKS cluster.
@@ -186,6 +189,9 @@ export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
 export DP_EBS_ENABLED=true
 export DP_EFS_ENABLED=true
 export DP_EFS_ID="fs-0ec1c745c10d523f6"
+## following section is required to send traces using nginx
+## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
+#export DP_NAMESPACE=""
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aws dp-config-aws \
@@ -205,6 +211,29 @@ storageClass:
     enabled: ${DP_EFS_ENABLED}
     parameters:
       fileSystemId: "${DP_EFS_ID}"
+ingress-nginx:
+  controller:
+    config:
+      # required by apps swagger
+      use-forwarded-headers: "true"
+## following section is required to send traces using nginx
+## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
+#       enable-opentelemetry: "true"
+#       log-level: debug
+#       opentelemetry-config: /etc/nginx/opentelemetry.toml
+#       opentelemetry-operation-name: HTTP $request_method $service_name $uri
+#       opentelemetry-trust-incoming-span: "true"
+#       otel-max-export-batch-size: "512"
+#       otel-max-queuesize: "2048"
+#       otel-sampler: AlwaysOn
+#       otel-sampler-parent-based: "false"
+#       otel-sampler-ratio: "1.0"
+#       otel-schedule-delay-millis: "5000"
+#       otel-service-name: nginx-proxy
+#       otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
+#       otlp-collector-port: "4317"
+#     opentelemetry:
+#       enabled: true
 EOF  
 ```
 
@@ -219,7 +248,7 @@ nginx   k8s.io/ingress-nginx   <none>       7h11m
 The `nginx` ingress class is the main ingress that DP will use. The `alb` ingress class is used by AWS ALB ingress controller.
 
 > [!IMPORTANT]
-> You will need to provide this ingress class name to TIBCO Control Plane when you deploy capability.
+> You will need to provide this ingress class name i.e. nginx to TIBCO Control Plane when you deploy capability.
 
 ### Storage class
 
@@ -265,7 +294,7 @@ export DP_STORAGE_CLASS=ebs-gp3
 
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.11" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
@@ -334,6 +363,10 @@ prometheus:
         regex: "true"
         source_labels:
         - __meta_kubernetes_pod_label_prometheus_io_scrape
+      - action: keep
+        regex: "infra"
+        source_labels:
+        - __meta_kubernetes_pod_label_platform_tibco_com_workload_type
       - action: keepequal
         source_labels: [__meta_kubernetes_pod_container_port_number]
         target_label: __meta_kubernetes_pod_label_prometheus_io_port
@@ -398,11 +431,19 @@ autoscaling:
   targetMemoryUtilizationPercentage: 80
 serviceAccount:
   create: true
+clusterRole:
+  create: true
+  rules:
+  - apiGroups: [""]
+    resources: ["pods", "namespaces"]
+    verbs: ["get", "watch", "list"]
+  - apiGroups: [""]
+    resources: ["nodes/stats", "nodes/proxy"]
+    verbs: ["get"]
 extraEnvs:
   - name: KUBE_NODE_NAME
     valueFrom:
       fieldRef:
-        apiVersion: v1
         fieldPath: spec.nodeName
 ports:
   metrics:
@@ -419,10 +460,6 @@ ports:
     protocol: TCP
 config:
   receivers:
-    k8s_cluster/all_settings:
-      collection_interval: 20s
-      allocatable_types_to_report: [ "cpu","memory" ]
-      metadata_collection_interval: 30m
     kubeletstats/user-app:
       collection_interval: 20s
       auth_type: "serviceAccount"
@@ -546,7 +583,6 @@ config:
       traces: null
       metrics:
         receivers:
-          - k8s_cluster/all_settings
           - kubeletstats/user-app
         processors:
           - k8sattributes/kubeletstats
@@ -581,6 +617,7 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 | ES password          | xxx                                                                              | see above ES password                                                     |
 | tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | same as elastic internal endpoint                                         |
 | Prometheus endpoint  | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | this comes from Prometheus service                                        |
+| Grafana endpoint  | https://grafana.\<base FQDN\> | this comes from Grafana service                                        |
 
 ## Clean up
 
