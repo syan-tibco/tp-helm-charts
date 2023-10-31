@@ -1,6 +1,6 @@
 # O11Y Service Helm Chart
 
-This repository hosts the official **[O11Y Service](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/o11y-service) Helm Charts** for deploying **O11Y Service** products to [Kubernetes](https://kubernetes.io/)
+This repository hosts the official **O11Y Service Helm Charts** for deploying **O11Y Service** products to [Kubernetes](https://kubernetes.io/)
 
 ## Install Helm (only V3 is supported)
 
@@ -10,12 +10,8 @@ Get the latest [Helm release](https://github.com/helm/helm#install).
 
 ### Add O11Y Service Helm repository
 
-Before installing O11Y Service helm charts, you need to add the [O11Y Service helm repository](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/o11y-service) to your helm client.
+Before installing O11Y Service helm charts, you need to add the [O11Y Service helm repository] to your helm client.
 
-```bash
-helm repo add o11y-service https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/o11y-service
-helm repo update
-```
 ### Install locally with override values
 
 ```bash

@@ -1,6 +1,6 @@
 # dp-config-es Helm Chart
 
-This repository hosts the official **[dp-config-es](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/dp-config-es) Helm Charts** for deploying **dp-config-es** products to [Kubernetes](https://kubernetes.io/)
+This repository hosts the official **dp-config-es Helm Charts** for deploying **elastic search configuration** products to [Kubernetes](https://kubernetes.io/)
 
 ## Install Helm (only V3 is supported)
 
@@ -10,12 +10,8 @@ Get the latest [Helm release](https://github.com/helm/helm#install).
 
 ### Add dp-config-es Helm repository
 
-Before installing dp-config-es helm charts, you need to add the [dp-config-es helm repository](https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/dp-config-es) to your helm client.
+Before installing dp-config-es helm charts, you need to add the [dp-config-es helm repository] to your helm client.
 
-```bash
-helm repo add dp-config-es https://github.com/syan-tibco/tp-helm-charts/tree/main/charts/dp-config-es
-helm repo update
-```
 ### Install locally with override values
 
 ```bash
