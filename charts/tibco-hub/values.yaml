@@ -1,3 +1,7 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 # Default values for the TIBCO Hub chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -10,10 +14,21 @@
 global:
   # -- Global Docker image registry
   imageRegistry: ""
-
+  # Following parameters which are used in our chart, are passed during provisioning from control plane
+  cp:
+    dataplaneId: ""
+    instanceId: ""
+    cpHostname: ""
+    resources:
+      serviceaccount:
+        serviceAccountName: ""
+    containerRegistry:
+      secret: ""
+      url: ""
   # -- Global Docker registry secret names as an array
   # </br> E.g. `imagePullSecrets: [myRegistryKeySecretName]`
   imagePullSecrets: []
+
 
 # -- Common parameters
 
@@ -66,10 +81,10 @@ ingress:
 
   # -- Hostname to be used to expose the route to access the backstage application (e.g: backstage.IP.nip.io)
   host: ""
-  
+
   # -- pathPrefix to be used for the routes to access the backstage application (e.g: /tibco/hub )
   pathPrefix: "/tibco/hub"
-  
+
   # -- Ingress TLS parameters
   tls:
 
@@ -121,7 +136,7 @@ backstage:
 
   # -- App config files that'll be loaded by default
   defaultAppConfigFiles:
-   - 'app-config.production.yaml'
+    - 'app-config.production.yaml'
 
   # -- Extra app configuration files to inline into command arguments
   extraAppConfig: []
@@ -305,7 +320,7 @@ postgresql:
 
 ## @section PostgreSQL Primary parameters
 ##
-primary:  
+primary:
   ## PostgreSQL Primary persistence configuration
   ##
   persistence:
@@ -370,10 +385,10 @@ fluentbit:
     registry: cr.fluentbit.io/fluent/fluent-bit
     tag: 2.1.6
     pullPolicy: Always
-    
+
 autoscaling:
 
-    # -- If enabled, a HorizontalPodAutoscaler is created for the backstage-deployment
+  # -- If enabled, a HorizontalPodAutoscaler is created for the backstage-deployment
   enabled: true
 
   minReplicas: 1

@@ -1,3 +1,7 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 {{- $imageRepository := .Values.backstage.image.repository | required "The repository name of the image is required (e.g. my-backstage:tag | docker.io/my-backstage:tag) !" -}}
 {{- $installDir := .Values.backstage.installDir -}}
 ---

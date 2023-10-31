@@ -1,3 +1,7 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 {{- $ingressHost := .Values.ingress.host | required ".Values.ingress.host is required." -}}
 {{- $cpHostname := (.Values.global.cp).cpHostname | required ".Values.global.cp.cpHostname is required." -}}
 apiVersion: networking.k8s.io/v1

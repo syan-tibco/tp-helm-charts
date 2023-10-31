@@ -1,6 +1,13 @@
 {{/*
+Copyright © 2023. Cloud Software Group, Inc.
+This file is subject to the license terms contained
+in the license file that is distributed with this file.
+*/}}
+
+{{/*
 Return the proper image name
 */}}
+
 {{- define "backstage.image" -}}
 {{- $CPImageValues := dict "registry" "reldocker.tibco.com" -}}
     {{- if .Values.global.cp -}}
