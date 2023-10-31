@@ -91,6 +91,7 @@ Before we deploy ingress or observability tools on an empty EKS cluster; we need
 # install cert-manager
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n cert-manager cert-manager cert-manager \
+  --labels layer=0 \
   --repo "https://charts.jetstack.io" --version "v1.12.3" -f - <<EOF
 installCRDs: true
 serviceAccount:
@@ -102,6 +103,7 @@ EOF
 export MAIN_INGRESS_CONTROLLER=alb
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n external-dns-system external-dns external-dns \
+  --labels layer=0 \
   --repo "https://kubernetes-sigs.github.io/external-dns" --version "1.13.0" -f - <<EOF
 serviceAccount:
   create: false
@@ -115,6 +117,7 @@ EOF
 export DP_CLUSTER_NAME=dp-cluster
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n kube-system aws-load-balancer-controller aws-load-balancer-controller \
+  --labels layer=0 \
   --repo "https://aws.github.io/eks-charts" --version "1.6.0" -f - <<EOF
 clusterName: ${DP_CLUSTER_NAME}
 serviceAccount:
@@ -125,6 +128,7 @@ EOF
 # install metrics-server
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n kube-system metrics-server metrics-server \
+  --labels layer=0 \
   --repo "https://kubernetes-sigs.github.io/metrics-server" --version "3.11.0" -f - <<EOF
 clusterName: ${DP_CLUSTER_NAME}
 serviceAccount:
@@ -188,14 +192,16 @@ export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
 export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
 export DP_EBS_ENABLED=true
 export DP_EFS_ENABLED=true
-export DP_EFS_ID="fs-0ec1c745c10d523f6"
+export DP_EFS_ID="fs-07ac0192ab92c1888"
 ## following section is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
 #export DP_NAMESPACE=""
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
-  -n ingress-system dp-config-aws dp-config-aws \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
+  -n ingress-system dp-config-aws ./dp-config-aws \
+  --labels layer=1 \
+  --debug \
+ --version "1.0.19" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
@@ -211,6 +217,8 @@ storageClass:
     enabled: ${DP_EFS_ENABLED}
     parameters:
       fileSystemId: "${DP_EFS_ID}"
+tigera-operator:
+  enabled: false
 ingress-nginx:
   controller:
     config:
@@ -273,7 +281,7 @@ We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` 
 > [!IMPORTANT]
 > You will need to provide this storage class name to TIBCO Control Plane when you deploy capability.
 
-## Install Calico
+## Install Calico [OPTIONAL]
 For network policies to take effect in the EKS cluster, we will need to deploy [calico](https://www.tigera.io/project-calico/).
 
 ### Pre Installation Steps
@@ -297,6 +305,7 @@ export INSTALL_CALICO="true"
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n tigera-operator dp-config-aws-calico dp-config-aws \
+  --labels layer=1 \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.18" -f - <<EOF
 ingress-nginx:
   enabled: false
@@ -360,7 +369,7 @@ kubectl rollout restart deployment calico-kube-controllers -n calico-system
 ```bash
 kubectl describe pod calico-kube-controllers-<pod_identifier> -n calico-system | grep vpc.amazonaws.com/pod-ips
 ```
-Output will similar to below
+Output will be similar to below
 ```bash
 vpc.amazonaws.com/pod-ips: 10.200.108.148
 ```
@@ -374,7 +383,7 @@ vpc.amazonaws.com/pod-ips: 10.200.108.148
 
 ```bash
 # install eck-operator
-helm upgrade --install --wait --timeout 1h --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
+helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
 
 # install dp-config-es
 export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
@@ -385,6 +394,7 @@ export DP_STORAGE_CLASS=ebs-gp3
 
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
+  --labels layer=2 \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
@@ -432,6 +442,7 @@ export DP_INGRESS_CLASS=nginx
 
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
+  --labels layer=2 \
   --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f <(envsubst '${DP_DOMAIN}, ${DP_INGRESS_CLASS}' <<'EOF'
 grafana:
   plugins:
@@ -499,6 +510,7 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system otel-collector-daemon opentelemetry-collector \
+  --labels layer=2 \
   --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<EOF
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
