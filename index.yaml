@@ -850,6 +850,33 @@ entries:
           description: "Added nginx"
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-10-31T06:40:32.608978763Z"
+    dependencies:
+    - condition: traefik.enabled
+      name: traefik
+      repository: https://traefik.github.io/charts
+      version: 24.0.0
+    - condition: ingress-nginx.enabled
+      name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: 4.7.2
+    description: dp-config-aks is used to config non-CIC2 TIBCO Dataplane
+    digest: 76b3c63943cff52000c45e0642c6a658dc5d2e2789471a7303c112ef472331f7
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aks
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aks-1.0.10/dp-config-aks-1.0.10.tgz
+    version: 1.0.10
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: "Added nginx"
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-10-14T06:29:46.675195519Z"
     dependencies:
     - condition: traefik.enabled
@@ -7305,4 +7332,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-31T05:34:17.282805686Z"
+generated: "2023-10-31T06:40:32.610075376Z"
