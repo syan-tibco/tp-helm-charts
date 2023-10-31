@@ -11,5 +11,4 @@ global:
 ## Installing the Chart
 
 ```console
-$ helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts/
 $ helm install distributed-lock-operator tibco-platform/distributed-lock-operator

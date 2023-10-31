@@ -17,5 +17,4 @@ connect:
 ## Installing the Chart
 
 ```console
-$ helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts/
 $ helm install tp-tibtunnel tibco-platform/tp-tibtunnel

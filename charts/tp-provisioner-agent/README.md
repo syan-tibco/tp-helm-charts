@@ -13,5 +13,4 @@ global:
 ## Installing the Chart
 
 ```console
-$ helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts/
 $ helm install tp-provisioner-agent tibco-platform/tp-provisioner-agent

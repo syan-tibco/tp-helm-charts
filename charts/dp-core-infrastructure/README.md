@@ -14,5 +14,4 @@ global:
 ## Installing the Chart
 
 ```console
-$ helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts/
 $ helm install dp-core-infrastructure tibco-platform/dp-core-infrastructure
