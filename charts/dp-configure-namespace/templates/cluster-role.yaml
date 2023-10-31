@@ -1,3 +1,9 @@
+{{/*
+    Copyright © 2023. Cloud Software Group, Inc.
+    This file is subject to the license terms contained
+    in the license file that is distributed with this file.
+*/}}
+
 {{/* all cluster roles are created at once during the deployment of the chart in primary namespace */}}
 {{- if eq .Release.Namespace .Values.global.tibco.primaryNamespaceName -}}
 {{ $mcsAPIGroup := "multicluster.x-k8s.io" }}
