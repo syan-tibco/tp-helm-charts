@@ -13,3 +13,11 @@
     {{- .Values.global.cp.containerRegistry.url }}/stratosphere/{{ .Values.tibco.initContainer.image }}:{{ .Values.tibco.initContainer.tag }}
   {{- end }}
 {{- end -}}
+
+{{/* fluentbit container image */}}
+{{- define "tibco.image.repository.fluentbit" -}}
+  {{- if contains "jfrog.io" .Values.global.cp.containerRegistry.url }}{{ .Values.global.cp.containerRegistry.url }}/platform/infra/{{ .Values.tibco.loggerContainer.image }}:{{ .Values.tibco.loggerContainer.tag }}
+  {{- else }}
+    {{- .Values.global.cp.containerRegistry.url }}/stratosphere/{{ .Values.tibco.loggerContainer.image }}:{{ .Values.tibco.loggerContainer.tag }}
+  {{- end }}
+{{- end -}}
