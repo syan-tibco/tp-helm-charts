@@ -23,6 +23,7 @@ spec:
       creationTimestamp: null
       labels:
         {{- include "o11y-service.shared.labels.standard" . | nindent 8 }}
+        networking.platform.tibco.com/kubernetes-api: enable
     spec:
       terminationGracePeriodSeconds: 30
       imagePullSecrets:
