@@ -1,6 +1,6 @@
-# O11Y Service Helm Chart
+# dp-config-es Helm Chart
 
-This repository hosts the official **O11Y Service Helm Charts** for deploying **O11Y Service** products to [Kubernetes](https://kubernetes.io/)
+This repository hosts the official **dp-config-es Helm Charts** for deploying **elastic search configuration** products to [Kubernetes](https://kubernetes.io/)
 
 ## Install Helm (only V3 is supported)
 
@@ -8,21 +8,21 @@ Get the latest [Helm release](https://github.com/helm/helm#install).
 
 ## Install Charts
 
-### Add O11Y Service Helm repository
+### Add dp-config-es Helm repository
 
-Before installing O11Y Service helm charts, you need to add the [O11Y Service helm repository] to your helm client.
+Before installing dp-config-es helm charts, you need to add the [dp-config-es helm repository] to your helm client.
 
 ### Install locally with override values
 
 ```bash
-helm upgrade --install o11y-service [--namespace <namespace>] --values <new file name>.yaml
+helm upgrade --install dp-config-es [--namespace <namespace>] --values <new file name>.yaml
 Or
-helm upgrade --install o11y-service [--namespace <namespace>] -f <new file name>.yaml
+helm upgrade --install dp-config-es [--namespace <namespace>] -f <new file name>.yaml
 ```
 
 **Note:** For instructions on how to install a chart follow instructions in its _README.md_.
 
-## Contributing to O11Y Service Charts
+## Contributing to dp-config-es Charts
 
 Fork the `repo`, make changes and then please run `helm lint` to lint charts locally, and at least install the chart to see it is working. :)
 
