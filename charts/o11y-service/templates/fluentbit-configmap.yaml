@@ -3,7 +3,7 @@
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 #
-{{- if .Values.enableLogging }}
+{{ if .Values.enableLogging -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -95,4 +95,4 @@ data:
       record["log"] = newLog
       return 2, timestamp, record
     end
-{{- end }}
+{{- end -}}

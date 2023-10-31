@@ -3,7 +3,7 @@
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 #
-{{- if .Values.index.enabled -}}
+{{ if .Values.index.enabled -}}
 apiVersion: es.eck.github.com/v1alpha1
 kind: IndexTemplate
 metadata:
@@ -82,4 +82,4 @@ spec:
         }
       }
     }
-{{- end }}
+{{- end -}}
