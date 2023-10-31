@@ -3,15 +3,15 @@
 # in the license file that is distributed with this file.
 
 apiVersion: v2
-appVersion: 1.0.253
+appVersion: 1.0.254
 dependencies:
 - condition: tp-tibtunnel.enabled
   name: tp-tibtunnel
-  repository: https://syan-tibco.github.io/tp-helm-charts
+  repository: alias:tibco-platfrom
   version: 1.0.*
 - condition: tp-provisioner-agent.enabled
   name: tp-provisioner-agent
-  repository: https://syan-tibco.github.io/tp-helm-charts
+  repository: alias:tibco-platfrom
   version: 1.0.*
 - condition: haproxy-ingress.enabled
   name: haproxy-ingress
@@ -24,4 +24,4 @@ dependencies:
 description: A Helm chart for TIBCO Platform Data Plane Infrastructure
 name: dp-core-infrastructure
 type: application
-version: 1.0.253
+version: 1.0.254
