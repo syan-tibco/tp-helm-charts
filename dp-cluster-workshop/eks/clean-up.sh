@@ -19,7 +19,7 @@ helm ls --selector '!layer' -a -A -o json | jq -r '.[] | "\(.name) \(.namespace)
   helm uninstall -n "$namespace" "$release"
 done
 
-for (( _chart_layer=2 ; _chart_layer<=0 ; _chart_layer-- ));
+for (( _chart_layer=2 ; _chart_layer>=0 ; _chart_layer-- ));
 do
   echo "deleting all installed charts with layer ${_chart_layer} labels"
   helm ls --selector "layer=${_chart_layer}" -a -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read -r line; do
