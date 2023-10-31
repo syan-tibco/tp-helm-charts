@@ -1,1 +1,0 @@
-stratosphere/tp-dp-secret-controller:latest
