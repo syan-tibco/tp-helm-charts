@@ -4,7 +4,7 @@
 
 apiVersion: v2
 name: dp-config-aws
-version: "1.0.17"
+version: "1.0.18"
 appVersion: "1.0.0"
 description: dp-config-aws is used to config CIC2 TIBCO Dataplane
 type: application
@@ -21,6 +21,10 @@ dependencies:
     version: 4.7.2
     repository: https://kubernetes.github.io/ingress-nginx
     condition: ingress-nginx.enabled
+  - name: tigera-operator
+    version: v3.25.2
+    repository: https://docs.tigera.io/calico/charts
+    condition: tigera-operator.enabled
 annotations:
   artifacthub.io/changes: |
     - kind: changed

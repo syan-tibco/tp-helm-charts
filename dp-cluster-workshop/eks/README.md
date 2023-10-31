@@ -273,6 +273,97 @@ We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` 
 > [!IMPORTANT]
 > You will need to provide this storage class name to TIBCO Control Plane when you deploy capability.
 
+## Install Calico
+For network policies to take effect in the EKS cluster, we will need to deploy [calico](https://www.tigera.io/project-calico/).
+
+### Pre Installation Steps
+As we are using Amazon VPC CNI add-on version 1.11.0 or later, traffic flow to Pods on branch network interfaces is subject to Calico network policy enforcement if we set POD_SECURITY_GROUP_ENFORCING_MODE=standard for the Amazon VPC CNI add-on.
+
+Use the following command to set the mode
+```bash
+kubectl set env daemonset aws-node -n kube-system POD_SECURITY_GROUP_ENFORCING_MODE=standard
+```
+> [!IMPORTANT]
+> This change can be verified with new pods of aws-node re-starting and a message appears in the terminal
+> for daemonset.apps/aws-node env updated
+
+### Chart Installation Step
+
+We will be using the following values to deploy `dp-config-aws` helm chart.
+
+```bash
+export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
+export INSTALL_CALICO="true"
+
+helm upgrade --install --wait --timeout 1h --create-namespace \
+  -n tigera-operator dp-config-aws-calico dp-config-aws \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.18" -f - <<EOF
+ingress-nginx:
+  enabled: false
+httpIngress:
+  enabled: false
+service:
+  enabled: false
+storageClass:
+  ebs:
+    enabled: false
+  efs:
+    enabled: false
+tigera-operator:
+  enabled: ${INSTALL_CALICO}
+  installation:
+    enabled: true
+    kubernetesProvider: EKS
+    cni:
+      type: AmazonVPC
+    calicoNetwork:
+      bgp: Disabled
+EOF
+```
+### Post Installation Steps
+
+Run the following commands post chart installation
+
+We will create a configuration file that needs to be applied to the cluster that grants the aws-node kubernetes clusterrole the permission to patch Pods.
+```bash
+cat >append.yaml<<EOF
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - patch
+EOF
+```
+
+We will apply the updated permissions to the cluster.
+```bash
+kubectl apply -f <(cat <(kubectl get clusterrole aws-node -o yaml) append.yaml)
+```
+
+We will need to set the environment variable for the plugin.
+```bash
+kubectl set env daemonset aws-node -n kube-system ANNOTATE_POD_IP=true
+```
+> [!IMPORTANT]
+> This change can be verified with new pods of aws-node re-starting and a message appears in the terminal
+> for daemonset.apps/aws-node env updated
+
+We need to restart the pod(s) of calico-kube-controllers. The easiest step would be to restart the deployment.Otherwise, the pod can also be individually deleted.
+```bash
+kubectl rollout restart deployment calico-kube-controllers -n calico-system
+```
+
+> [!IMPORTANT]
+> To confirm that the vpc.amazonaws.com/pod-ips annotation is added to the new calico-kube-controllers pod
+> Run the following command
+```bash
+kubectl describe pod calico-kube-controllers-<pod_identifier> -n calico-system | grep vpc.amazonaws.com/pod-ips
+```
+Output will similar to below
+```bash
+vpc.amazonaws.com/pod-ips: 10.200.108.148
+```
 ## Install Observability tools
 
 ### Install Elastic stack
