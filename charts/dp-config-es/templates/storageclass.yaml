@@ -3,7 +3,7 @@
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 #
-{{- if .Values.storage.enabled -}}
+{{ if .Values.storage.enabled }}
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -17,4 +17,4 @@ parameters:
   fsType: ext4
   type: gp3
   encrypted: "true"
-{{- end }}
+{{ end }}
