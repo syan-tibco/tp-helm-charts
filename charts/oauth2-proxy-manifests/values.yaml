@@ -423,6 +423,9 @@ tibco:
   initContainer:
     image: alpine
     tag: 3.18
+  loggerContainer:
+    image: fluentbit
+    tag: 2.1.6
 
 global:
   cp:

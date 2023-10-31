@@ -1,3 +1,9 @@
+{{/* 
+Copyright © 2023. Cloud Software Group, Inc.
+This file is subject to the license terms contained
+in the license file that is distributed with this file.
+*/}}
+
 {{/* Generate tibtunnel configure command using values params. Ex: tp-tibtunnel configure --tibcoDataPlaneId abcd -a accessKey --config-dir /opt/config/tibtunnel */}}
 {{- define "tp-tibtunnel.helpers.command.configure" -}}
 {{- $profile := printf "%s%s" (ternary "--profile " "" (ne .Values.configure.profile "")) .Values.configure.profile  -}}
