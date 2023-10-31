@@ -4,7 +4,7 @@
 
 apiVersion: v2
 name: dp-config-aws
-version: "1.0.20"
+version: "1.0.21"
 appVersion: "1.0.0"
 description: dp-config-aws is used to config CIC2 TIBCO Dataplane
 type: application
