@@ -1,6 +1,10 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 apiVersion: v1
 name: distributed-lock-operator
-version: 1.0.72
+version: 1.0.73
 appVersion: "1.0.72"
 description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
 home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git

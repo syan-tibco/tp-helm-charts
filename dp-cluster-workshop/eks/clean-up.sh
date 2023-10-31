@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CLUSTER_NAME=${1:-dp-cluster}
-expport DP_STORAGE_CLASS_EFS=efs-sc
+export DP_STORAGE_CLASS_EFS=efs-sc
 
 # need to output empty string otherwise will output null
 EFS_ID=$(kubectl get sc ${DP_STORAGE_CLASS_EFS} -oyaml | yq eval '.parameters.fileSystemId // ""')
