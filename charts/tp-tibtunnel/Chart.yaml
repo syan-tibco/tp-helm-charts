@@ -1,3 +1,7 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 apiVersion: v1
 appVersion: 1.0.94
 description: A Helm chart for TIBCO Tibtunnel
@@ -11,4 +15,4 @@ maintainers:
 - email: compute-dev@tibco.com
   name: TIBCO CIC Compute Dev Team
 name: tp-tibtunnel
-version: 1.0.94
+version: 1.0.95
