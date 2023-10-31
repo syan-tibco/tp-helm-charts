@@ -635,6 +635,20 @@ entries:
   distributed-lock-operator:
   - apiVersion: v1
     appVersion: 1.0.72
+    created: "2023-10-31T09:19:03.471753002Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: ca6020c3494d374f6305834ae6cad8d7b3b76d809ec40126c297e729ef461a8c
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.73/distributed-lock-operator-1.0.73.tgz
+    version: 1.0.73
+  - apiVersion: v1
+    appVersion: 1.0.72
     created: "2023-10-26T04:20:55.371457566Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
     digest: 98dd63eb4401fe5020a7885733af75ba70022d72a9ade98390f2753f65c0d21a
@@ -5900,6 +5914,23 @@ entries:
   tp-cp-proxy:
   - apiVersion: v2
     appVersion: 1.0.107
+    created: "2023-10-31T09:19:03.897262515Z"
+    description: TIBCO Data Plane -- Control Plane Proxy
+    digest: 7db91c48afeb3c4e7be818b77515f9fbd581a9479e02ec56a02bab4dbfa5f4ca
+    home: https://github.com/tibco/tp-core-cp-proxy
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - cp-proxy
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-cp-proxy
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.108/tp-cp-proxy-1.0.108.tgz
+    version: 1.0.108
+  - apiVersion: v2
+    appVersion: 1.0.107
     created: "2023-10-26T04:20:55.910819463Z"
     description: TIBCO Data Plane -- Control Plane Proxy
     digest: 572a43ffc8e6d09ec4e4d929998d22236c55d7aa6bc08eca53578b459fb7e856
@@ -6620,6 +6651,23 @@ entries:
   tp-dp-secret-controller:
   - apiVersion: v2
     appVersion: 1.0.37
+    created: "2023-10-31T09:19:04.05342024Z"
+    description: TIBCO Data Plane -- Secret Controller
+    digest: 24721f2e0eecf4a38f336d184a21035f7902da063741e7ff8ffebf12440b77ce
+    home: https://github.com/tibco/tp-core-dp-secret-controller
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - secret-controller
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-dp-secret-controller
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.38/tp-dp-secret-controller-1.0.38.tgz
+    version: 1.0.38
+  - apiVersion: v2
+    appVersion: 1.0.37
     created: "2023-10-26T04:20:56.031014562Z"
     description: TIBCO Data Plane -- Secret Controller
     digest: 4a9b71ab001713aedaf8d3853f00cd20b4eda895e551c1b492cc4e6c39cec87f
@@ -6874,6 +6922,23 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.20/tp-dp-secret-controller-1.0.20.tgz
     version: 1.0.20
   tp-provisioner-agent:
+  - apiVersion: v2
+    appVersion: 1.0.194
+    created: "2023-10-31T09:19:04.207833163Z"
+    description: TIBCO Data Plane -- Provisioner Agent
+    digest: b00a7180bea09ebca8c1810c8dbb3ef35760ffc71c2ce048b7d411cc43eeed21
+    home: https://github.com/tibco/tp-core-provisioner-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - provisioner-agent
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-provisioner-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.195/tp-provisioner-agent-1.0.195.tgz
+    version: 1.0.195
   - apiVersion: v2
     appVersion: 1.0.194
     created: "2023-10-26T04:20:56.167899847Z"
@@ -7132,6 +7197,24 @@ entries:
   tp-tibtunnel:
   - apiVersion: v1
     appVersion: 1.0.94
+    created: "2023-10-31T09:19:04.495474977Z"
+    description: A Helm chart for TIBCO Tibtunnel
+    digest: e5c09b21d7ab101f1817943109b84865df983144bef7f76f65dfc28e2419686d
+    home: https://github.com/tibco/tp-core-tibtunnel
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - tibtunnel
+    - data-plane
+    - hybrid-connectivity
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-tibtunnel
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.95/tp-tibtunnel-1.0.95.tgz
+    version: 1.0.95
+  - apiVersion: v1
+    appVersion: 1.0.94
     created: "2023-10-26T04:20:56.307811301Z"
     description: A Helm chart for TIBCO Tibtunnel
     digest: 5d97095b08c18802dec0aeebc71ef446b9d7dac0b82c042a5b0084b392c60277
@@ -7346,4 +7429,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-10-31T08:33:34.685678628Z"
+generated: "2023-10-31T09:19:04.496550579Z"
