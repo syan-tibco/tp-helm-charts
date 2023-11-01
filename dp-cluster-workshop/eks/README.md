@@ -200,7 +200,6 @@ export DP_EFS_ID="fs-0ec1c745c10d523f6" # Replace with your EFS ID
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aws ./dp-config-aws \
   --labels layer=1 \
-  --debug \
  --version "1.0.19" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
