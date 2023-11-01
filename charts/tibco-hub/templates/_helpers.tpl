@@ -26,9 +26,9 @@ Return the proper image name
 {{- $CPImageValues := dict "registry" "reldocker.tibco.com" -}}
     {{- if .Values.global.cp -}}
     {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") -}}
-    {{- $imageRoot := merge .Values.postgresql.image $CPImageValues -}}
+    {{- $imageRoot := merge .Values.image $CPImageValues -}}
         {{ if (hasSuffix ".jfrog.io" $imageRoot.registry) }}
-        {{- $imageRoot = merge (dict "repository" .Values.postgresql.image.jfrogRepository) $imageRoot -}}
+        {{- $imageRoot = merge (dict "repository" .Values.image.jfrogRepository) $imageRoot -}}
         {{ include "common.images.image" (dict "imageRoot" $imageRoot  "global" .Values.global) }}
         {{- else -}}
         {{ include "common.images.image" (dict "imageRoot" $imageRoot "global" .Values.global) }}
