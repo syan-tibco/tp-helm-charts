@@ -198,9 +198,10 @@ export DP_EFS_ID="fs-0ec1c745c10d523f6" # Replace with your EFS ID
 #export DP_NAMESPACE=""
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
-  -n ingress-system dp-config-aws ./dp-config-aws \
+  -n ingress-system dp-config-aws dp-config-aws \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" \
   --labels layer=1 \
- --version "1.0.19" -f - <<EOF
+  --version "1.0.19" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
