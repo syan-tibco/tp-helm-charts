@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
 
 outfile=${1:-ftlserver.yml}
 srvBase="${MY_POD_NAME%-*}"
@@ -17,15 +21,10 @@ loglevel=${FTL_LOGLEVEL:-"info"}
 cat - <<EOF > $outfile
 globals:
   loglevel: "$loglevel"
-  # Add internal.address for FTL-6.6 compatibility
-  # internal.address: "*:${ftlport}"
   core.servers:
     ${srvBase}-0: "${srvBase}-0.${svcname}.${namespace}.svc:${ftlport}"
     ${srvBase}-1: "${srvBase}-1.${svcname}.${namespace}.svc:${ftlport}"
     ${srvBase}-2: "${srvBase}-2.${svcname}.${namespace}.svc:${ftlport}"
-services:
-  realm:
-    default.cluster.disk.swap: true
 servers:
   ${srvBase}-0:
     - tibemsd:
@@ -39,7 +38,6 @@ servers:
     - persistence:
         name: default_${srvBase}-0
         data: "$podData/ftldata"
-        swapdir: "$podData/swap"
   ${srvBase}-1:
     - tibemsd:
         exepath: /opt/tibco/ems/current-version/bin/tibemsd
@@ -52,7 +50,6 @@ servers:
     - persistence:
         name: default_${srvBase}-1
         data: "$podData/ftldata"
-        swapdir: "$podData/swap"
   ${srvBase}-2:
     - tibemsd:
         exepath: /opt/tibco/ems/current-version/bin/tibemsd
@@ -66,5 +63,4 @@ servers:
     - persistence:
         name: default_${srvBase}-2
         data: "$podData/ftldata"
-        swapdir: "$podData/swap"
 EOF

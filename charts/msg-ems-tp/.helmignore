@@ -3,6 +3,8 @@
 # negation (prefixed with !). Only one pattern per line.
 .DS_Store
 # Standalone deploy scripts
+*internal*
+upgrade.sh
 deploy.sh 
 undeploy.sh
 # Common VCS dirs
