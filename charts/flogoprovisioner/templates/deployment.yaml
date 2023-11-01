@@ -100,17 +100,17 @@ spec:
               value: {{ include "flogoprovisioner.image.registry" .}}{{"/"}}{{ include "flogoprovisioner.image.repository" .}}{{"/"}}
             - name: FLUENT_BIT_SIDECAR_IMAGE
               value: {{ include "flogoprovisioner.image.registry" .}}{{"/"}}{{ include "flogoprovisioner.appinit.image.repository" .}}{{"/"}}{{ .Values.global.flogoprovisioner.logging.image.name }}:{{ .Values.global.flogoprovisioner.logging.image.tag }}
-#            - name: OTEL_SERVICE_NAME
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: {{ include "flogoprovisioner.o11yservice.configmap" . }}
-#                  key: otel-recvservice-name
+            - name: OTEL_SERVICE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "flogoprovisioner.o11yservice.configmap" . }}
+                  key: otel-recvservice-name
                   optional: true
-#            - name: OTEL_SERVICE_PORT
-#              valueFrom:
-#                configMapKeyRef:
-#                  name: {{ include "flogoprovisioner.o11yservice.configmap" . }}
-#                  key: otel-recvservice-port
+            - name: OTEL_SERVICE_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "flogoprovisioner.o11yservice.configmap" . }}
+                  key: otel-recvservice-port
                   optional: true
         {{- if .Values.global.flogoprovisioner.logging.enabled }}
         - name: fluent-bit
