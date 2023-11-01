@@ -288,7 +288,11 @@ postgresql:
 
   # -- Switch to enable or disable the PostgreSQL helm chart
   enabled: false
-
+  image:
+   registry: ""
+   repository: pdx/postgresql
+   jfrogRepository: platform/dx/postgresql
+   tag: 14.5.0-debian-11-r35
   commonLabels: '{{- include "tibcohub.platform.commonLabels" . -}}'
 
   # -- The authentication details of the Postgres database
