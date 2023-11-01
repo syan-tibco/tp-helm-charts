@@ -192,7 +192,7 @@ export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
 export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
 export DP_EBS_ENABLED=true
 export DP_EFS_ENABLED=true
-export DP_EFS_ID="fs-07ac0192ab92c1888"
+export DP_EFS_ID="fs-0ec1c745c10d523f6" # Replace with your EFS ID
 ## following section is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
 #export DP_NAMESPACE=""
