@@ -1,4 +1,9 @@
-{{- if .Values.ingress.enabled -}}
+#
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+#
+{{ if .Values.ingress.enabled -}}
 {{- $fullName := include "artifactmanager.fullname" . -}}
 {{- $releaseName := .Release.Name -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
