@@ -8,17 +8,16 @@ metadata:
     app: istiod
     release: {{ .Release.Name }}
     istio: istiod
-    # causing repeated loop when more then one istiod are deployed to a cluster in multiple namespaces.
-    #istio.io/rev: {{ .Values.revision | default "default" }}
+    istio.io/rev: {{ .Values.revision | default "default" }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     {{ if .Values.global.cp.dataplaneId -}}
     platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
     {{- end }}
 webhooks:
-  # Webhook handling per-revision validation. Mostly here so we can determine whether webhooks
-  # are rejecting invalid configs on a per-revision basis.
-  - name: rev.validation.istio.io-{{ .Values.global.istioNamespace }}
+  # Webhook handling per-revision validation.
+  # Mostly here so we can determine whether webhooks are rejecting invalid configs on a per-revision basis.
+  - name: rev.validation.istio.io-{{ .Values.global.cp.dataplaneId }}
     clientConfig:
       # Should change from base but cannot for API compat
       {{- if .Values.base.validationURL }}
@@ -45,18 +44,12 @@ webhooks:
           - "*"
         resources:
           - "*"
-    # Fail open until the validation webhook is ready. The webhook controller
-    # will update this to `Fail` and patch in the `caBundle` when the webhook
-    # endpoint is ready.
+    # Fail open until the validation webhook is ready.
+    # The webhook controller will update this to `Fail`
+    #   and patch in the `caBundle` when the webhook endpoint is ready.
     failurePolicy: Ignore
     sideEffects: None
     admissionReviewVersions: ["v1beta1", "v1"]
-    namespaceSelector:
-      matchExpressions:
-      - key: "platform.tibco.com/dataplane-id"
-        operator: In
-        values:
-        - {{ .Values.global.cp.dataplaneId }}
     objectSelector:
       matchExpressions:
         - key: istio.io/rev
