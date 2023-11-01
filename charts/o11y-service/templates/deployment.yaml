@@ -24,6 +24,7 @@ spec:
       labels:
         {{- include "o11y-service.shared.labels.standard" . | nindent 8 }}
         networking.platform.tibco.com/kubernetes-api: enable
+        egress.networking.platform.tibco.com/internet-all: enable
     spec:
       terminationGracePeriodSeconds: 30
       imagePullSecrets:
