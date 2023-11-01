@@ -1,3 +1,8 @@
+#
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+#
 # Default values for artifactmanager.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.

@@ -1,4 +1,9 @@
-{{- if .Values.volumes.artifactmanager.persistentVolumeClaim.create }}
+#
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+#
+{{ if .Values.volumes.artifactmanager.persistentVolumeClaim.create }}
 {{- $pvcCheck :=  (lookup "v1" "PersistentVolumeClaim" .Release.Namespace ( include "artifactmanager.storage.pvc.name" . )) }}
 {{- if not $pvcCheck }}
 apiVersion: v1

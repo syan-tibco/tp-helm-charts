@@ -1,6 +1,6 @@
 # Artifact Manager Helm Chart
 
-This repository hosts the official **[Artifact Manager](https://github.com/sasahoo-tibco/tp-integration/tree/main/helm/charts/artifactmanager) Helm Charts** for deploying **Artifact Manager** products to [Kubernetes](https://kubernetes.io/)
+This repository hosts the official **Artifact Manager Helm Charts** for deploying **Artifact Manager** products to [Kubernetes](https://kubernetes.io/)
 
 ## Install Helm (only V3 is supported)
 
@@ -10,12 +10,8 @@ Get the latest [Helm release](https://github.com/helm/helm#install).
 
 ### Add Artifact Manager Helm repository
 
-Before installing Artifact Manager helm charts, you need to add the [Artifact Manager helm repository](https://github.com/sasahoo-tibco/tp-integration/tree/main/helm/charts/artifactmanager) to your helm client.
+Before installing Artifact Manager helm charts, you need to add the Artifact Manager helm repository to your helm client.
 
-```bash
-helm repo add artifactmanager https://github.com/sasahoo-tibco/tp-integration/tree/main/helm/charts/artifactmanager
-helm repo update
-```
 ### Install locally with override values
 
 ```bash
