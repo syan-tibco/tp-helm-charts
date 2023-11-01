@@ -1,4 +1,9 @@
-{{- if .Values.global.artifactmanager.logging.enabled }}
+#
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+#
+{{ if .Values.global.artifactmanager.logging.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -34,7 +39,7 @@ data:
       Match             dp.*
       Remove_key        stream
       Remove_key        _p
-      
+
     [FILTER]
       Name              parser
       Match             dp.*
@@ -53,7 +58,7 @@ data:
       Name   stdout
       Match  dp.*
       Format json
-    
+
     [OUTPUT]
       Name                 opentelemetry
       Match                dp.*
@@ -77,19 +82,17 @@ data:
     -- Function to append all fields under key "msg"
     function update_record(tag, timestamp, record)
       local newLog = record["log"]
-      local newMsg = ""
+      local newMsg = newLog["msg"]
       for key, val in pairs(newLog) do
         if(key ~= "level" and key ~= "caller" and key ~= "msg" and key ~= "stacktrace" and key ~= "error" and key ~= "errorVerbose") then
-          if(key ~= "time") then 
-            newMsg = newLog["msg"] .. ", " .. key .. ": " .. val
+          if(key ~= "time") then
+            newMsg = newMsg .. ", " .. key .. ": " .. tostring(val)
           end
           newLog[key] = nil
         end
       end
-      if(newMsg ~= "") then
-        newLog["msg"] = newMsg
-      end
+      newLog["msg"] = newMsg
       record["log"] = newLog
       return 2, timestamp, record
     end
-{{- end }}
+{{- end -}}
