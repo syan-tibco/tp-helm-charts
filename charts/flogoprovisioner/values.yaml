@@ -159,10 +159,10 @@ affinity: {}
 
 probes:
   liveness:
-    initialDelaySeconds: 3
-    failureThreshold: 5
-    periodSeconds: 5
-    timeoutSeconds: 5
+    initialDelaySeconds: 60
+    failureThreshold: 10
+    periodSeconds: 10
+    timeoutSeconds: 10
 
 # -- Additional environment variables.
 extraEnvVars: []
