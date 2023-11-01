@@ -386,7 +386,9 @@ enableLogging: true
 
 fluentbit:
   image:
-    registry: cr.fluentbit.io/fluent/fluent-bit
+    registry: ""
+    repository: pdx/fluent-bit
+    jfrogRepository: platform/dx/fluent-bit
     tag: 2.1.6
     pullPolicy: Always
 

@@ -22,6 +22,20 @@ Return the proper image name
     {{- end -}}
 {{- end -}}
 
+{{- define "fluentbit.image" -}}
+{{- $CPImageValues := dict "registry" "reldocker.tibco.com" -}}
+    {{- if .Values.global.cp -}}
+    {{- $CPImageValues = dict "registry" (.Values.global.cp.containerRegistry.url | default "reldocker.tibco.com") -}}
+    {{- $imageRoot := merge .Values.fluentbit.image $CPImageValues -}}
+        {{ if (hasSuffix ".jfrog.io" $imageRoot.registry) }}
+        {{- $imageRoot = merge (dict "repository" .Values.fluentbit.image.jfrogRepository) $imageRoot -}}
+        {{ include "common.images.image" (dict "imageRoot" $imageRoot  "global" .Values.global) }}
+        {{- else -}}
+        {{ include "common.images.image" (dict "imageRoot" $imageRoot "global" .Values.global) }}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
 {{- define "postgresql.image" -}}
 {{- $CPImageValues := dict "registry" "reldocker.tibco.com" -}}
     {{- if .Values.global.cp -}}
