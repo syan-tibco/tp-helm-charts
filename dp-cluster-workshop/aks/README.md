@@ -215,12 +215,36 @@ For this workshop work; you will need to
 * create a wildcard certificate in ACM. You can follow this [link](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html) to create a wildcard certificate in ACM.
 
 ### Setup EFS
+
+
+# the mi name
+export MI_NAME=dp-cluster
+export SERVICE_ACCOUNT_NAMESPACE=cert-manager
+export SERVICE_ACCOUNT_NAME=cert-manager
+export DP_RESOURCE_GROUP=dp-resource-group
+export DP_CLUSTER_NAME=dp-cluster
+
+
+# get oidc issuer
+export AKS_OIDC_ISSUER="$(az aks show -n ${DP_CLUSTER_NAME} -g "${DP_RESOURCE_GROUP}" --query "oidcIssuerProfile.issuerUrl" -otsv)"
+
+echo "create federated awi for ${MI_NAME} in ${SERVICE_ACCOUNT_NAMESPACE}/${SERVICE_ACCOUNT_NAME}"
+az identity federated-credential create --name "${SERVICE_ACCOUNT_NAMESPACE}-${SERVICE_ACCOUNT_NAME}-federated" \
+  --resource-group "${DP_RESOURCE_GROUP}" \
+  --identity-name "${MI_NAME}" \
+  --issuer "${AKS_OIDC_ISSUER}" \
+  --subject system:serviceaccount:"${SERVICE_ACCOUNT_NAMESPACE}":"${SERVICE_ACCOUNT_NAME}" \
+  --audience api://AzureADTokenExchange
+
+
+
 ```bash
 export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
 export AZURE_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 export DP_RESOURCE_GROUP=dp-resource-group
+export DP_DNS_RESOURCE_GROUP=cic-dns
 export DP_CLUSTER_NAME=dp-cluster
-export CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.objectId" --output tsv)
+export CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
 export DP_TOP_LEVEL_DOMAIN="azure.dataplanes.pro"
 export DP_SANDBOX_SUBDOMAIN="dp1"
 export DP_DOMAIN="dp1.azure.dataplanes.pro"
@@ -235,6 +259,7 @@ export DP_NAMESPACE="ns"
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aks dp-config-aks \
+  --labels layer=1 \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.11" -f - <<EOF
 global:
   dnsSandboxSubdomain: "${DP_SANDBOX_SUBDOMAIN}"
@@ -332,7 +357,7 @@ We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` 
 
 ```bash
 # install eck-operator
-helm upgrade --install --wait --timeout 1h --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
+helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
 
 # install dp-config-es
 export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
@@ -343,7 +368,8 @@ export DP_STORAGE_CLASS=managed-csi
 
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
+  --labels layer=2 \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.15" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
@@ -390,6 +416,7 @@ export DP_INGRESS_CLASS=nginx
 
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
+  --labels layer=2 \
   --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f <(envsubst '${DP_DOMAIN}, ${DP_INGRESS_CLASS}' <<'EOF'
 grafana:
   plugins:
@@ -457,6 +484,7 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system otel-collector-daemon opentelemetry-collector \
+  --labels layer=2 \
   --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<EOF
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
@@ -645,6 +673,19 @@ EOF
 ```
 </details>
 
+# Attach TIBCO ACR [Optional]
+
+```bash
+export MASTER_SUBSCRIPTION="520d9f10-9713-409c-b8bc-10345c9c01eb"
+export ACR_NAME="troposerv"
+export CONTAINER_RESOURCE_GROUP="container_registry"
+export DP_RESOURCE_GROUP=dp-resource-group
+export DP_CLUSTER_NAME=dp-cluster
+export AKS_MI=$(az aks show --name "${DP_CLUSTER_NAME}" --resource-group "${DP_RESOURCE_GROUP}" --query "identity.principalId" --output tsv)
+az role assignment create --assignee-object-id "${AKS_MI}" --assignee-principal-type "ServicePrincipal" --role "AcrPull" --scope /subscriptions/${MASTER_SUBSCRIPTION}/resourceGroups/${CONTAINER_RESOURCE_GROUP}/providers/Microsoft.ContainerRegistry/registries/${ACR_NAME} --description "Allow ACR Pull access to AKS Managed Identity"
+az aks update -n "${DP_CLUSTER_NAME}" -g "${DP_RESOURCE_GROUP}" --attach-acr /subscriptions/${MASTER_SUBSCRIPTION}/resourceGroups/${CONTAINER_RESOURCE_GROUP}/providers/Microsoft.ContainerRegistry/registries/${ACR_NAME}
+```
+
 ## Information needed to be set on TIBCO Control Plane
 
 You can get base FQDN by running the following command:
@@ -654,10 +695,10 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 
 | Name                 | Sample value                                                                     | Notes                                                                     |
 |:---------------------|:---------------------------------------------------------------------------------|:--------------------------------------------------------------------------|
-| VPC_CIDR             | 10.200.0.0/16                                                                    | you can find this from eks recipe                                         |
+| VPC_CIDR             | 10.224.0.0/12                                                                    | you can find this from eks recipe                                         |
 | ingress class name   | nginx                                                                            | this is used for BWCE                                                     |
-| EFS storage class    | efs-sc                                                                           | this is used for BWCE EFS storage                                         |
-| EBS storage class    | ebs-gp3                                                                          | this is used for EMS messaging                                            |
+| Azure Files storage class    | azure-files-sc                                                                           | this is used for BWCE EFS storage                                         |
+| Azure Disks storage class    | managed-csi                                                                          | this is used for EMS messaging                                            |
 | BW FQDN              | bwce.\<base FQDN\>                                                               | this is the main domain plus any name you want to use for this capability |
 | User app log index   | user-app-1                                                                       | this comes from dp-config-es index template                               |
 | service ES index     | service-1                                                                        | this comes from dp-config-es index template                               |
