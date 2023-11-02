@@ -1231,6 +1231,37 @@ entries:
           description: "update traefik to 24.0.0"
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-11-02T13:35:45.893503145Z"
+    dependencies:
+    - condition: traefik.enabled
+      name: traefik
+      repository: https://traefik.github.io/charts
+      version: 24.0.0
+    - condition: ingress-nginx.enabled
+      name: ingress-nginx
+      repository: https://kubernetes.github.io/ingress-nginx
+      version: 4.7.2
+    - condition: tigera-operator.enabled
+      name: tigera-operator
+      repository: https://docs.tigera.io/calico/charts
+      version: v3.25.2
+    description: dp-config-aws is used to config CIC2 TIBCO Dataplane
+    digest: 97c52365d8ded0126d4a69a2ba6e225a2d16c379450e21e597308304a71d14ea
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-aws
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-aws-1.0.22/dp-config-aws-1.0.22.tgz
+    version: 1.0.22
+  - annotations:
+      artifacthub.io/changes: |-
+        - kind: changed
+          description: "update traefik to 24.0.0"
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-10-31T14:42:01.688834859Z"
     dependencies:
     - condition: traefik.enabled
@@ -8266,4 +8297,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-02T12:06:05.053622012Z"
+generated: "2023-11-02T13:35:45.894460499Z"
