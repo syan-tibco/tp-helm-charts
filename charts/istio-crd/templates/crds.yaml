@@ -1,3 +1,7 @@
+# Copyright Â© 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+---
 {{- if .Values.base.enableCRDTemplates }}
 {{ .Files.Get "crds/crd-all.gen.yaml" }}
 {{ .Files.Get "crds/crd-operator.yaml" }}
