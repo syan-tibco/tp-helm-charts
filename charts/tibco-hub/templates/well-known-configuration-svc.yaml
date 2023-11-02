@@ -2,7 +2,7 @@
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 
-{{ $cpHostname := (.Values.global.cp).cpHostname | required ".Values.global.cp.cpHostname is required." }}
+{{- $cpHostname := (.Values.global.cp).cpHostname | required ".Values.global.cp.cpHostname is required." }}
 apiVersion: v1
 kind: Service
 metadata:
