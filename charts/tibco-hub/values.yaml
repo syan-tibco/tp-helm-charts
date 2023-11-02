@@ -1,3 +1,7 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 # Default values for the TIBCO Hub chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
@@ -10,10 +14,21 @@
 global:
   # -- Global Docker image registry
   imageRegistry: ""
-
+  # Following parameters which are used in our chart, are passed during provisioning from control plane
+  cp:
+    dataplaneId: ""
+    instanceId: ""
+    cpHostname: ""
+    resources:
+      serviceaccount:
+        serviceAccountName: ""
+    containerRegistry:
+      secret: ""
+      url: ""
   # -- Global Docker registry secret names as an array
   # </br> E.g. `imagePullSecrets: [myRegistryKeySecretName]`
   imagePullSecrets: []
+
 
 # -- Common parameters
 
@@ -66,10 +81,10 @@ ingress:
 
   # -- Hostname to be used to expose the route to access the backstage application (e.g: backstage.IP.nip.io)
   host: ""
-  
+
   # -- pathPrefix to be used for the routes to access the backstage application (e.g: /tibco/hub )
   pathPrefix: "/tibco/hub"
-  
+
   # -- Ingress TLS parameters
   tls:
 
@@ -93,7 +108,7 @@ backstage:
     jfrogRepository: platform/dx/tibco-hub
 
     # -- Backstage image tag (immutable tags are recommended)
-    tag: "234"
+    tag: "250"
 
     # -- Specify a imagePullPolicy.
     # Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -121,7 +136,7 @@ backstage:
 
   # -- App config files that'll be loaded by default
   defaultAppConfigFiles:
-   - 'app-config.production.yaml'
+    - 'app-config.production.yaml'
 
   # -- Extra app configuration files to inline into command arguments
   extraAppConfig: []
@@ -273,7 +288,11 @@ postgresql:
 
   # -- Switch to enable or disable the PostgreSQL helm chart
   enabled: false
-
+  image:
+   registry: ""
+   repository: pdx/postgresql
+   jfrogRepository: platform/dx/postgresql
+   tag: 14.5.0-debian-11-r35
   commonLabels: '{{- include "tibcohub.platform.commonLabels" . -}}'
 
   # -- The authentication details of the Postgres database
@@ -305,7 +324,7 @@ postgresql:
 
 ## @section PostgreSQL Primary parameters
 ##
-primary:  
+primary:
   ## PostgreSQL Primary persistence configuration
   ##
   persistence:
@@ -367,13 +386,15 @@ enableLogging: true
 
 fluentbit:
   image:
-    registry: cr.fluentbit.io/fluent/fluent-bit
+    registry: ""
+    repository: pdx/fluent-bit
+    jfrogRepository: platform/dx/fluent-bit
     tag: 2.1.6
     pullPolicy: Always
-    
+
 autoscaling:
 
-    # -- If enabled, a HorizontalPodAutoscaler is created for the backstage-deployment
+  # -- If enabled, a HorizontalPodAutoscaler is created for the backstage-deployment
   enabled: true
 
   minReplicas: 1
