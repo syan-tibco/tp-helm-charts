@@ -19,7 +19,7 @@ replicaCount: "1"
 
 image:
   name: tp-dp-secret-controller
-  tag: 37
+  tag: 40
   pullPolicy: IfNotPresent
 
 nodeSelector:
