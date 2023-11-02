@@ -1,4 +1,6 @@
-dataplaneId: cj8nibajvtkr83ega0n0
+# Copyright Â© 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
 
 # service account
 serviceAccount:
@@ -29,8 +31,11 @@ pilot:
   # Resources for a small pilot install
   resources:
     requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
       cpu: 500m
-      memory: 2048Mi
+      memory: 512Mi
 
   # Set to `type: RuntimeDefault` to use the default profile if available.
   seccompProfile: {}
@@ -308,11 +313,11 @@ global:
   # block in the relevant section below and setting the desired resources values.
   defaultResources:
     requests:
-      cpu: 250m
+      cpu: 100m
       memory: 128Mi
     limits:
       cpu: 500m
-      memory: 256Mi
+      memory: 512Mi
 
   # Default hub for Istio images.
   # Releases are published to docker hub under 'istio' project.
@@ -436,8 +441,8 @@ global:
         cpu: 100m
         memory: 128Mi
       limits:
-        cpu: 2000m
-        memory: 1024Mi
+        cpu: 200m
+        memory: 256Mi
 
     # Default port for Pilot agent health checks. A value of 0 will disable health checking.
     statusPort: 15020
@@ -450,8 +455,10 @@ global:
     # Base name for the proxy_init container, used to configure iptables.
     image: proxyv2
 
-  #If set to true, enable validating webhook
-  configValidation: true
+
+  # If set to true, enable validating webhook
+  # Skip webhook validation. Causing repeated loop when deployed in multiple namespaces
+  configValidation: false
 
   # configure remote pilot and istiod service and endpoint
   remotePilotAddress: ""

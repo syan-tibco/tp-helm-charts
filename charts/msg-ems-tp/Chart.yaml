@@ -10,7 +10,7 @@ annotations:
        image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-8"
        platforms:
          - linux/amd64
-  artifacthub.io/license: TIBCO
+  artifacthub.io/license: https://www.apache.org/licenses/LICENSE-2.0
   artifacthub.io/prerelease: "true"
 apiVersion: v2
 appVersion: 10.2.1-8
@@ -21,4 +21,4 @@ keywords:
 - messaging
 - EMS
 name: msg-ems-tp
-version: 1.0.18
+version: 1.0.20

@@ -1,6 +1,10 @@
 #!/bin/bash 
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
 
-# Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
 bootDir=${1:-"/logs/$MY_POD_NAME/boot"}
 outfile="$bootDir/runPromCollector.sh"
 

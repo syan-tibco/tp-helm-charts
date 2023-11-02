@@ -1,6 +1,9 @@
 #!/bin/bash
-
-# Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
 
 outfile=${1:-tibemsd-ftl.json}
 srvBase="${MY_POD_NAME%-*}"
@@ -138,7 +141,6 @@ cat - <<EOF > $outfile
     "always_exit_on_disk_error":true,
     "authorization":false,
     "console_trace": "DEFAULT,+CONNECT",
-    "flow_control":false,
     "handshake_timeout":60,
     "destination_backlog_swapout":"20000",
     "large_destination_memory":"3200MB",
@@ -148,12 +150,10 @@ cat - <<EOF > $outfile
     "max_stat_memory":"64MB",
     "msg_swapping":true,
     "network_thread_count":3,
-    "rate_interval":3,
     "reserve_memory":"32MB",
     "routing":false,
     "server":"$srvBase",
     "server_heartbeat_client":5,
-    "server_rate_interval":1,
     "server_timeout_client_connection":16,
     "client_heartbeat_server": 5,
     "client_timeout_server_connection":16,

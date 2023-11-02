@@ -1,3 +1,7 @@
+# Copyright Â© 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 apiVersion: v1
 appVersion: 1.19.0
 description: Helm chart for deploying Istio cluster resources and CRDs
@@ -7,4 +11,4 @@ keywords:
 name: istio-crd
 sources:
 - https://github.com/istio/istio
-version: 1.0.8
+version: 1.0.10

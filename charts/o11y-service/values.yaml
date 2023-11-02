@@ -1,4 +1,9 @@
-# Default values for artifactmanager.
+#
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+#
+# Default values for o11y service.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -146,6 +151,7 @@ global:
       namespace: dp-integration-default
     image:
       registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
+      tag: 616
 
 
 replicaCount: 1

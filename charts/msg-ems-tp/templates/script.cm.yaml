@@ -1,4 +1,8 @@
-# Copyright (c) 2023 Cloud Software Group, Inc. All Rights Reserved. Confidential and Proprietary.
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
 
 {{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
 
@@ -13,9 +17,5 @@ metadata:
     tib-msg-stsname: "{{ $emsParams.ems.name }}-ems"
     {{ include "msg.dp.labels" . | indent 4 }}
 data:
-  emsParams: |
-{{ include "need.msg.ems.params" . | indent 4 }}
-
-# 
 {{ (.Files.Glob "scripts/*").AsConfig | indent 2 }}
 ...

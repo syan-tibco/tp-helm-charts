@@ -1,4 +1,8 @@
-{{- if .Values.oauth2proxy.ingress.enabled -}}
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
+{{ if .Values.oauth2proxy.ingress.enabled -}}
 {{- $fullName := include "flogoprovisioner.fullname" . -}}
 {{- $releaseName := .Release.Name -}}
 {{- if and .Values.oauth2proxy.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}

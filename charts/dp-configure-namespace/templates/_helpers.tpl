@@ -1,11 +1,9 @@
+{{/*
+    Copyright © 2023. Cloud Software Group, Inc.
+    This file is subject to the license terms contained
+    in the license file that is distributed with this file.
+*/}}
 {{/* 
-   Copyright (c) 2023 Cloud Software Group, Inc.
-   All Rights Reserved.
-
-   File       : _helper.tpl
-   Version    : 1.0.0
-   Description: Template helper used across chart. 
-   
     NOTES: 
       - Helpers below are making some assumptions regarding files Chart.yaml and values.yaml. Change carefully!
       - Any change in this file needs to be synchronized with all charts

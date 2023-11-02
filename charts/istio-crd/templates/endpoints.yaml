@@ -1,3 +1,7 @@
+# Copyright Â© 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+---
 {{- if regexMatch "^([0-9]*\\.){3}[0-9]*$" .Values.global.remotePilotAddress }}
 # if the remotePilotAddress is an IP addr
 apiVersion: v1

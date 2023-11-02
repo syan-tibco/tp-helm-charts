@@ -1,6 +1,12 @@
 
 {{/*
 MSG DP Common Helpers
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
+
 */}}
 
 {{- define "msgdp.ghcrImageRepo" -}}"tibco/msg-platform-cicd"{{ end }}
@@ -127,7 +133,7 @@ note: tib-msg-stsname will be added directly in statefulset charts, as it needs 
 */}}
 {{- define "msg.dp.labels" }}
 tib-dp-release: {{ .Release.Name | quote }}
-tib-dp-msgbuild: "1.0.0.18"
+tib-dp-msgbuild: "1.0.0.20"
 tib-dp-chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
 tib-dp-workload-type: "capability-service"
 tib-dp-dataplane-id: "{{ .Values.global.cp.dataplaneId | default "local-dp" }}"

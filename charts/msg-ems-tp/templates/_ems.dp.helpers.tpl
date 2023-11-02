@@ -1,6 +1,12 @@
 
 {{/*
 MSG DP EMS-on-FTL Helpers
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
+
 */}}
 
 {{/*
@@ -134,7 +140,7 @@ ems:
   allowZoneSkew: "{{ $allowZoneSkew }}"
   resources:
     {{ if .Values.ems.resources }}
-{{ .Values.ems.resources | indent 4 }}
+{{ .Values.ems.resources | toYaml | indent 4 }}
     {{ else }}
     requests:
       memory: {{ $memReq }}
