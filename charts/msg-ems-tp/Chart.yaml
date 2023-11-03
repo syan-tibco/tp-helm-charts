@@ -1,24 +1,28 @@
-annotations:
-  artifacthub.io/category: streaming-messaging
-  artifacthub.io/changes: |
-    - kind: changed
-      description: "Changed EMS service URL to tcp://${EMS_NAME}-ems.${NAMESPACE}.svc:9011"
-    - kind: added
-      description: "Added image support for python, java, prometheus endpoints"
-  artifacthub.io/images: |
-    - name: msg-ems-all
-       image: "ghcr.io/tibco/msg-platform-cicd/msg-ems-all:10.2.1-8"
-       platforms:
-         - linux/amd64
-  artifacthub.io/license: https://www.apache.org/licenses/LICENSE-2.0
-  artifacthub.io/prerelease: "true"
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
+
 apiVersion: v2
-appVersion: 10.2.1-8
-description: Data-plane provisioning chart for EMS-on-FTL server group
+appVersion: "10.2.1-8"
+description: Data-plane provisioning chart for EMS server group
+name: msg-ems-tp
+version: "1.0.20"
 keywords:
 - tibco-platform
 - data-plane
 - messaging
 - EMS
-name: msg-ems-tp
-version: 1.0.19
+annotations:
+  artifacthub.io/category: streaming-messaging
+  artifacthub.io/changes: |
+    - kind: added
+      description: "Tibco Platform Release: 1.0.0"
+  artifacthub.io/prerelease: "true"
+  artifacthub.io/license: "https://www.apache.org/licenses/LICENSE-2.0"
+  artifacthub.io/images: |
+   - name: msg-ems-all
+      image: "msg-ems-all:10.2.1-8"
+      platforms:
+        - linux/amd64
