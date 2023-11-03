@@ -48,6 +48,14 @@ az identity federated-credential create --name "cert-manager-cert-manager-federa
   --subject system:serviceaccount:cert-manager:cert-manager \
   --audience api://AzureADTokenExchange
 
+echo "create federated awi for ${USER_ASSIGNED_IDENTITY_NAME} in external-dns-system/external-dns"
+az identity federated-credential create --name "external-dns-system-external-dns-federated" \
+  --resource-group "${DP_RESOURCE_GROUP}" \
+  --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
+  --issuer "${AKS_OIDC_ISSUER}" \
+  --subject system:serviceaccount:external-dns-system:external-dns \
+  --audience api://AzureADTokenExchange
+
 # external dns configuration
 AZURE_EXTERNAL_DNS_JSON_FILE=azure.json
 
@@ -61,18 +69,9 @@ cat <<-EOF > ${AZURE_EXTERNAL_DNS_JSON_FILE}
 }
 EOF
 
-##### FIX THIS #####
+az aks get-credentials --name "${DP_CLUSTER_NAME}" --resource-group "${DP_RESOURCE_GROUP}" --overwrite-existing
 kubectl create ns external-dns-system
 kubectl delete secret --namespace external-dns-system azure-config-file
 kubectl create secret generic azure-config-file --namespace external-dns-system --from-file ./${AZURE_EXTERNAL_DNS_JSON_FILE}
-##### FIX THIS #####
-
-echo "create federated awi for ${USER_ASSIGNED_IDENTITY_NAME} in external-dns-system/external-dns"
-az identity federated-credential create --name "external-dns-system-external-dns-federated" \
-  --resource-group "${DP_RESOURCE_GROUP}" \
-  --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
-  --issuer "${AKS_OIDC_ISSUER}" \
-  --subject system:serviceaccount:external-dns-system:external-dns \
-  --audience api://AzureADTokenExchange
 
 rm -rf ./${AZURE_EXTERNAL_DNS_JSON_FILE}
