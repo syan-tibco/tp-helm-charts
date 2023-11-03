@@ -10,7 +10,7 @@ global:
 
 ## details of capability
 capability:
-  name: ISTIO
+  name: istio
 
 ## source details
 source:
