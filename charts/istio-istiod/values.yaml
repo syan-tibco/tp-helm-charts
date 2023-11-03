@@ -8,6 +8,8 @@ serviceAccount:
   annotations: {}
   name: istio
 
+enableLogging: true
+
 #.Values.pilot for discovery and mesh wide config
 
 ## Discovery Settings
@@ -611,7 +613,7 @@ fluentBit:
     Name: opentelemetry
     Host: otel-services.${POD_NAMESPACE}.svc.cluster.local
     Port: 4318
-    Match: kube.istio-proxy.*
+    Match: dp.*
     Logs_uri: /v1/logs
     Log_response_payload: True
     Tls: Off
