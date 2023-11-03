@@ -252,6 +252,7 @@ spec:
           {{- with .Values.pilot.volumeMounts }}
             {{- toYaml . | nindent 10 }}
           {{- end }}
+{{- if .Values.enableLogging }}
         - name: fluent-bit
           image: "{{ .Values.fluentBit.repository }}/{{ .Values.fluentBit.image }}:{{ .Values.fluentBit.tag }}"
           imagePullPolicy: "{{ .Values.fluentBit.pullPolicy }}"
@@ -260,10 +261,20 @@ spec:
               containerPort: 2020
               protocol: TCP
           env:
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: CONTAINER_NAME
+              value: {{ .Chart.Name }}
           volumeMounts:
             - mountPath: /fluent-bit/etc/fluent-bit.conf
               name: fluent-bit-config
@@ -271,8 +282,12 @@ spec:
             - mountPath: /fluent-bit/etc/custom_parsers.conf
               name: fluent-bit-config
               subPath: custom_parsers.conf
+            - mountPath: /fluent-bit/etc/update_record.lua
+              name: fluent-bit-config
+              subPath: update_record.lua
             - name: log-volume
               mountPath: /var/log
+{{- end }}
       volumes:
       - name: log-volume
         hostPath:
