@@ -558,9 +558,14 @@ config:
       insecure_skip_verify: true
       metric_groups:
         - pod
+        - container
       extra_metadata_labels:
         - container.id
       metrics:
+        k8s.container.memory_limit_utilization:
+          enabled: true
+        k8s.container.cpu_limit_utilization:
+          enabled: true
         k8s.pod.cpu_limit_utilization:
           enabled: true
         k8s.pod.memory_limit_utilization:
