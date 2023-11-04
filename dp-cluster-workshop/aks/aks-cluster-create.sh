@@ -1,10 +1,13 @@
+#!/bin/bash
+set +x
+
 export SUBSCRIPTION_ID="14669e18-e772-4744-bf93-72f677ccb9aa"
 export TENANT_ID="cde6fa59-abb3-4971-be01-2443c417cbda"
 export DP_RESOURCE_GROUP="dp-resource-group"
 export DP_CLUSTER_NAME="dp-cluster"
 export AZURE_REGION="eastus"
 export USER_ASSIGNED_IDENTITY_NAME="dp-cluster-identity"
-export AUTHORIZED_IP="103.243.236.10/32,58.84.62.35/32"
+export AUTHORIZED_IP="103.243.236.10/32"
 export VNET_NAME="dp-cluster-vnet"
 export VNET_CIDR="10.4.0.0/16"
 export AKS_SUBNET_NAME="aks-subnet"
@@ -15,6 +18,11 @@ export NAT_GW_NAME="nat-gateway"
 export NAT_GW_SUBNET_NAME="natgw-subnet"
 export NAT_GW_SUBNET_CIDR="10.4.18.0/27"
 export PUBLIC_IP_NAME="public-ip"
+
+
+# add your public ip
+MY_PUBLIC_IP=$(curl https://ipinfo.io/ip)
+export AUTHORIZED_IP="${AUTHORIZED_IP},${MY_PUBLIC_IP}"
 
 # create resource group
 az group create --location "${AZURE_REGION}" --name "${DP_RESOURCE_GROUP}"
@@ -31,12 +39,12 @@ az network public-ip create -g "${DP_RESOURCE_GROUP}" -n ${PUBLIC_IP_NAME} --sku
 export PUBLIC_IP_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_RESOURCE_GROUP}/providers/Microsoft.Network/publicIPAddresses/${PUBLIC_IP_NAME}"
 
 # create nat gateway
-az network nat gateway create --resource-group "${DP_RESOURCE_GROUP}" --name "${NAT_GATEWAY_NAME}" --public-ip-prefixes --public-ip-addresses "${PUBLIC_IP_ID}"
-export NAT_GATEWAY_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_RESOURCE_GROUP}/providers/Microsoft.Network/natGateways/${NAT_GATEWAY_NAME}"
+az network nat gateway create --resource-group "${DP_RESOURCE_GROUP}" --name "${NAT_GW_NAME}" --public-ip-addresses "${PUBLIC_IP_ID}"
+export NAT_GW_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_RESOURCE_GROUP}/providers/Microsoft.Network/natGateways/${NAT_GW_NAME}"
 
 # append public ip
-export PUBLIC_IP=$(az network public-ip show -g ${DP_RESOURCE_GROUP} -n ${PUBLIC_IP_NAME}  --query 'ipAddress' -otsv)
-export AUTHORIZED_IP="103.243.236.10/32,58.84.62.35/32,${PUBLIC_IP}"
+export NAT_GW_PUBLIC_IP=$(az network public-ip show -g ${DP_RESOURCE_GROUP} -n ${PUBLIC_IP_NAME}  --query 'ipAddress' -otsv)
+export AUTHORIZED_IP="${AUTHORIZED_IP},${NAT_GW_PUBLIC_IP}"
 
 # create virtual network
 az network vnet create -g "${DP_RESOURCE_GROUP}" -n "${VNET_NAME}" --address-prefix "${VNET_CIDR}" 
@@ -46,11 +54,11 @@ az network vnet subnet create -g ${DP_RESOURCE_GROUP} --vnet-name "${VNET_NAME}"
 export APPLICATION_GW_SUBNET_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_RESOURCE_GROUP}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${APPLICATION_GW_SUBNET_NAME}"
 
 # create aks subnet
-az network vnet subnet create -g ${DP_RESOURCE_GROUP} --vnet-name "${VNET_NAME}" -n "${AKS_SUBNET_NAME}" --address-prefixes "${AKS_SUBNET_CIDR}" --nat-gateway "${NAT_GATEWAY_ID}"
+az network vnet subnet create -g ${DP_RESOURCE_GROUP} --vnet-name "${VNET_NAME}" -n "${AKS_SUBNET_NAME}" --address-prefixes "${AKS_SUBNET_CIDR}" --nat-gateway "${NAT_GW_ID}"
 export AKS_VNET_SUBNET_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_RESOURCE_GROUP}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${AKS_SUBNET_NAME}"
 
 # create nat gateway subnet
-az network vnet subnet create -g ${DP_RESOURCE_GROUP} --vnet-name "${VNET_NAME}" -n "${NAT_GW_SUBNET_NAME}" --address-prefixes "${NAT_GW_SUBNET_CIDR}" --nat-gateway "${NAT_GATEWAY_ID}"
+az network vnet subnet create -g ${DP_RESOURCE_GROUP} --vnet-name "${VNET_NAME}" -n "${NAT_GW_SUBNET_NAME}" --address-prefixes "${NAT_GW_SUBNET_CIDR}" --nat-gateway "${NAT_GW_ID}"
 export NAT_GW_VNET_SUBNET_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_RESOURCE_GROUP}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/${NAT_GW_SUBNET_NAME}"
 
 # create aks cluster

@@ -5,13 +5,14 @@ Table of Contents
 * [TIBCO Data Plane Cluster Workshop](#tibco-data-plane-cluster-workshop)
   * [Introduction](#introduction)
   * [Command Line Tools needed](#command-line-tools-needed)
-  * [Recommended IAM Policies](#recommended-iam-policies)
-  * [Create EKS cluster](#create-eks-cluster)
-  * [Generate kubeconfig to connect to EKS cluster](#generate-kubeconfig-to-connect-to-eks-cluster)
+  * [Azure Login](#azure-login)
+  * [Create AKS cluster](#create-aks-cluster)
+  * [Generate kubeconfig to connect to AKS cluster](#generate-kubeconfig-to-connect-to-aks-cluster)
+  * [Configure cluster](#configure-cluster)
   * [Install common third party tools](#install-common-third-party-tools)
-  * [Install Ingress Controller, Storage class](#install-ingress-controller-storage-class-)
+  * [Install Ingress Controller, Storage class](#install-ingress-controller-storage-class)
     * [Setup DNS](#setup-dns)
-    * [Setup EFS](#setup-efs)
+    * [Configure Azure Files, Ingress](#configure-azure-files-ingress)
     * [Storage class](#storage-class)
   * [Install Observability tools](#install-observability-tools)
     * [Install Elastic stack](#install-elastic-stack)
@@ -34,6 +35,7 @@ In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and i
 We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
 * envsubst
 * yq (v4.35.2)
+* jq
 * bash (5.2.15)
 * az (az-cli/2.53.1)
 * kubectl (v1.28.3)
@@ -42,14 +44,7 @@ We are running the steps in a MacBook Pro. The following tools are installed usi
 ## Azure Login
 We have used the contributor role which has access to create resources in a given subscription. 
 
-## Create AKS resource group and AKS cluster
-Set the following variables in the file aks-cluster-create.sh
-```bash
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-export AZURE_REGION=eastus
-export AUTHORIZED_IP="103.243.236.10"
-export VNET_CIDR="10.224.0.0/12"
+## Create AKS cluster
 ```
 Execute the script 
 ```bash
@@ -57,15 +52,21 @@ Execute the script
 ```
 It will take around 15 minutes to create an empty AKS cluster. 
 
-## Generate kubeconfig to connect to AKS cluster
+## Configure cluster
+Execute the script 
+```bash
+./configure-cluster.sh
+```
+It will take around 10 minutes to do the following configuration: 
 
+## Generate kubeconfig to connect to AKS cluster
 We can use the following command to generate kubeconfig file.
 ```bash
 export AZURE_REGION=eastus
 export DP_RESOURCE_GROUP=dp-resource-group
 export DP_CLUSTER_NAME=dp-cluster
 az aks install-cli
-az aks get-credentials --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME}
+az aks get-credentials --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --overwrite-existing
 ```
 
 And check the connection to AKS cluster.
@@ -78,6 +79,8 @@ kubectl get nodes
 Before we deploy ingress or observability tools on an empty AKS cluster; we need to install some basic tools. 
 * [cert-manager](https://cert-manager.io/docs/installation/helm/)
 * [external-dns](https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns)
+* [metrics-server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server)
+
 
 <details>
 
@@ -97,64 +100,16 @@ serviceAccount:
     azure.workload.identity/use: "true"
 EOF
 
-export AZURE_REGION=eastus
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-export APP_GW_CIDR="10.238.0.0/16"
-
 ```bash
-az aks addon enable --name ${DP_CLUSTER_NAME} --resource-group ${DP_RESOURCE_GROUP} --addon ingress-appgw --appgw-subnet-cidr ${APP_GW_CIDR} --appgw-name gateway
-```
-The command requires the extension aks-preview. Do you want to install it now? The command will continue to run after the extension is installed. (Y/n): Y
-Run 'az config set extension.use_dynamic_install=yes_without_prompt' to allow installing extensions without prompt.
-The installed extension 'aks-preview' is in preview.
-
-Use the following command to get the ingress class name.
-```bash
-kubectl get ingressclass
-NAME                        CONTROLLER                  PARAMETERS   AGE
-azure-application-gateway   azure/application-gateway   <none>       5m44s
-```
-
-### install external-dns
-
-#### Pre-requisites the step
-Run the 
-```bash
+# install external-dns
 export DP_RESOURCE_GROUP=dp-resource-group
 export DP_CLUSTER_NAME=dp-cluster
 export DP_DNS_RESOURCE_GROUP=cic-dns
 export AZURE_REGION=eastus
-export AUTHORIZED_IP="103.243.236.10"
-export VNET_CIDR="10.224.0.0/12"
 export AZURE_EXTERNAL_DNS_SA_NAMESPACE="external-dns-system"
-
-DNS_CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" \
-  --query "identityProfile.kubeletidentity.clientId" --output tsv)
-
-PRINCIPAL_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.objectId" --output tsv)
-
-az role assignment create --role "DNS Zone Contributor" --assignee ${PRINCIPAL_ID} --scope ${DNS_ID}
-
-
-## Run the
-cat <<-EOF > ./azure.json
-{
-  "tenantId": "$(az account show --query tenantId -o tsv)",
-  "subscriptionId": "$(az account show --query id -o tsv)",
-  "resourceGroup": "cic-dns",
-  "useManagedIdentityExtension": true,
-  "userAssignedIdentityID": "${DNS_CLIENT_ID}"
-}
-EOF
-
-kubectl create ns "${AZURE_EXTERNAL_DNS_SA_NAMESPACE}"
-kubectl create secret generic azure-config-file --namespace "${AZURE_EXTERNAL_DNS_SA_NAMESPACE}" --from-file ./azure.json
-
 export MAIN_INGRESS_CLASS_NAME="azure-application-gateway"
 export DP_DOMAIN="dp1.azure.dataplanes.pro"
 
-```bash
 helm upgrade --install --wait --timeout 1h --reuse-values \
   -n ${AZURE_EXTERNAL_DNS_SA_NAMESPACE} external-dns external-dns \
   --labels layer=0 \
@@ -185,15 +140,21 @@ EOF
 
 ```bash
 $ helm ls -A -a
-NAME                          	NAMESPACE          	REVISION	UPDATED                                	STATUS  	CHART                                                                   	APP VERSION
-aks-managed-azure-monitor-logs	kube-system        	400     	2023-11-01 14:15:22.240120554 +0000 UTC	deployed	azure-monitor-logs-addon-3.1.15-e18e7efd8ae17cf36a4ad04ae0de94df0465b817	           
-aks-managed-workload-identity 	kube-system        	401     	2023-11-01 14:15:52.667116078 +0000 UTC	deployed	workload-identity-addon-0.1.0-575c84365b912ce669b63fe9cb46727096e72c3c  	           
-cert-manager                  	cert-manager       	1       	2023-11-01 14:17:53.748433 +0530 IST   	deployed	cert-manager-v1.12.3                                                    	v1.12.3    
-external-dns                  	external-dns-system	1       	2023-11-01 19:44:47.402565 +0530 IST   	deployed	external-dns-1.13.0                                                     	0.13.5     
+NAME                         	NAMESPACE          	REVISION	UPDATED                                	STATUS  	CHART                                                                APP VERSION
+aks-managed-workload-identity	kube-system        	956     	2023-11-03 11:51:09.441169483 +0000 UTC	deployed	workload-identity-addon-0.1.0-575c84365b912ce669b63fe9cb46727096e72c3           
+cert-manager                 	cert-manager       	1       	2023-11-03 17:11:50.00057 +0530 IST    	deployed	cert-manager-v1.12.3                                                 v1.12.3    
+external-dns                 	external-dns-system	1       	2023-11-03 17:17:00.469065 +0530 IST   	deployed	external-dns-1.13.0                                                  0.13.5        
 ```
 </details>
 
-## Install Ingress Controller, Storage class 
+## Install Ingress Controller, Storage class
+
+Use the following command to get the ingress class name.
+```bash
+kubectl get ingressclass
+NAME                        CONTROLLER                  PARAMETERS   AGE
+azure-application-gateway   azure/application-gateway   <none>       19m
+```
 
 In this section, we will install ingress controller and storage class. We have made a helm chart called `dp-config-aks` that encapsulates the installation of ingress controller and storage class. 
 It will create the following resources:
@@ -214,28 +175,7 @@ For this workshop work; you will need to
 * register a domain name in Route 53. You can follow this [link](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html) to register a domain name in Route 53.
 * create a wildcard certificate in ACM. You can follow this [link](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html) to create a wildcard certificate in ACM.
 
-### Setup EFS
-
-
-# the mi name
-export MI_NAME=dp-cluster
-export SERVICE_ACCOUNT_NAMESPACE=cert-manager
-export SERVICE_ACCOUNT_NAME=cert-manager
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-
-
-# get oidc issuer
-export AKS_OIDC_ISSUER="$(az aks show -n ${DP_CLUSTER_NAME} -g "${DP_RESOURCE_GROUP}" --query "oidcIssuerProfile.issuerUrl" -otsv)"
-
-echo "create federated awi for ${MI_NAME} in ${SERVICE_ACCOUNT_NAMESPACE}/${SERVICE_ACCOUNT_NAME}"
-az identity federated-credential create --name "${SERVICE_ACCOUNT_NAMESPACE}-${SERVICE_ACCOUNT_NAME}-federated" \
-  --resource-group "${DP_RESOURCE_GROUP}" \
-  --identity-name "${MI_NAME}" \
-  --issuer "${AKS_OIDC_ISSUER}" \
-  --subject system:serviceaccount:"${SERVICE_ACCOUNT_NAMESPACE}":"${SERVICE_ACCOUNT_NAME}" \
-  --audience api://AzureADTokenExchange
-
+### Configure Azure Files, Ingress
 
 
 ```bash
@@ -308,8 +248,8 @@ Use the following command to get the ingress class name.
 ```bash
 $ kubectl get ingressclass
 NAME                        CONTROLLER                  PARAMETERS   AGE
-azure-application-gateway   azure/application-gateway   <none>       5h44m
-nginx                       k8s.io/ingress-nginx        <none>       10s
+azure-application-gateway   azure/application-gateway   <none>       24m
+nginx                       k8s.io/ingress-nginx        <none>       2m18s
 ```
 
 The `nginx` ingress class is the main ingress that DP will use. The `azure-application-gateway` ingress class is used by Azure Application Gateway.
@@ -324,16 +264,16 @@ Use the following command to get the storage class name.
 ```bash
 $ kubectl get storageclass
 NAME                    PROVISIONER          RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
-azure-files-sc          file.csi.azure.com   Delete          WaitForFirstConsumer   true                   25s
-azurefile               file.csi.azure.com   Delete          Immediate              true                   8h
-azurefile-csi           file.csi.azure.com   Delete          Immediate              true                   8h
-azurefile-csi-premium   file.csi.azure.com   Delete          Immediate              true                   8h
-azurefile-premium       file.csi.azure.com   Delete          Immediate              true                   8h
-default (default)       disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   8h
-managed                 disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   8h
-managed-csi             disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   8h
-managed-csi-premium     disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   8h
-managed-premium         disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   8h
+azure-files-sc          file.csi.azure.com   Delete          WaitForFirstConsumer   true                   2m35s
+azurefile               file.csi.azure.com   Delete          Immediate              true                   24m
+azurefile-csi           file.csi.azure.com   Delete          Immediate              true                   24m
+azurefile-csi-premium   file.csi.azure.com   Delete          Immediate              true                   24m
+azurefile-premium       file.csi.azure.com   Delete          Immediate              true                   24m
+default (default)       disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
+managed                 disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
+managed-csi             disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
+managed-csi-premium     disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
+managed-premium         disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
 ```
 
 We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` helm chart will create all these storage classes.
@@ -544,9 +484,14 @@ config:
       insecure_skip_verify: true
       metric_groups:
         - pod
+        - container
       extra_metadata_labels:
         - container.id
       metrics:
+        k8s.container.memory_limit_utilization:
+          enabled: true
+        k8s.container.cpu_limit_utilization:
+          enabled: true
         k8s.pod.cpu_limit_utilization:
           enabled: true
         k8s.pod.memory_limit_utilization:
@@ -672,19 +617,6 @@ config:
 EOF
 ```
 </details>
-
-# Attach TIBCO ACR [Optional]
-
-```bash
-export MASTER_SUBSCRIPTION="520d9f10-9713-409c-b8bc-10345c9c01eb"
-export ACR_NAME="troposerv"
-export CONTAINER_RESOURCE_GROUP="container_registry"
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-export AKS_MI=$(az aks show --name "${DP_CLUSTER_NAME}" --resource-group "${DP_RESOURCE_GROUP}" --query "identity.principalId" --output tsv)
-az role assignment create --assignee-object-id "${AKS_MI}" --assignee-principal-type "ServicePrincipal" --role "AcrPull" --scope /subscriptions/${MASTER_SUBSCRIPTION}/resourceGroups/${CONTAINER_RESOURCE_GROUP}/providers/Microsoft.ContainerRegistry/registries/${ACR_NAME} --description "Allow ACR Pull access to AKS Managed Identity"
-az aks update -n "${DP_CLUSTER_NAME}" -g "${DP_RESOURCE_GROUP}" --attach-acr /subscriptions/${MASTER_SUBSCRIPTION}/resourceGroups/${CONTAINER_RESOURCE_GROUP}/providers/Microsoft.ContainerRegistry/registries/${ACR_NAME}
-```
 
 ## Information needed to be set on TIBCO Control Plane
 
