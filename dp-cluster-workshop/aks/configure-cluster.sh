@@ -1,4 +1,6 @@
-set -x
+#!/bin/bash
+
+set +x
 
 export SUBSCRIPTION_ID="14669e18-e772-4744-bf93-72f677ccb9aa"
 export TENANT_ID="cde6fa59-abb3-4971-be01-2443c417cbda"
@@ -8,10 +10,15 @@ export DP_CLUSTER_NAME="dp-cluster"
 export AZURE_REGION="eastus"
 export USER_ASSIGNED_IDENTITY_NAME="dp-cluster-identity"
 export ATTACH_TIBCO_ACR=true
-
 export USER_ASSIGNED_IDENTITY_CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
 export USER_ASSIGNED_IDENTITY_PRINCIPAL_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.objectId" --output tsv)
 export USER_ASSIGNED_IDENTITY_OBJECT_ID="${USER_ASSIGNED_IDENTITY_PRINCIPAL_ID}"
+
+# add contributor privileged role
+az role assignment create --assignee-object-id "${USER_ASSIGNED_IDENTITY_OBJECT_ID}" \
+  --assignee-principal-type "ServicePrincipal" --role "Contributor" \
+  --scope /subscriptions/${SUBSCRIPTION_ID} \
+  --description "Allow Contributor access to AKS Managed Identity"
 
 # add dns zone contributor permission
 az role assignment create \
@@ -69,7 +76,10 @@ cat <<-EOF > ${AZURE_EXTERNAL_DNS_JSON_FILE}
 }
 EOF
 
+# connect to cluster
 az aks get-credentials --name "${DP_CLUSTER_NAME}" --resource-group "${DP_RESOURCE_GROUP}" --overwrite-existing
+
+# create namespace and secrets for external-dns-system
 kubectl create ns external-dns-system
 kubectl delete secret --namespace external-dns-system azure-config-file
 kubectl create secret generic azure-config-file --namespace external-dns-system --from-file ./${AZURE_EXTERNAL_DNS_JSON_FILE}
