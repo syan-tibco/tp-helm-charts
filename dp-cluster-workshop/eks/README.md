@@ -83,6 +83,12 @@ Before we deploy ingress or observability tools on an empty EKS cluster; we need
 * [aws-load-balancer-controller](https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller)
 * [metrics-server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server)
 
+> [!NOTE]
+> In the chart installation commands starting in this section & continued in next sections, you will see labels added
+> in the helm upgrade command i.e. --labels layer=number. Adding labels is supported in helm version v3.13. Label
+> numbers are added to identify the dependency of chart installations, so that uninstallation can be done in reverse
+> sequence (starting with charts not labelled first).
+
 <details>
 
 <summary>We can use the following commands to install these tools......</summary>
