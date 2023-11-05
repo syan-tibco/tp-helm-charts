@@ -1,4 +1,9 @@
-# Example helm deployment
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
+
 global: 
   cp: 
     dataplaneId: 
@@ -8,18 +13,12 @@ dp:
   # CAUTION: Values set here will override .global.cp.*
   # See _dp.helpers.tpl to set defaults
   #
-  # serviceAccount: provisioner-agent
-  # # registry: "664529841144.dkr.ecr.us-west-2.amazonaws.com/"
-  # # repo: "msg-platform-cicd/"
-  # # pullSecret: 
-  # pullSecret: "cic2-tcm-ghcr-secret"
-  # registry: "ghcr.io/"
-  # repo: "tibco/msg-platform-cicd/"
 
 ems:
   stores: ftl
   sizing: small
   use: dev
+  # CAUTION: Current chart does not support overriding internal ports
   ports:
     httpPort: 9010
     tcpPort: 9011
@@ -29,7 +28,6 @@ ems:
     promServerEP: 9091
     promQueuesEP: 9092
     promTopicsEP: 9093
-    # FIXME: Are these 2 DP or EMS settings
     watchdogPort: 12502
     loggerPort: 12506
   msgData: 

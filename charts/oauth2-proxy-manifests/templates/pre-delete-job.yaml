@@ -12,12 +12,16 @@ metadata:
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
 spec:
-  backoffLimit: 0
+  backoffLimit: 3
+  activeDeadlineSeconds: 60
   template:
     metadata:
       name: {{ template "oauth2-proxy.fullname" . }}
       labels:
         {{- include "oauth2-proxy.labels" . | indent 8 }}
+{{- if .Values.podLabels }}
+{{ toYaml .Values.podLabels | indent 8 }}
+{{- end }}
     spec:
     {{- if .Values.priorityClassName }}
       priorityClassName: "{{ .Values.priorityClassName }}"
@@ -37,7 +41,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: oauth2-proxy-secret-pre-delete-job
-        image: alpine:3.17.2
+        image: "{{ template "tibco.image.repository.alpine" .}}"
         command: [ "/bin/sh", "-c", "source /etc/config/script/iat_to_clienid.sh && cleanup" ]
         volumeMounts:
         - name: shell-script-volume

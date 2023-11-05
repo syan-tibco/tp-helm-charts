@@ -33,6 +33,7 @@ In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and i
 
 We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
 * envsubst
+* jq (1.7)
 * yq (v4.35.2)
 * bash (5.2.15)
 * aws (aws-cli/2.13.27)
@@ -207,7 +208,7 @@ helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aws dp-config-aws \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" \
   --labels layer=1 \
-  --version "1.0.19" -f - <<EOF
+  --version "1.0.22" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
@@ -248,7 +249,7 @@ ingress-nginx:
 #       otlp-collector-port: "4317"
 #     opentelemetry:
 #       enabled: true
-EOF  
+EOF
 ```
 
 Use the following command to get the ingress class name.
@@ -298,7 +299,7 @@ Use the following command to set the mode
 kubectl set env daemonset aws-node -n kube-system POD_SECURITY_GROUP_ENFORCING_MODE=standard
 ```
 > [!IMPORTANT]
-> This change can be verified with new pods of aws-node re-starting and a message appears in the terminal
+> This change can be verified with new pods of aws-node re-starting, and a message appears in the terminal
 > for daemonset.apps/aws-node env updated
 
 ### Chart Installation Step
@@ -312,7 +313,7 @@ export INSTALL_CALICO="true"
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n tigera-operator dp-config-aws-calico dp-config-aws \
   --labels layer=1 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.18" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.22" -f - <<EOF
 ingress-nginx:
   enabled: false
 httpIngress:
@@ -364,7 +365,7 @@ kubectl set env daemonset aws-node -n kube-system ANNOTATE_POD_IP=true
 > This change can be verified with new pods of aws-node re-starting and a message appears in the terminal
 > for daemonset.apps/aws-node env updated
 
-We need to restart the pod(s) of calico-kube-controllers. The easiest step would be to restart the deployment.Otherwise, the pod can also be individually deleted.
+We need to restart the pod(s) of calico-kube-controllers. The easiest step would be to restart the deployment. Otherwise, the pod can also be individually deleted.
 ```bash
 kubectl rollout restart deployment calico-kube-controllers -n calico-system
 ```
@@ -500,7 +501,7 @@ EOF
 ```
 </details>
 
-Use this command to get the host URL for Kibana
+Use this command to get the host URL for Grafana
 ```bash
 kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host'
 ```
@@ -576,9 +577,14 @@ config:
       insecure_skip_verify: true
       metric_groups:
         - pod
+        - container
       extra_metadata_labels:
         - container.id
       metrics:
+        k8s.container.memory_limit_utilization:
+          enabled: true
+        k8s.container.cpu_limit_utilization:
+          enabled: true
         k8s.pod.cpu_limit_utilization:
           enabled: true
         k8s.pod.memory_limit_utilization:
@@ -597,6 +603,10 @@ config:
           enabled: false
         k8s.pod.memory.working_set:
           enabled: false
+        k8s.container.memory_limit_utilization:
+          enabled: true
+        k8s.container.cpu_limit_utilization:
+          enabled: true
   processors:
     memory_limiter:
       check_interval: 5s

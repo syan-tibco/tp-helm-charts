@@ -1,3 +1,7 @@
+# Copyright © 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+
 # Resources
 # https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 resources:

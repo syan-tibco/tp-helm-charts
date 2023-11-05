@@ -1,4 +1,9 @@
-# ............... WATCHDOG CONFIG .............
+#
+# Copyright (c) 2023. Cloud Software Group, Inc.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
+#
+
 export TCM_SUB_ID=${TCM_SUB_ID:-hello}
 export MY_POD_NAME="${MY_POD_NAME:-$(hostname)}"
 outfile=${1:-watchdog.yml}

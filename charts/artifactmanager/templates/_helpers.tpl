@@ -1,5 +1,9 @@
 {{/*
-Expand the name of the chart.
+   Copyright (c) 2023 Cloud Software Group Inc.
+   This file is subject to the license terms contained
+   in the license file that is distributed with this file.
+
+   Expand the name of the chart.
 */}}
 {{- define "artifactmanager.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
