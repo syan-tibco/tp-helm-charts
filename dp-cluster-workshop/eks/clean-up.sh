@@ -12,11 +12,21 @@ kubectl delete ingress -A --all
 echo "sleep 2 minutes"
 sleep 120
 
-echo "deleting all installed charts"
-helm ls -a -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read -r line; do
+echo "deleting all installed charts with no layer labels"
+helm ls --selector '!layer' -a -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read -r line; do
   release=$(echo $line | awk '{print $1}')
   namespace=$(echo $line | awk '{print $2}')
   helm uninstall -n "$namespace" "$release"
+done
+
+for (( _chart_layer=2 ; _chart_layer>=0 ; _chart_layer-- ));
+do
+  echo "deleting all installed charts with layer ${_chart_layer} labels"
+  helm ls --selector "layer=${_chart_layer}" -a -A -o json | jq -r '.[] | "\(.name) \(.namespace)"' | while read -r line; do
+    release=$(echo $line | awk '{print $1}')
+    namespace=$(echo $line | awk '{print $2}')
+    helm uninstall -n "$namespace" "$release"
+  done
 done
 
 if [ "${EFS_ID}" != "" ]; then
