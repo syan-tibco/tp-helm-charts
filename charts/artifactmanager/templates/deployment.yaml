@@ -93,7 +93,7 @@ spec:
                   fieldPath: metadata.name
         {{- if .Values.global.artifactmanager.logging.enabled }}
         - name: fluent-bit
-          image: {{ .Values.global.artifactmanager.logging.image.registry }}{{ .Values.global.artifactmanager.logging.image.name }}:{{ .Values.global.artifactmanager.logging.image.tag }}
+          image: {{ include "artifactmanager.image.registry" .}}{{"/"}}{{ include "artifactmanager.image.repository" .}}{{"/"}}fluent-bit:{{ .Values.fluentbit.image.tag }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: POD_NAMESPACE
