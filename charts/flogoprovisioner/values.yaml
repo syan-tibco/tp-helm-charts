@@ -196,7 +196,7 @@ extraInitContainers: []
 #   command: ['echo', "hey"]
 
 config:
-  #  DP_INTERNAL_URL: "test.tci-env.ap-southeast-2.tcie.pro"
+  #  DP_INTERNAL_URL: ""
   DP_INTERNAL_URL: "***NOT AVAILABLE***"
   ARTIFACT_MANAGER_PORT: "7813"
   APP_INIT_IMAGE_TAG: "13"
@@ -206,7 +206,7 @@ oauth2proxy:
     enabled: false
     className: nginx
     hosts:
-      - host: "test.tci-env.ap-southeast-2.tcie.pro"
+      - host: ""
         paths:
           - path: /oauth2
             pathType: Prefix
@@ -228,4 +228,4 @@ publicApi:
     nginx:
       className: nginx
       pathPrefix: /tibco/flogo
-      fqdn: flogo.dp-flogodev.tcie.pro
+      fqdn: ""
