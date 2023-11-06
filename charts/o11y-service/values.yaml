@@ -98,16 +98,16 @@ global:
             proxy:
               userapp:
                 logindex:
-                  endpoint: "https://elastic.dp1-platform.tcie.pro"
+                  endpoint: ""
                   username: "elastic"
             exporter:
               userapp:
                 logindex:
-                  endpoint: "https://elastic.dp1-platform.tcie.pro"
+                  endpoint: ""
                   username: "elastic"
               services:
                 logindex:
-                  endpoint: "https://elastic.dp1-platform.tcie.pro"
+                  endpoint: ""
                   username: "elastic"
           promserver:
             proxy:
@@ -120,7 +120,7 @@ global:
               host: "dummy"
               port: 4317
             es:
-              host: "https://elastic.dp1-platform.tcie.pro"
+              host: ""
               port: 9200
               username: "elastic"
         secret:

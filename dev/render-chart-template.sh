@@ -23,11 +23,11 @@ traefik:
   enabled: false
 global:
   clusterName: "dp1-s01"
-  oidc_provider_arn: "arn:aws:iam::679789275507:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/6D124EBE627694798BA9BF7D18Exxxxx"
+  oidc_provider_arn: "arn:aws:iam::<accountId>:oidc-provider/oidc.eks.us-east-2.amazonaws.com/id/6D124EBE627694798BA9BF7D18Exxxxx"
   oidc_issuer_hostpath: "oidc.eks.us-east-2.amazonaws.com/id/6D124EBE627694798BA9BF7D18Exxxxx"
   where: aws
   env:
-    accountId: "679789275507"
+    accountId: ""
     region: "us-east-2"
 EOF
 
