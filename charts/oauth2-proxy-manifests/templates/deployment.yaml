@@ -394,7 +394,7 @@ spec:
           type: DirectoryOrCreate
       - name: config-volume
         configMap:
-          name: {{ template "oauth2-proxy.name" . }}-fluentbit-config
+          name: {{ template "oauth2-proxy.fullname" . }}-fluentbit-config
 {{- end }}          
 {{- if .Values.global.cp.containerRegistry.secret }}
       imagePullSecrets: [ name: {{ .Values.global.cp.containerRegistry.secret }} ]
