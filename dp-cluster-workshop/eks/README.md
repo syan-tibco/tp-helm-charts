@@ -518,7 +518,7 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system otel-collector-daemon opentelemetry-collector \
   --labels layer=2 \
-  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<EOF
+  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<'EOF'
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
