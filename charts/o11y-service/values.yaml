@@ -151,7 +151,7 @@ global:
       namespace: dp-integration-default
     image:
       registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
-      tag: 616
+      tag: 625
 
 
 replicaCount: 1
@@ -312,5 +312,4 @@ jaeger:
 enableLogging: true
 fluentbit:
   image:
-    registry: cr.fluentbit.io/fluent/fluent-bit
     tag: 2.1.6

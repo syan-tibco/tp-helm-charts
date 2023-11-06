@@ -348,7 +348,7 @@ global:
     enableAnalysis: false
 
   # To output all istio components logs in json format by adding --log_as_json argument to each container argument
-  logAsJson: false
+  logAsJson: true
 
   # Comma-separated minimum per-scope logging level of messages to output, in the form of <scope>:<level>,<scope>:<level>
   # The control plane has different scopes depending on component, but can configure default log level across all components
