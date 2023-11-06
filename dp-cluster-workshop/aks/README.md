@@ -35,7 +35,7 @@ In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and i
 We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
 * envsubst
 * yq (v4.35.2)
-* jq
+* jq (1.7)
 * bash (5.2.15)
 * az (az-cli/2.53.1)
 * kubectl (v1.28.3)
@@ -59,6 +59,22 @@ Execute the script
 ```
 It will take around 10 minutes to do the following configuration: 
 
+## Adding additional IPs to access cluster
+By default, your VPN IPs will be added as part of the configure-cluster.sh command above.
+To add more IPs to be allowed to access the cluster, use the following code snippet
+> [!Note]
+> Additional IPs are required only when you are not using VPN.
+> The rules can take up to two minutes to propagate. Please allow up to that time when testing the connection.
+```bash
+export DP_RESOURCE_GROUP=dp-resource-group
+export DP_CLUSTER_NAME=dp-cluster
+export MY_PUBLIC_IP="" ## add one or more comma separated non-duplicate public IPs with /32 CIDR without any spaces
+CURRENT_IP=$(az aks show --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --query apiServerAccessProfile.authorizedIpRanges -o tsv | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}')
+ARRAY_CURRENT_IP=(`echo ${CURRENT_IP}`)
+ADDITIONAL_IP=$(echo ${ARRAY_CURRENT_IP} | sed 's/$/,/' | xargs | sed 's/[[:blank:]]//g')${MY_PUBLIC_IP}
+az aks update --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --api-server-authorized-ip-ranges "${ADDITIONAL_IP}"
+```
+
 ## Generate kubeconfig to connect to AKS cluster
 We can use the following command to generate kubeconfig file.
 ```bash
@@ -79,8 +95,6 @@ kubectl get nodes
 Before we deploy ingress or observability tools on an empty AKS cluster; we need to install some basic tools. 
 * [cert-manager](https://cert-manager.io/docs/installation/helm/)
 * [external-dns](https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns)
-* [metrics-server](https://github.com/kubernetes-sigs/metrics-server/tree/master/charts/metrics-server)
-
 
 <details>
 
@@ -164,12 +178,12 @@ It will create the following resources:
 * a storage class for Azure Files
 
 ### Setup DNS
-For this workshop we will use `dp-workshop.dataplanes.pro` as the domain name. We will use `*.dp1.dp-workshop.dataplanes.pro` as the wildcard domain name for all the DP capabilities.
+For this workshop we will use `dp1.azure.dataplanes.pro` as the domain name. We will use `*.dp1.azure.dataplanes.pro` as the wildcard domain name for all the DP capabilities.
 We are using the following services in this workshop:
-* [Amazon Route 53](https://aws.amazon.com/route53/): to manage DNS. We register `dp-workshop.dataplanes.pro` in Route 53. And give permission to external-dns to add new record.
-* [AWS Certificate Manager (ACM)](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html): to manage SSL certificate. We will create a wildcard certificate for `*.dp1.dp-workshop.dataplanes.pro` in ACM.
-* aws-load-balancer-controller: to create AWS ALB. It will automatically create AWS ALB and add SSL certificate to ALB.
-* external-dns: to create DNS record in Route 53. It will automatically create DNS record for ingress objects.
+* [DNS Zones](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records): to manage DNS. We register `azure.dataplanes.pro` in Azure DNS Zones.
+* [Let's Encrypt](https://cert-manager.io/docs/configuration/acme/dns01/azuredns/): to manage SSL certificate. We will create a wildcard certificate for `*.dp1.azure.dataplanes.pro`.
+* azure-application-gateway: to create Application Gateway. It will automatically create listeners and add SSL certificate to application gateway.
+* external-dns: to create DNS record in dns zone for the record set. It will automatically create DNS record for ingress objects.
 
 For this workshop work; you will need to 
 * register a domain name in Route 53. You can follow this [link](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html) to register a domain name in Route 53.
@@ -422,10 +436,8 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 <summary>Use the following command to install Opentelemetry Collector for metrics...</summary>
 
 ```bash
-helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-  -n prometheus-system otel-collector-daemon opentelemetry-collector \
-  --labels layer=2 \
-  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<EOF
+# Copy the below content to a YAML file values.yaml
+# Make sure the indetations are right.
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
@@ -614,7 +626,15 @@ config:
           - batch
         exporters:
           - prometheus/user
-EOF
+```
+
+```bash
+# Run the helm upgrade command passing the above values.yaml file
+
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n prometheus-system otel-collector-daemon opentelemetry-collector \
+  --labels layer=2 \
+  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f values.yaml
 ```
 </details>
 
