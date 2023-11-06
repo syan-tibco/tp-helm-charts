@@ -6140,6 +6140,46 @@ entries:
               url: https://github.com/oauth2-proxy/manifests/pull/159
     apiVersion: v2
     appVersion: 7.5.0
+    created: "2023-11-06T10:42:27.558219029Z"
+    description: A reverse proxy that provides authentication with Google, Github
+      or other providers
+    digest: 50afd990f6db6b3c876cd0b6654c93b7a17b59339d0f738a4736dde33ead5d50
+    home: https://oauth2-proxy.github.io/oauth2-proxy/
+    keywords:
+    - kubernetes
+    - oauth
+    - oauth2
+    - authentication
+    - google
+    - github
+    - redis
+    kubeVersion: '>=1.9.0-0'
+    maintainers:
+    - email: cedric@desaintmartin.fr
+      name: desaintmartin
+    - name: tlawrie
+    - email: nicholas.meves@gmail.com
+      name: NickMeves
+    - email: joel.speed@hotmail.co.uk
+      name: JoelSpeed
+    - email: pierluigi.lenoci@gmail.com
+      name: pierluigilenoci
+    name: oauth2-proxy
+    sources:
+    - https://github.com/oauth2-proxy/oauth2-proxy
+    - https://github.com/oauth2-proxy/manifests
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/oauth2-proxy-6.17.0-tibx-16/oauth2-proxy-6.17.0-tibx-16.tgz
+    version: 6.17.0-tibx-16
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: securityContext and timeout of the initContainer wait-for-redis configurable via values.
+          links:
+            - name: Github PR
+              url: https://github.com/oauth2-proxy/manifests/pull/159
+    apiVersion: v2
+    appVersion: 7.5.0
     created: "2023-11-06T09:32:48.438168987Z"
     description: A reverse proxy that provides authentication with Google, Github
       or other providers
@@ -8680,4 +8720,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-06T10:38:54.877936928Z"
+generated: "2023-11-06T10:42:27.559704836Z"
