@@ -201,7 +201,7 @@ extraInitContainers: []
 #   command: ['echo', "hey"]
 
 config:
-  #  DP_INTERNAL_URL: "test.tci-env.ap-southeast-2.tcie.pro"
+  #  DP_INTERNAL_URL: ""
   DP_INTERNAL_URL: "***NOT AVAILABLE***"
   EFS_ROOT: "/data"
 

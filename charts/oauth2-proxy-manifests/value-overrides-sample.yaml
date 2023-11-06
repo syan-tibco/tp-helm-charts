@@ -4,13 +4,13 @@ image:
 config:
   existingSecret: "oauth2-proxy-tibx" ### can be the release name to make it unique
 extraArgs:
-  oidc-issuer-url: "https://changeme.tcie.pro" ### https://${global.cp.cpHostname}
-  redirect-url: "https://changeme.tcie.pro/oauth2/callback" ### https://${global.cp.resources.ingress.fqdn}${global.cp.capability.pathPrefix}/oauth2/callback
+  oidc-issuer-url: "" ### https://${global.cp.cpHostname}
+  redirect-url: "" ### https://${global.cp.resources.ingress.fqdn}${global.cp.capability.pathPrefix}/oauth2/callback
 
 ingress:
   className: nginx ### ${global.cp.resources.ingress.ingressClassName}
   hosts: 
-    - changeme.tcie.pro ### ${global.cp.resources.ingress.fqdn}
+    - "" ### ${global.cp.resources.ingress.fqdn}
   path: "/oauth2" ### ${global.cp.capability.pathPrefix}/oauth2
 
 # CP Provided
