@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# change this to your cluster name
-CLUSTER_NAME=${1:-dp-cluster}
-
 echo "get basic info"
 VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
 CIDR_BLOCK=$(aws ec2 describe-vpcs --vpc-ids $VPC_ID --query "Vpcs[].CidrBlock" --output text)
