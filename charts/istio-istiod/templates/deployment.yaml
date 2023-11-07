@@ -117,6 +117,10 @@ spec:
 {{- if .Values.global.imagePullPolicy }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
 {{- end }}
+{{- if .Values.global.cp.containerRegistry.secret }}
+          imagePullSecrets:
+            - name: {{ .Values.global.cp.containerRegistry.secret }}
+{{- end }}
           args:
           - "discovery"
           - --monitoringAddr=:15014
