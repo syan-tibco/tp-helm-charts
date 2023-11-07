@@ -31,7 +31,7 @@ jobs:
             helm repo add tibco-platfrom https://syan-tibco.github.io/tp-helm-charts
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.1
+        uses: helm/chart-releaser-action@v1.6.0
         with:
           skip_existing: true
           packages_with_index: false # set to true when https://github.com/helm/chart-releaser/pull/314 is merged for private repo
