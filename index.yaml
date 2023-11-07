@@ -6807,6 +6807,26 @@ entries:
   tibco-developer-hub:
   - apiVersion: v2
     appVersion: 1.0.250
+    created: "2023-11-07T10:36:41.565626462Z"
+    dependencies:
+    - name: common
+      repository: ""
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: ""
+      version: 11.x.x
+    description: A Helm chart for TIBCO Developer Hub
+    digest: e38fdd569139ca98173e1c2201e7ee9f570390daa77bbed956c45935407597aa
+    name: tibco-developer-hub
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tibco-developer-hub-1.0.26-PLTDX-751-rename/tibco-developer-hub-1.0.26-PLTDX-751-rename.tgz
+    version: 1.0.26-PLTDX-751-rename
+  - apiVersion: v2
+    appVersion: 1.0.250
     created: "2023-11-07T09:43:40.724319083Z"
     dependencies:
     - name: common
@@ -8935,4 +8955,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-07T10:33:38.442652843Z"
+generated: "2023-11-07T10:36:41.566281971Z"
