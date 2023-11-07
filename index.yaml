@@ -4167,6 +4167,20 @@ entries:
     version: 1.16.1
   - apiVersion: v1
     appVersion: 1.19.0
+    created: "2023-11-07T18:14:25.515522355Z"
+    description: Helm chart for deploying Istio cluster resources and CRDs
+    digest: cb1c4e6354594123c9537e7e3394c9e719bc58594620a4d0ea1e193280a57b16
+    icon: https://istio.io/latest/favicons/android-192x192.png
+    keywords:
+    - istio
+    name: istio-crd
+    sources:
+    - https://github.com/istio/istio
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-crd-1.0.13/istio-crd-1.0.13.tgz
+    version: 1.0.13
+  - apiVersion: v1
+    appVersion: 1.19.0
     created: "2023-11-06T00:16:52.309108872Z"
     description: Helm chart for deploying Istio cluster resources and CRDs
     digest: 2e8fcb329ad23ff4c34590c4db9b1125c7bcdda135c42550fbcaba5742a54735
@@ -4590,6 +4604,22 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-istiod-1.16.1/istio-istiod-1.16.1.tgz
     version: 1.16.1
+  - apiVersion: v1
+    appVersion: 1.19.0
+    created: "2023-11-07T18:14:25.654723805Z"
+    description: Helm chart for istio control plane
+    digest: 24e10b1fa964f62fe278d45bc923b889aae401c973334f3f76b8404a33597d8d
+    icon: https://github.com/cncf/artwork/blob/master/projects/istio/icon/color/istio-icon-color.svg
+    keywords:
+    - istio
+    - istiod
+    - istio-discovery
+    name: istio-istiod
+    sources:
+    - https://github.com/istio/istio
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/istio-istiod-1.0.13/istio-istiod-1.0.13.tgz
+    version: 1.0.13
   - apiVersion: v1
     appVersion: 1.19.0
     created: "2023-11-06T00:16:52.551472741Z"
@@ -9016,4 +9046,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-07T16:45:02.062248534Z"
+generated: "2023-11-07T18:14:25.65706514Z"
