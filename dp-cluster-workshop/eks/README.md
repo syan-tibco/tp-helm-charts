@@ -43,6 +43,32 @@ We are running the steps in a MacBook Pro. The following tools are installed usi
 
 ## Recommended IAM Policies
 It is recommeded to have the [Minimum IAM Policies](https://eksctl.io/usage/minimum-iam-policies/ attached to the role which is being used for the cluster creation.
+Additionally, you will need to add the AmazonElasticFileSystemFullAccess (arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess) policy to the role you are going to use.
+
+## Export required variables
+```bash
+## Cluster configuration specific variables
+export DP_VPC_CIDR="10.200.0.0/16" # vpc cidr for the cluster
+export AWS_REGION=us-west-2 # aws region to be used for deployment
+export KUBECONFIG=${DP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
+export DP_CLUSTER_NAME=dp-cluster # name of the cluster to be prvisioned, used for chart deployment
+
+## Tooling specific variables
+export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts # location of charts repo url
+export DP_DOMAIN=dp1.aws.example.com # domain to be used
+export MAIN_INGRESS_CONTROLLER=alb # name of aws load balancer controller
+export DP_EBS_ENABLED=true # to enable ebs storage class
+export DP_STORAGE_CLASS=ebs-gp3 # name storge class ebs
+export DP_EFS_ENABLED=true # to enable efs storage class
+export INSTALL_CALICO="true" # to deploy calico
+export DP_INGRESS_CLASS=nginx # name of main ingress class used by capabilities 
+export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
+```
+
+> [!IMPORTANT]
+> The scripts associated with the workshop are NOT idempotent.
+> It is recommended to clean-up the existing setup to create a new one.
+
 ## Create EKS cluster
 
 In this section, we will use [eksctl tool](https://eksctl.io/) to create an EKS cluster. This tool is recommended by AWS as the official tool to create EKS cluster.
@@ -53,9 +79,6 @@ We have created a yaml file [eksctl-recipe.yaml](eksctl-recipe.yaml) for our wor
 We can use the following command to create an EKS cluster in your AWS account. 
 
 ```bash 
-export DP_CLUSTER_NAME=dp-cluster
-export DP_VPC_CIDR="10.200.0.0/16"
-export AWS_REGION=us-west-2
 cat eksctl-recipe.yaml | envsubst | eksctl create cluster -f -
 ```
 
@@ -65,14 +88,11 @@ It will take around 30 minutes to create an empty EKS cluster.
 
 We can use the following command to generate kubeconfig file.
 ```bash
-export AWS_REGION=us-west-2
-export DP_CLUSTER_NAME=dp-cluster
 aws eks update-kubeconfig --region ${AWS_REGION} --name ${DP_CLUSTER_NAME} --kubeconfig ${DP_CLUSTER_NAME}.yaml
 ```
 
 And check the connection to EKS cluster.
 ```bash
-export KUBECONFIG=${DP_CLUSTER_NAME}.yaml
 kubectl get nodes
 ```
 
@@ -107,7 +127,6 @@ serviceAccount:
 EOF
 
 # install external-dns
-export MAIN_INGRESS_CONTROLLER=alb
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n external-dns-system external-dns external-dns \
   --labels layer=0 \
@@ -169,10 +188,11 @@ It will create the following resources:
 * a storage class for EFS
 
 ### Setup DNS
-For this workshop we will use `dp-workshop.dataplanes.pro` as the domain name. We will use `*.dp1.dp-workshop.dataplanes.pro` as the wildcard domain name for all the DP capabilities.
-We are using the following services in this workshop:
-* [Amazon Route 53](https://aws.amazon.com/route53/): to manage DNS. We register `dp-workshop.dataplanes.pro` in Route 53. And give permission to external-dns to add new record.
-* [AWS Certificate Manager (ACM)](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html): to manage SSL certificate. We will create a wildcard certificate for `*.dp1.dp-workshop.dataplanes.pro` in ACM.
+Please use an appropriate domain name in place of `dp1.aws.example.com`. You can use `*.dp1.aws.example.com` as the wildcard domain name for all the DP capabilities.
+
+You can use the following services to register domain and manage certificates.
+* [Amazon Route 53](https://aws.amazon.com/route53/): to manage DNS. You can register your dataplanes domain in Route 53. And give permission to external-dns to add new record.
+* [AWS Certificate Manager (ACM)](https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html): to manage SSL certificate. You can create a wildcard certificate for `*.<DP_DOMAIN>` in ACM.
 * aws-load-balancer-controller: to create AWS ALB. It will automatically create AWS ALB and add SSL certificate to ALB.
 * external-dns: to create DNS record in Route 53. It will automatically create DNS record for ingress objects.
 
@@ -188,27 +208,21 @@ Before deploy `dp-config-aws`; we need to set up AWS EFS. For more information a
 
 We provide an [EFS creation script](create-efs.sh) to create EFS. 
 ```bash
-export DP_CLUSTER_NAME=dp-cluster
 ./create-efs.sh ${DP_CLUSTER_NAME}
 ```
 
 After running above script; we will get an EFS ID output like `fs-0ec1c745c10d523f6`. We will need to use this value to deploy `dp-config-aws` helm chart.
 
 ```bash
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
-export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
-export DP_EBS_ENABLED=true
-export DP_EFS_ENABLED=true
-export DP_EFS_ID="fs-0ec1c745c10d523f6" # Replace with your EFS ID
-## following section is required to send traces using nginx
+## following variable is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
-#export DP_NAMESPACE=""
+export DP_NAMESPACE="ns" # Replace with your DP namespace
 
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aws dp-config-aws \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" \
   --labels layer=1 \
-  --version "1.0.22" -f - <<EOF
+  --version "1.0.23" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
@@ -219,11 +233,9 @@ httpIngress:
     kubernetes.io/ingress.class: alb
 storageClass:
   ebs:
-    enabled: ${DP_EBS_ENABLED}
+    enabled: false
   efs:
-    enabled: ${DP_EFS_ENABLED}
-    parameters:
-      fileSystemId: "${DP_EFS_ID}"
+    enabled: false
 tigera-operator:
   enabled: false
 ingress-nginx:
@@ -249,6 +261,33 @@ ingress-nginx:
 #       otlp-collector-port: "4317"
 #     opentelemetry:
 #       enabled: true
+EOF
+```
+
+```bash
+## following variable is required to create the storage class
+export DP_EFS_ID="fs-0ec1c745c10d523f6" # Replace with the EFS ID created in your installation
+
+helm upgrade --install --wait --timeout 1h --create-namespace \
+  -n storage-system dp-config-aws-storage dp-config-aws \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" \
+  --labels layer=1 \
+  --version "1.0.23" -f - <<EOF
+dns:
+  domain: "${DP_DOMAIN}"
+httpIngress:
+  enabled: false
+storageClass:
+  ebs:
+    enabled: ${DP_EBS_ENABLED}
+  efs:
+    enabled: ${DP_EFS_ENABLED}
+    parameters:
+      fileSystemId: "${DP_EFS_ID}"
+tigera-operator:
+  enabled: false
+ingress-nginx:
+  enabled: false
 EOF
 ```
 
@@ -307,13 +346,10 @@ kubectl set env daemonset aws-node -n kube-system POD_SECURITY_GROUP_ENFORCING_M
 We will be using the following values to deploy `dp-config-aws` helm chart.
 
 ```bash
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
-export INSTALL_CALICO="true"
-
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n tigera-operator dp-config-aws-calico dp-config-aws \
   --labels layer=1 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.22" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.23" -f - <<EOF
 ingress-nginx:
   enabled: false
 httpIngress:
@@ -393,16 +429,10 @@ vpc.amazonaws.com/pod-ips: 10.200.108.148
 helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
 
 # install dp-config-es
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
-export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
-export DP_ES_RELEASE_NAME=dp-config-es
-export DP_INGRESS_CLASS=nginx
-export DP_STORAGE_CLASS=ebs-gp3
-
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-  -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
+  -n elastic-system ${DP_ES_RELEASE_NAME} dp-config-es \
   --labels layer=2 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.16" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
@@ -444,9 +474,6 @@ kubectl get secret dp-config-es-es-elastic-user -n elastic-system -o jsonpath="{
 
 ```bash
 # install prometheus stack
-export DP_DOMAIN=dp1.dp-workshop.dataplanes.pro
-export DP_INGRESS_CLASS=nginx
-
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
   --labels layer=2 \
@@ -515,10 +542,9 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 <summary>Use the following command to install Opentelemetry Collector for metrics...</summary>
 
 ```bash
-helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-  -n prometheus-system otel-collector-daemon opentelemetry-collector \
-  --labels layer=2 \
-  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f - <<'EOF'
+## create the values.yaml file with below contents
+## make sure the identations are in-tact
+cat > values.yaml
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
@@ -711,37 +737,46 @@ config:
           - batch
         exporters:
           - prometheus/user
-EOF
+```
+
+```bash
+## pass the values.yaml file created to the chart upgrade
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n prometheus-system otel-collector-daemon opentelemetry-collector \
+  --labels layer=2 \
+  --repo "https://open-telemetry.github.io/opentelemetry-helm-charts" --version "0.72.0" -f values.yaml
 ```
 </details>
 
 ## Information needed to be set on TIBCO Control Plane
 
-You can get base FQDN by running the following command:
+You can get BASE_FQDN by running the following command:
 ```bash
 kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 ```
 
 | Name                 | Sample value                                                                     | Notes                                                                     |
 |:---------------------|:---------------------------------------------------------------------------------|:--------------------------------------------------------------------------|
-| VPC_CIDR             | 10.200.0.0/16                                                                    | you can find this from eks recipe                                         |
-| ingress class name   | nginx                                                                            | this is used for BWCE                                                     |
-| EFS storage class    | efs-sc                                                                           | this is used for BWCE EFS storage                                         |
-| EBS storage class    | ebs-gp3                                                                          | this is used for EMS messaging                                            |
-| BW FQDN              | bwce.\<base FQDN\>                                                               | this is the main domain plus any name you want to use for this capability |
-| User app log index   | user-app-1                                                                       | this comes from dp-config-es index template                               |
-| service ES index     | service-1                                                                        | this comes from dp-config-es index template                               |
-| ES internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | this comes from ES service                                                |
-| ES public endpoint   | https://elastic.\<base FQDN\>                                                    | this comes from ES ingress                                                |
-| ES password          | xxx                                                                              | see above ES password                                                     |
-| tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | same as elastic internal endpoint                                         |
-| Prometheus endpoint  | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | this comes from Prometheus service                                        |
-| Grafana endpoint  | https://grafana.\<base FQDN\> | this comes from Grafana service                                        |
+| VPC_CIDR             | 10.200.0.0/16                                                                    | from eks recipe                                         |
+| Ingress class name   | nginx                                                                            | used for BWCE                                                     |
+| EFS storage class    | efs-sc                                                                           | used for BWCE EFS storage                                         |
+| EBS storage class    | ebs-gp3                                                                          | used for EMS messaging                                            |
+| BW FQDN              | bwce.\<BASE_FQDN\>                                                               | capability fqdn |
+| Elastic User app logs index   | user-app-1                                                                       | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
+| Elastic Search logs index     | service-1                                                                        | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
+| Elastic Search internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search service                                                |
+| Elastic Search public endpoint   | https://elastic.\<BASE_FQDN\>                                                    | Elastic Search ingress host                                                |
+| Elastic Search password          | xxx                                                                              | Elastic Search password in dp-config-es-es-elastic-user secret                                             |
+| Tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search internal endpoint                                         |
+| Prometheus service internal endpoint | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | Prometheus service                                        |
+| Prometheus public endpoint | https://prometheus-internal.\<BASE_FQDN\>  |  Prometheus ingress host                                        |
+| Grafana endpoint  | https://grafana.\<BASE_FQDN\> | Grafana ingress host                                        |
+Network Policies Details for Data Plane Namespace | [Confluence Document for Network Policies](https://confluence.tibco.com/display/TCP/Data+Plane+Network+Polices) | To be replcaed with TIBCO Doc link
 
 ## Clean up
 
-We provide a helper [clean-up](clean-up.sh) to delete the EKS cluster.
+Please process for de-provisioning of all the provisioned capabilities from the UI.
+For the tools charts uninstallation, EFS mount and security groups deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
-export DP_CLUSTER_NAME=dp-cluster
 ./clean-up.sh ${DP_CLUSTER_NAME}
 ```
