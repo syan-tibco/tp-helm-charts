@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - PLTDX-751-rename
+      - main
 
 jobs:
   release:
