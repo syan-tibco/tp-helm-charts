@@ -166,3 +166,10 @@ nginx.ingress.kubernetes.io/auth-signin: {{ include "tibcohub.host.url" (dict "p
 nginx.ingress.kubernetes.io/auth-url: {{ include "tibcohub.host.url" (dict "path" "tibco/hub/oauth2/auth" "context" $) }}
 nginx.ingress.kubernetes.io/proxy-buffer-size: 16k  
 {{- end -}}
+
+{{- define "postgresql.imagePullSecrets" -}}
+{{- if .Values.global.cp.containerRegistry.secret -}}
+imagePullSecrets:
+  - name: {{ .Values.global.cp.containerRegistry.secret }}
+{{- end -}}
+{{- end -}}
