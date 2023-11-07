@@ -19,8 +19,9 @@ data:
       Flush             1
       Log_Level         info
       Daemon            off
-      Parsers_File /fluent-bit/etc/parsers.conf
-      Parsers_File /fluent-bit/etc/custom_parsers.conf
+      Parsers_File      /fluent-bit/etc/parsers.conf
+      Parsers_File      /fluent-bit/etc/custom_parsers.conf
+      Parsers_File      /fluent-bit/etc/update_record.lua
       HTTP_Server On
       HTTP_Listen 0.0.0.0
       HTTP_Port 2020
@@ -42,11 +43,28 @@ data:
       Remove_key        stream
       Remove_key        _p
 
+    [FILTER]
+      name              parser
+      Match             dp.*
+      Parser            json
+      key_name          log
+      Reserve_Data      On
+
     [OUTPUT]
+      Match dp.*
       {{- range $key, $val := .Values.fluentBit.output }}
       {{ $key }} {{ $val }}
       {{- end }}
-      Match dp.*
+
+  update_record.lua: |
+    -- Function to append all fields under key "msg"
+    function update_record(tag, timestamp, record)
+      record["level"] = newLog[level]
+      record["scope"] = newLog[scope]
+      record["msg"] = newLog[msg]
+      record["log"] = nil
+      return 2, timestamp, record
+    end
 
   custom_parsers.conf: |
     [PARSER]
@@ -56,7 +74,6 @@ data:
        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
        Time_Keep   On
        Time_Key start_time
-
 {{- end }}
 
 
