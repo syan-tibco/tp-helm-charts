@@ -74,7 +74,7 @@ spec:
             type: DirectoryOrCreate
         - name: config-volume
           configMap:
-            name: tibco-hub-fluentbit-config
+            name: tibco-developer-hub-fluentbit-config
   {{- end }}
       {{- if or .Values.backstage.image.pullSecrets .Values.global.cp.containerRegistry.secret }}
       imagePullSecrets:
