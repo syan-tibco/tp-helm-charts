@@ -65,6 +65,10 @@ export DP_INGRESS_CLASS=nginx # name of main ingress class used by capabilities
 export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
 ```
 
+> [!IMPORTANT]
+> The scripts associated with the workshop are NOT idempotent.
+> It is recommended to clean-up the existing setup to create a new one.
+
 ## Create EKS cluster
 
 In this section, we will use [eksctl tool](https://eksctl.io/) to create an EKS cluster. This tool is recommended by AWS as the official tool to create EKS cluster.
@@ -218,7 +222,7 @@ helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aws dp-config-aws \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" \
   --labels layer=1 \
-  --version "1.0.22" -f - <<EOF
+  --version "1.0.23" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
@@ -268,7 +272,7 @@ helm upgrade --install --wait --timeout 1h --create-namespace \
   -n storage-system dp-config-aws-storage dp-config-aws \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" \
   --labels layer=1 \
-  --version "1.0.22" -f - <<EOF
+  --version "1.0.23" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
@@ -345,7 +349,7 @@ We will be using the following values to deploy `dp-config-aws` helm chart.
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n tigera-operator dp-config-aws-calico dp-config-aws \
   --labels layer=1 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.22" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.23" -f - <<EOF
 ingress-nginx:
   enabled: false
 httpIngress:
@@ -428,7 +432,7 @@ helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system ${DP_ES_RELEASE_NAME} dp-config-es \
   --labels layer=2 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.16" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
@@ -758,13 +762,14 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 | EFS storage class    | efs-sc                                                                           | used for BWCE EFS storage                                         |
 | EBS storage class    | ebs-gp3                                                                          | used for EMS messaging                                            |
 | BW FQDN              | bwce.\<BASE_FQDN\>                                                               | capability fqdn |
-| Elastic User app logs index   | user-app-1                                                                       | dp-config-es index template                               |
-| Elastic Search logs index     | service-1                                                                        | dp-config-es index template                               |
+| Elastic User app logs index   | user-app-1                                                                       | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
+| Elastic Search logs index     | service-1                                                                        | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
 | Elastic Search internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search service                                                |
 | Elastic Search public endpoint   | https://elastic.\<BASE_FQDN\>                                                    | Elastic Search ingress host                                                |
 | Elastic Search password          | xxx                                                                              | Elastic Search password in dp-config-es-es-elastic-user secret                                             |
 | Tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search internal endpoint                                         |
-| Prometheus endpoint  | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | Prometheus service                                        |
+| Prometheus service internal endpoint | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | Prometheus service                                        |
+| Prometheus public endpoint | https://prometheus-internal.\<BASE_FQDN\>  |  Prometheus ingress host                                        |
 | Grafana endpoint  | https://grafana.\<BASE_FQDN\> | Grafana ingress host                                        |
 Network Policies Details for Data Plane Namespace | [Confluence Document for Network Policies](https://confluence.tibco.com/display/TCP/Data+Plane+Network+Polices) | To be replcaed with TIBCO Doc link
 
