@@ -6,16 +6,14 @@
 #
 
 outfile=${1:-tibemsd-ftl.json}
-srvBase="${MY_POD_NAME%-*}"
-svcname="${srvBase/-ftl/-ems/}"
+srvBase="${EMS_SERVICE}"
+svcname="${srvBase}"
 namespace=$MY_NAMESPACE
 realmPort="${FTL_REALM_PORT-9013}"
 emsTcpPort="${EMS_TCP_PORT:-9011}"
 emsSslPort="${EMS_SSL_PORT:-9012}"
 subData="/data"
 pstoreData="/data"
-# loglevel=${FTL_LOGLEVEL:-"info;quorum:debug"}
-loglevel=${FTL_LOGLEVEL:-"info"}
 
 # export LD_LIBRARY_PATH=/opt/tibco/ftl/lib
 # /opt/tibco/ems/current-version/bin/tibemsjson2ftl -url "http://localhost:$ftlport" -json $initTibemsdJson

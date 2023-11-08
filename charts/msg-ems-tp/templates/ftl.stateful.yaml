@@ -228,6 +228,8 @@ spec:
                 value: "/logs/$(MY_POD_NAME)/boot/tibemsd-ftl.json"
               - name: EMS_HTTP_PORT
                 value: "{{ $emsParams.ems.ports.httpPort }}"
+              - name: EMS_SERVICE
+                value: "{{ $emsParams.ems.name }}-ems"
               - name: MY_SVC_NAME
                 value: "{{ $svcname }}"
               - name: MY_SVC_HOST

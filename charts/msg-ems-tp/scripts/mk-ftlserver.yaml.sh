@@ -7,8 +7,8 @@
 #
 
 outfile=${1:-ftlserver.yml}
-srvBase="${MY_POD_NAME%-*}"
-svcname="${MY_SVC_NAME:-$srvBase}"
+srvBase="${EMS_SERVICE}"
+svcname="${EMS_SERVICE:-$srvBase}"
 namespace=$MY_NAMESPACE
 ftlport="${FTL_REALM_PORT:-9013}"
 EMS_TCP_PORT="${EMS_TCP_PORT-9011}"

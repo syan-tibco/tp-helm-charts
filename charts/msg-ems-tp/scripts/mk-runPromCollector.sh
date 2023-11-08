@@ -12,8 +12,6 @@ export MY_POD_NAME=${MY_POD_NAME:-$(hostname)}
 export EMS_TCP_PORT=${EMS_TCP_PORT:-"9011"}
 export EMS_PROM_PORT=${EMS_PROM_PORT:-"9091"}
 
-# FIXME : Mount admin user/password from K8s secret
-
 # Generate Server Config
 cat - <<EOF > $bootDir/servers.xml
 <?xml version="1.0"?>
