@@ -6,7 +6,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: tibco-hub-fluentbit-config
+  name: tibco-developer-hub-fluentbit-config
   labels: {{ include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: backstage
     {{- include "tibcohub.platform.commonLabels" . | nindent 4 }}
