@@ -41,6 +41,16 @@ We are running the steps in a MacBook Pro. The following tools are installed usi
 * kubectl (v1.28.3)
 * helm (v3.13.1)
 
+For reference, [Dockerfile](../Dockerfile) with [apline 3.18](https://hub.docker.com/_/alpine) can be used to build a docker image with all the tools mentioned above, pre-installed.
+The subsequent steps can be followed from within the container.
+
+> [!IMPORTANT]
+> Please use --platform while building tha image with docker buildx commands.
+> We have used linux/amd64 as platform. This can be different based on your machine OS.
+
+> [!NOTE]
+> Please use export AWS_PAGER="" within the container to disable the use of a pager
+
 ## Recommended IAM Policies
 It is recommeded to have the [Minimum IAM Policies](https://eksctl.io/usage/minimum-iam-policies/ attached to the role which is being used for the cluster creation.
 Additionally, you will need to add the AmazonElasticFileSystemFullAccess (arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess) policy to the role you are going to use.
@@ -50,16 +60,17 @@ Additionally, you will need to add the AmazonElasticFileSystemFullAccess (arn:aw
 ## Cluster configuration specific variables
 export DP_VPC_CIDR="10.200.0.0/16" # vpc cidr for the cluster
 export AWS_REGION=us-west-2 # aws region to be used for deployment
-export KUBECONFIG=${DP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
 export DP_CLUSTER_NAME=dp-cluster # name of the cluster to be prvisioned, used for chart deployment
+export KUBECONFIG=${DP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
 
 ## Tooling specific variables
 export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts # location of charts repo url
 export DP_DOMAIN=dp1.aws.example.com # domain to be used
 export MAIN_INGRESS_CONTROLLER=alb # name of aws load balancer controller
 export DP_EBS_ENABLED=true # to enable ebs storage class
-export DP_STORAGE_CLASS=ebs-gp3 # name storge class ebs
+export DP_STORAGE_CLASS=ebs-gp3 # name of ebs storge class
 export DP_EFS_ENABLED=true # to enable efs storage class
+export DP_STORAGE_CLASS_EFS=efs-sc # name of efs storge class
 export INSTALL_CALICO="true" # to deploy calico
 export DP_INGRESS_CLASS=nginx # name of main ingress class used by capabilities 
 export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
@@ -140,7 +151,6 @@ extraArgs:
 EOF
 
 # install aws-load-balancer-controller
-export DP_CLUSTER_NAME=dp-cluster
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n kube-system aws-load-balancer-controller aws-load-balancer-controller \
   --labels layer=0 \
@@ -208,7 +218,7 @@ Before deploy `dp-config-aws`; we need to set up AWS EFS. For more information a
 
 We provide an [EFS creation script](create-efs.sh) to create EFS. 
 ```bash
-./create-efs.sh ${DP_CLUSTER_NAME}
+./create-efs.sh
 ```
 
 After running above script; we will get an EFS ID output like `fs-0ec1c745c10d523f6`. We will need to use this value to deploy `dp-config-aws` helm chart.
