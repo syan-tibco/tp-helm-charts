@@ -42,7 +42,6 @@ data:
       Match             dp.*
       Remove_key        stream
       Remove_key        _p
-      Remove_key        time
 
     [FILTER]
       name              parser
@@ -51,6 +50,12 @@ data:
       key_name          log
       Reserve_Data      On
 
+    [FILTER]
+      Name lua
+      Match dp.*
+      Script update_record.lua
+      Call update_record
+
     [OUTPUT]
       Match dp.*
       {{- range $key, $val := .Values.fluentBit.output }}
@@ -58,21 +63,27 @@ data:
       {{- end }}
 
   update_record.lua: |
-    -- Function to append all fields under key "msg"
+    -- move level, scope, and message under log
     function update_record(tag, timestamp, record)
-      record["level"] = newLog[level]
-      record["scope"] = newLog[scope]
-      record["msg"] = newLog[msg]
-      record["log"] = nil
+      local log = {};
+      log.level = record["level"]
+      record["level"] = nil;
+      log.scope = record["scope"]
+      record["scope"] = nil;
+      log.msg  = record["msg"]
+      record["msg"] = nil;
+      record.log = log
       return 2, timestamp, record
     end
 
   custom_parsers.conf: |
     [PARSER]
-        Name   istio-discovery-json-parser
-        Format json
-        Time_Key time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+      Name              istio-discovery-json-parser
+      Format            json
+      Time_Key          time
+      Time_Key time
+      Time_Format       %Y-%m-%dT%H:%M:%S.%L%z
+      Decode_Field_As   json log
 {{- end }}
 
 
