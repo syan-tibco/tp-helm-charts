@@ -5030,6 +5030,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/jaeger-0.71.15/jaeger-0.71.15.tgz
     version: 0.71.15
   msg-ems-tp:
+  - apiVersion: v2
+    appVersion: 10.2.1-8
+    created: "2023-11-08T03:29:40.760873657Z"
+    description: Data-plane provisioning chart for EMS server group
+    digest: 5135e4801cb4470f12a780a1b8d6cbdbcd91b8eb18488f98c72d115de6be1a8f
+    keywords:
+    - tibco-platform
+    - data-plane
+    - messaging
+    - EMS
+    name: msg-ems-tp
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/msg-ems-tp-1.0.21/msg-ems-tp-1.0.21.tgz
+    version: 1.0.21
   - annotations:
       artifacthub.io/category: streaming-messaging
       artifacthub.io/changes: |
@@ -9046,4 +9060,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-07T18:14:25.65706514Z"
+generated: "2023-11-08T03:29:40.76158531Z"
