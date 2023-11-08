@@ -42,11 +42,12 @@ data:
       Match             dp.*
       Remove_key        stream
       Remove_key        _p
+      Remove_key        time
 
     [FILTER]
       name              parser
       Match             dp.*
-      Parser            json
+      Parser            istio-discovery-json-parser
       key_name          log
       Reserve_Data      On
 
@@ -68,12 +69,10 @@ data:
 
   custom_parsers.conf: |
     [PARSER]
-       Name    istio-discovery-proxy
-       Format  regex
-       Regex ^(?<timestamp>[\S+]*)(?: +<level>[\S+]*)(?: +?<scope>[\S+]*)(?: +?<msg>[\S+ ]*)
-       Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-       Time_Keep   On
-       Time_Key start_time
+        Name   istio-discovery-json-parser
+        Format json
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
 {{- end }}
 
 
