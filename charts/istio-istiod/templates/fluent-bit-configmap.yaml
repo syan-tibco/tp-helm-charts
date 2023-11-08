@@ -19,8 +19,9 @@ data:
       Flush             1
       Log_Level         info
       Daemon            off
-      Parsers_File /fluent-bit/etc/parsers.conf
-      Parsers_File /fluent-bit/etc/custom_parsers.conf
+      Parsers_File      /fluent-bit/etc/parsers.conf
+      Parsers_File      /fluent-bit/etc/custom_parsers.conf
+      Parsers_File      /fluent-bit/etc/update_record.lua
       HTTP_Server On
       HTTP_Listen 0.0.0.0
       HTTP_Port 2020
@@ -42,21 +43,47 @@ data:
       Remove_key        stream
       Remove_key        _p
 
+    [FILTER]
+      name              parser
+      Match             dp.*
+      Parser            istio-discovery-json-parser
+      key_name          log
+      Reserve_Data      On
+
+    [FILTER]
+      Name lua
+      Match dp.*
+      Script update_record.lua
+      Call update_record
+
     [OUTPUT]
+      Match dp.*
       {{- range $key, $val := .Values.fluentBit.output }}
       {{ $key }} {{ $val }}
       {{- end }}
-      Match dp.*
+
+  update_record.lua: |
+    -- move level, scope, and message under log
+    function update_record(tag, timestamp, record)
+      local log = {};
+      log.level = record["level"]
+      record["level"] = nil;
+      log.scope = record["scope"]
+      record["scope"] = nil;
+      log.msg  = record["msg"]
+      record["msg"] = nil;
+      record.log = log
+      return 2, timestamp, record
+    end
 
   custom_parsers.conf: |
     [PARSER]
-       Name    istio-discovery-proxy
-       Format  regex
-       Regex ^(?<timestamp>[\S+]*)(?: +<level>[\S+]*)(?: +?<scope>[\S+]*)(?: +?<msg>[\S+ ]*)
-       Time_Format %Y-%m-%dT%H:%M:%S.%L%z
-       Time_Keep   On
-       Time_Key start_time
-
+      Name              istio-discovery-json-parser
+      Format            json
+      Time_Key          time
+      Time_Key time
+      Time_Format       %Y-%m-%dT%H:%M:%S.%L%z
+      Decode_Field_As   json log
 {{- end }}
 
 
