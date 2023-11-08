@@ -23,7 +23,7 @@ global:
       serviceaccount:
         serviceAccountName: ""
     containerRegistry:
-      secret: ""
+      secret: &psgImagePullSecrets ""
       url: ""
   # -- Global Docker registry secret names as an array
   # </br> E.g. `imagePullSecrets: [myRegistryKeySecretName]`
@@ -108,7 +108,7 @@ backstage:
     jfrogRepository: platform/dx/tibco-hub
 
     # -- Backstage image tag (immutable tags are recommended)
-    tag: "256"
+    tag: "254"
 
     # -- Specify a imagePullPolicy.
     # Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -293,6 +293,7 @@ postgresql:
    repository: pdx/postgresql
    jfrogRepository: platform/dx/postgresql
    tag: 14.5.0-debian-11-r35
+   pullSecrets: [ *psgImagePullSecrets ]
   commonLabels: '{{- include "tibcohub.platform.commonLabels" . -}}'
 
   # -- The authentication details of the Postgres database

@@ -6,9 +6,9 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 1.0.25
+version: 1.0.25.1-PLTDX-751-rename
 
-appVersion: "1.0.256"
+appVersion: "1.0.254"
 
 dependencies:
   - name: common
