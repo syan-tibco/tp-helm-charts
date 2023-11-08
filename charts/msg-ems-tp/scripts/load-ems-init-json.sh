@@ -11,16 +11,11 @@ function wait_for_url()  {
 }
 
 outfile=${1:-tibemsd-ftl.json}
-srvBase="${MY_POD_NAME%-*}"
-relname="${MY_RELEASE}"
-namespace=$MY_NAMESPACE
 ftlport="443"
 emsport="9010"
 initDir="${EMS_INIT_DIR:-/logs/$MY_POD_NAME}"
 initTibemsdJson="${EMS_INIT_JSON:-$initDir/boot/tibemsd-ftl.json}"
 
-# Expect
-# FTL_REALM_URL
 echo "Waiting for FTL-Server Quorum ... "
 wait_for_url "$FTL_REALM_URL/api/v1/available"
 

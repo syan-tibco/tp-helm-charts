@@ -8,21 +8,9 @@ apiVersion: v2
 appVersion: "10.2.1-8"
 description: Data-plane provisioning chart for EMS server group
 name: msg-ems-tp
-version: "1.0.20"
+version: "1.0.21"
 keywords:
 - tibco-platform
 - data-plane
 - messaging
 - EMS
-annotations:
-  artifacthub.io/category: streaming-messaging
-  artifacthub.io/changes: |
-    - kind: added
-      description: "Tibco Platform Release: 1.0.0"
-  artifacthub.io/prerelease: "true"
-  artifacthub.io/license: "https://www.apache.org/licenses/LICENSE-2.0"
-  artifacthub.io/images: |
-   - name: msg-ems-all
-      image: "msg-ems-all:10.2.1-8"
-      platforms:
-        - linux/amd64
