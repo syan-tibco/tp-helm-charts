@@ -51,7 +51,7 @@ The subsequent steps can be followed from within the container.
 A sample command on Linux AMD64 is
 ```bash
 docker buildx build --platform=${platform} --progress=plain \
-  --build-arg AWS_CLI_VERSION${AWS_CLI_VERSION} \
+  --build-arg AWS_CLI_VERSION=${AWS_CLI_VERSION} \
   --build-arg EKSCTL_VERSION=${EKSCTL_VERSION} \
   --build-arg KUBECTL_VERSION=${KUBECTL_VERSION} \
   --build-arg HELM_VERSION=${HELM_VERSION} \
