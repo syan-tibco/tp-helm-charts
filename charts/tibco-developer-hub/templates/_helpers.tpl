@@ -164,7 +164,11 @@ nginx.ingress.kubernetes.io/auth-response-headers: >-
     X-Auth-Request-User,X-Auth-Request-Email,X-Forwarded-Access-Token,X-Auth-Request-Access-Token,X-Atmosphere-Token
 nginx.ingress.kubernetes.io/auth-signin: {{ include "tibcohub.host.url" (dict "path" "tibco/hub/oauth2/start?rd=$escaped_request_uri" "context" $) }}
 nginx.ingress.kubernetes.io/auth-url: {{ include "tibcohub.host.url" (dict "path" "tibco/hub/oauth2/auth" "context" $) }}
-nginx.ingress.kubernetes.io/proxy-buffer-size: 16k  
+nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
+nginx.ingress.kubernetes.io/auth-snippet: >-
+    if ( $request_uri !~ "{{ .Values.ingress.pathPrefix }}/(.*)" ) {
+        return 200;
+    }
 {{- end -}}
 
 {{- define "postgresql.imagePullSecrets" -}}
