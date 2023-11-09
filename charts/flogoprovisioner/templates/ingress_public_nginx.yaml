@@ -11,6 +11,10 @@ metadata:
     nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email,X-Forwarded-Access-Token,X-Auth-Request-Access-Token,X-Atmosphere-Token
     nginx.ingress.kubernetes.io/auth-signin: https://{{ .Values.publicApi.ingress.nginx.fqdn }}{{ .Values.publicApi.ingress.nginx.pathPrefix }}/oauth2/start?rd=$escaped_request_uri
     nginx.ingress.kubernetes.io/auth-url: https://{{ .Values.publicApi.ingress.nginx.fqdn }}{{ .Values.publicApi.ingress.nginx.pathPrefix }}/oauth2/auth
+    nginx.ingress.kubernetes.io/auth-snippet: |
+      if ( $request_uri !~ "{{ .Values.publicApi.ingress.nginx.pathPrefix }}/(.*)" ) {
+            return 200;
+      }
     nginx.ingress.kubernetes.io/configuration-snippet: "auth_request_set $token $upstream_http_authorization;\nproxy_set_header
       Authorization $token;\nproxy_pass_header Authorization; \n"
     nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
