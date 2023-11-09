@@ -32,7 +32,7 @@ In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and i
 ## Command Line Tools needed
 
 We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
-* envsubst
+* envsubst (part of homebrew gettext)
 * jq (1.7)
 * yq (v4.35.2)
 * bash (5.2.15)
@@ -45,8 +45,19 @@ For reference, [Dockerfile](../Dockerfile) with [apline 3.18](https://hub.docker
 The subsequent steps can be followed from within the container.
 
 > [!IMPORTANT]
-> Please use --platform while building tha image with docker buildx commands.
+> Please use --platform while building tha image with [docker buildx commands](https://docs.docker.com/engine/reference/commandline/buildx_build/).
 > We have used linux/amd64 as platform. This can be different based on your machine OS.
+
+A sample command on Linux AMD64 is
+```bash
+docker buildx build --platform=${platform} --progress=plain \
+  --build-arg AWS_CLI_VERSION${AWS_CLI_VERSION} \
+  --build-arg EKSCTL_VERSION=${EKSCTL_VERSION} \
+  --build-arg KUBECTL_VERSION=${KUBECTL_VERSION} \
+  --build-arg HELM_VERSION=${HELM_VERSION} \
+  --build-arg YQ_VERSION=${YQ_VERSION} \
+  -t workshop-cli-tools:latest --load .
+```
 
 > [!NOTE]
 > Please use export AWS_PAGER="" within the container to disable the use of a pager
