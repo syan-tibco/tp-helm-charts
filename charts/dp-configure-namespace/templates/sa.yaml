@@ -10,7 +10,7 @@
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: {{ include "dp-configure-namespace.serviceAccount" . }}
+  name: {{ include "dp-configure-namespace.serviceAccount" . | quote }}
   namespace: {{ include "dp-configure-namespace.primaryNamespaceName" . }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}

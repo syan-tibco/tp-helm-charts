@@ -10,7 +10,7 @@ global:
     primaryNamespaceName: "dp-namespace"
     # Provide the name of the service account from primary namespace 
     # This will be used for dp-core-infrastrcuture, capability provisioning, application deployment
-    serviceAccount: "sa"
+    # serviceAccount: "sa"
 
 # Use an already existing service account present in the primary namespace
 # Default value is true. Possible values are true, false
