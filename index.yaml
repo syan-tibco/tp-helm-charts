@@ -6958,6 +6958,17 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/opentelemetry-collector-0.69.2/opentelemetry-collector-0.69.2.tgz
     version: 0.69.2
+  servicemesh-contrib:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-11-09T08:06:28.293901113Z"
+    description: A Helm chart for copying Service Mesh contribution to EFS
+    digest: 32412d64c8c89c3fcb48135e1de47452ac1288a3c5dcc4f2851288d3ba76010d
+    name: servicemesh-contrib
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/servicemesh-contrib-1.0.1/servicemesh-contrib-1.0.1.tgz
+    version: 1.0.1
   tibco-developer-hub:
   - apiVersion: v2
     appVersion: 1.0.254
@@ -9183,4 +9194,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-08T18:31:53.712811816Z"
+generated: "2023-11-09T08:06:28.294657999Z"
