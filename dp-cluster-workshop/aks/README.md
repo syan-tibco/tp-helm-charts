@@ -28,7 +28,7 @@ Table of Contents
 The goal of this workshop is to provide a hands-on experience to deploy a TIBCO Data Plane cluster in Azure. This is the prerequisite for the TIBCO Data Plane.
 
 > [!Note]
-> This workshop is not meant for production deployment.
+> This workshop is NOT meant for production deployment.
 
 ## Introduction
 
