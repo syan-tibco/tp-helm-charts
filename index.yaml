@@ -5270,6 +5270,20 @@ entries:
   o11yservice:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-11-09T08:11:50.620548525Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
+    digest: bc35f5ddec31c215fc553e51f4d80ae39be65b75f1a0a1ec308fcc9166c859f0
+    home: https://github.com/tibco/tp-o11y-service.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: o11yservice
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/o11yservice-1.0.46/o11yservice-1.0.46.tgz
+    version: 1.0.46
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-11-06T15:29:36.315513364Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
     digest: 1a2e4d9bbdd06f5aa695182af8e76654c34f7034d41cd92aef8fc9c6abcb45b1
@@ -9194,4 +9208,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-09T08:06:28.294657999Z"
+generated: "2023-11-09T08:11:50.622042781Z"
