@@ -1,8 +1,5 @@
 #!/bin/bash
 
-export DP_RESOURCE_GROUP=${1:-dp-resource-group}
-export STORAGE_ACCOUNT_NAME=${2:-templatestorageaccount3}
-
 # need to output empty string otherwise will output null
 PVC_LIST=$(kubectl get pv -o jsonpath='{range .items[?(@.spec.csi.driver=="file.csi.azure.com")]}{.metadata.name}{"\n"}{end}')
 
@@ -30,7 +27,7 @@ do
 done
 
 echo "deleting resource group"
-az group delete -n ${DP_CLUSTER_NAME} -y
+az group delete -n ${DP_RESOURCE_GROUP} -y
 
 echo "deleting file shares"
 while read -r line

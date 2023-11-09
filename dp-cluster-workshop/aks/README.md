@@ -6,14 +6,15 @@ Table of Contents
   * [Introduction](#introduction)
   * [Command Line Tools needed](#command-line-tools-needed)
   * [Azure Login](#azure-login)
+  * [Export required variables](#export-required-variables)
   * [Create AKS cluster](#create-aks-cluster)
-  * [Generate kubeconfig to connect to AKS cluster](#generate-kubeconfig-to-connect-to-aks-cluster)
   * [Configure cluster](#configure-cluster)
+  * [Generate kubeconfig to connect to AKS cluster](#generate-kubeconfig-to-connect-to-aks-cluster)
   * [Install common third party tools](#install-common-third-party-tools)
   * [Install Ingress Controller, Storage class](#install-ingress-controller-storage-class)
     * [Setup DNS](#setup-dns)
-    * [Configure Azure Files, Ingress](#configure-azure-files-ingress)
-    * [Storage class](#storage-class)
+    * [Ingress Controller](#ingress-controller)
+    * [Storage Class](#storage-class)
   * [Install Observability tools](#install-observability-tools)
     * [Install Elastic stack](#install-elastic-stack)
     * [Install Prometheus stack](#install-prometheus-stack)
@@ -26,6 +27,9 @@ Table of Contents
 
 The goal of this workshop is to provide a hands-on experience to deploy a TIBCO Data Plane cluster in Azure. This is the prerequisite for the TIBCO Data Plane.
 
+> [!Note]
+> This workshop is not meant for production deployment.
+
 ## Introduction
 
 In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and install the necessary tools. This workshop will guide you to create a Kubernetes cluster in Azure and install the necessary tools.
@@ -33,7 +37,7 @@ In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and i
 ## Command Line Tools needed
 
 We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
-* envsubst
+* envsubst (part of homebrew gettext)
 * yq (v4.35.2)
 * jq (1.7)
 * bash (5.2.15)
@@ -41,48 +45,110 @@ We are running the steps in a MacBook Pro. The following tools are installed usi
 * kubectl (v1.28.3)
 * helm (v3.13.1)
 
-## Azure Login
-We have used the contributor role which has access to create resources in a given subscription. 
+For reference, [Dockerfile](../Dockerfile) with [apline 3.18](https://hub.docker.com/_/alpine) can be used to build a docker image with all the tools mentioned above, pre-installed.
+The subsequent steps can be followed from within the container.
 
-## Create AKS cluster
+> [!IMPORTANT]
+> Please use --platform while building tha image with [docker buildx commands](https://docs.docker.com/engine/reference/commandline/buildx_build/).
+> We have used linux/amd64 as platform. This can be different based on your machine OS.
+
+A sample command on Linux AMD64 is
+```bash
+docker buildx build --platform=${platform} --progress=plain \
+  --build-arg AZURE_CLI_VERSION=${AZURE_CLI_VERSION} \
+  --build-arg KUBECTL_VERSION=${KUBECTL_VERSION} \
+  --build-arg HELM_VERSION=${HELM_VERSION} \
+  --build-arg YQ_VERSION=${YQ_VERSION} \
+  -t workshop-cli-tools:latest --load .
 ```
+## Azure Login
+We have used a user with Contributor & User Access Administrator roles for the workshop.
+
+This is to ensure that user can create resource group, create resources, assign roles to managed identity and create dns zones.
+
+You can optionally choose to [create a service principal with these role assignments](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash) and login. 
+
+## Export required variables
+```bash
+## Azure specific variables
+export SUBSCRIPTION_ID=$(az account show --query id -o tsv) # subscription id
+export TENANT_ID=$(az account show --query tenantId -o tsv) # tenant id
+export AZURE_REGION="eastus" # region of resource group
+
+## Cluster configuration specific variables
+export DP_RESOURCE_GROUP="dp-resource-group" # resource group name
+export DP_CLUSTER_NAME="dp-cluster" # name of the cluster to be prvisioned, used for chart deployment
+export USER_ASSIGNED_IDENTITY_NAME="${DP_CLUSTER_NAME}-identity" # user assigned identity to be associated with cluster
+export KUBECONFIG=${DP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
+
+## Network specific variables
+export VNET_NAME="${DP_CLUSTER_NAME}-vnet" # name of VNet resource
+export VNET_CIDR="10.4.0.0/16" # CIDR of the VNet
+export AKS_SUBNET_NAME="aks-subnet" # name of AKS subnet resource
+export AKS_SUBNET_CIDR="10.4.0.0/20" # CIDR of the AKS subnet address space
+export APPLICATION_GW_SUBNET_NAME="appgw-subnet" # name of application gateway subnet
+export APPLICATION_GW_SUBNET_CIDR="10.4.17.0/24" # CIDR of the application gateway subnet address space
+export PUBLIC_IP_NAME="public-ip" # name of public ip resource
+export NAT_GW_NAME="nat-gateway" # name of NAT gateway resource
+export NAT_GW_SUBNET_NAME="natgw-subnet" # name of NAT gateway subnet
+export NAT_GW_SUBNET_CIDR="10.4.18.0/27" # CIDR of the NAT gateway subnet address space
+
+## By default, only your public IP will be added to allow access to public cluster
+export AUTHORIZED_IP=""  # declare additional IPs to be whitelisted for accessing cluster
+
+## Tooling specific variables
+export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts # location of charts repo url
+#export DP_DOMAIN="dp1.azure.example.com" # domain to be used
+export DP_DOMAIN="dp1.azure.dataplanes.pro"
+export MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of azure application gateway ingress controller
+export DP_DISK_ENABLED="true" # to enable azure block storage class
+export DP_DISK_STORAGE_CLASS="azure-disk-sc" # name of azure block storage class
+export DP_FILE_ENABLED="true" # to enable azure files share storage class
+export DP_FILE_STORAGE_CLASS="azure-files-sc" # name of azure files storage class
+export DP_INGRESS_CLASS="nginx" # name of main ingress class used by capabilities 
+export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
+export DP_DNS_RESOURCE_GROUP="" # replace with name of resource group containing dns record sets
+export STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account to be used for azure files
+export STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group
+
+export MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of azure application gateway ingress controller class
+```
+
+Change the directory to aks/ to proceed with the next steps.
+```bash
+cd /aks
+```
+## Create AKS cluster
+> [!IMPORTNANT]
+> Please note, for cluster we are using a flag --enable-workload-identity.
+> This works with if the preview feature EnableWorkloadIdentityPreview is registered for the subscription.
+> You might get a prompt to allow to register the feature as part of script execution, if it is not registered already.
+> This is one time step and you can also enable explicitly using the [cli command to register feature](https://learn.microsoft.com/en-us/cli/azure/feature?view=azure-cli-latest#az-feature-register)
+> e.g. az feature register --namespace Microsoft.ContainerService --name EnableWorkloadIdentityPreview
+
 Execute the script 
 ```bash
 ./aks-cluster-create.sh
 ```
+
 It will take around 15 minutes to create an empty AKS cluster. 
+> [!NOTE]
+> The AKS cluster provisioned is of version 1.28 which is in [public preview mode](https://> azure.microsoft.com/en-us/updates/public-preview-aks-support-for-kubernetes-version-128/)
 
 ## Configure cluster
-Execute the script 
+Execute the script to
+1. create necessary role assignments
+2. create federated workload identity federation
+3. create namespace and secrets for external dns
 ```bash
 ./configure-cluster.sh
 ```
-It will take around 10 minutes to do the following configuration: 
-
-## Adding additional IPs to access cluster
-By default, your VPN IPs will be added as part of the configure-cluster.sh command above.
-To add more IPs to be allowed to access the cluster, use the following code snippet
-> [!Note]
-> Additional IPs are required only when you are not using VPN.
-> The rules can take up to two minutes to propagate. Please allow up to that time when testing the connection.
-```bash
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-export MY_PUBLIC_IP="" ## add one or more comma separated non-duplicate public IPs with /32 CIDR without any spaces
-CURRENT_IP=$(az aks show --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --query apiServerAccessProfile.authorizedIpRanges -o tsv | sed -n -e 'H;${x;s/\n/,/g;s/^,//;p;}')
-ARRAY_CURRENT_IP=(`echo ${CURRENT_IP}`)
-ADDITIONAL_IP=$(echo ${ARRAY_CURRENT_IP} | sed 's/$/,/' | xargs | sed 's/[[:blank:]]//g')${MY_PUBLIC_IP}
-az aks update --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --api-server-authorized-ip-ranges "${ADDITIONAL_IP}"
-```
+It will take around 5 minutes to complete the configuration.
 
 ## Generate kubeconfig to connect to AKS cluster
 We can use the following command to generate kubeconfig file.
 ```bash
-export AZURE_REGION=eastus
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-az aks install-cli
-az aks get-credentials --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --overwrite-existing
+az aks get-credentials --resource-group ${DP_RESOURCE_GROUP} --name ${DP_CLUSTER_NAME} --file "${KUBECONFIG}" --overwrite-existing
 ```
 
 And check the connection to AKS cluster.
@@ -95,6 +161,12 @@ kubectl get nodes
 Before we deploy ingress or observability tools on an empty AKS cluster; we need to install some basic tools. 
 * [cert-manager](https://cert-manager.io/docs/installation/helm/)
 * [external-dns](https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns)
+
+> [!NOTE]
+> In the chart installation commands starting in this section & continued in next sections, you will see labels added
+> in the helm upgrade command i.e. --labels layer=number. Adding labels is supported in helm version v3.13. Label
+> numbers are added to identify the dependency of chart installations, so that uninstallation can be done in reverse
+> sequence (starting with charts not labelled first).
 
 <details>
 
@@ -114,18 +186,9 @@ serviceAccount:
     azure.workload.identity/use: "true"
 EOF
 
-```bash
 # install external-dns
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_CLUSTER_NAME=dp-cluster
-export DP_DNS_RESOURCE_GROUP=cic-dns
-export AZURE_REGION=eastus
-export AZURE_EXTERNAL_DNS_SA_NAMESPACE="external-dns-system"
-export MAIN_INGRESS_CLASS_NAME="azure-application-gateway"
-export DP_DOMAIN="dp1.azure.dataplanes.pro"
-
 helm upgrade --install --wait --timeout 1h --reuse-values \
-  -n ${AZURE_EXTERNAL_DNS_SA_NAMESPACE} external-dns external-dns \
+  -n external-dns-system external-dns external-dns \
   --labels layer=0 \
   --repo "https://kubernetes-sigs.github.io/external-dns" --version "1.13.0" -f - <<EOF
 provider: azure
@@ -150,7 +213,7 @@ EOF
 
 <details>
 
-<summary>Sample output of third party helm charts that we have installed in the EKS cluster...</summary>
+<summary>Sample output of third party helm charts that we have installed in the AKS cluster...</summary>
 
 ```bash
 $ helm ls -A -a
@@ -178,35 +241,19 @@ It will create the following resources:
 * a storage class for Azure Files
 
 ### Setup DNS
-For this workshop we will use `dp1.azure.dataplanes.pro` as the domain name. We will use `*.dp1.azure.dataplanes.pro` as the wildcard domain name for all the DP capabilities.
+For this workshop we will use `dp1.azure.example.com` as the domain name. We will use `*.dp1.azure.example.com` as the wildcard domain name for all the DP capabilities.
 We are using the following services in this workshop:
-* [DNS Zones](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records): to manage DNS. We register `azure.dataplanes.pro` in Azure DNS Zones.
-* [Let's Encrypt](https://cert-manager.io/docs/configuration/acme/dns01/azuredns/): to manage SSL certificate. We will create a wildcard certificate for `*.dp1.azure.dataplanes.pro`.
+* [DNS Zones](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records): to manage DNS. We register `azure.example.com` in Azure DNS Zones.
+* [Let's Encrypt](https://cert-manager.io/docs/configuration/acme/dns01/azuredns/): to manage SSL certificate. We will create a wildcard certificate for `*.dp1.azure.example.com`.
 * azure-application-gateway: to create Application Gateway. It will automatically create listeners and add SSL certificate to application gateway.
 * external-dns: to create DNS record in dns zone for the record set. It will automatically create DNS record for ingress objects.
 
-For this workshop work; you will need to 
-* register a domain name in Route 53. You can follow this [link](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-register.html) to register a domain name in Route 53.
-* create a wildcard certificate in ACM. You can follow this [link](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html) to create a wildcard certificate in ACM.
-
-### Configure Azure Files, Ingress
-
+### Ingress Controller
 
 ```bash
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
-export AZURE_SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-export DP_RESOURCE_GROUP=dp-resource-group
-export DP_DNS_RESOURCE_GROUP=cic-dns
-export DP_CLUSTER_NAME=dp-cluster
-export CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
-export DP_TOP_LEVEL_DOMAIN="azure.dataplanes.pro"
 export DP_SANDBOX_SUBDOMAIN="dp1"
-export DP_DOMAIN="dp1.azure.dataplanes.pro"
-export MAIN_INGRESS_CLASS_NAME="azure-application-gateway"
-export STORAGE_ACCOUNT_NAME="templatestorageaccount3"
-export STORAGE_ACCOUNT_RESOURCE_GROUP="azrtroposdev-CloudInfraEngineering-template"
-export DP_DISK_ENABLED=false
-export DP_FILE_ENABLED=true
+export DP_TOP_LEVEL_DOMAIN="azure.example.com"
+export CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
 ## following section is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
 export DP_NAMESPACE="ns"
@@ -214,12 +261,12 @@ export DP_NAMESPACE="ns"
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aks dp-config-aks \
   --labels layer=1 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.11" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.12" -f - <<EOF
 global:
   dnsSandboxSubdomain: "${DP_SANDBOX_SUBDOMAIN}"
   dnsGlobalTopDomain: "${DP_TOP_LEVEL_DOMAIN}"
   azureSubscriptionDnsResourceGroup: "${DP_DNS_RESOURCE_GROUP}"
-  azureSubscriptionId: "${AZURE_SUBSCRIPTION_ID}"
+  azureSubscriptionId: "${SUBSCRIPTION_ID}"
   azureAwiAsoDnsClientId: "${CLIENT_ID}"
 dns:
   domain: "${DP_DOMAIN}"
@@ -229,32 +276,32 @@ httpIngress:
     external-dns.alpha.kubernetes.io/hostname: "*.${DP_DOMAIN}"
 storageClass:
   azuredisk:
-    enabled: ${DP_DISK_ENABLED}
+    enabled: false
   azurefile:
-    enabled: ${DP_FILE_ENABLED}
-    parameters:
-      storageAccount: ${STORAGE_ACCOUNT_NAME}
-      resourceGroup: ${STORAGE_ACCOUNT_RESOURCE_GROUP}
+    enabled: false
 ingress-nginx:
   controller:
     config:
+      # required by apps swagger
       use-forwarded-headers: "true"
-      enable-opentelemetry: "true"
-      log-level: debug
-      opentelemetry-config: /etc/nginx/opentelemetry.toml
-      opentelemetry-operation-name: HTTP $request_method $service_name $uri
-      opentelemetry-trust-incoming-span: "true"
-      otel-max-export-batch-size: "512"
-      otel-max-queuesize: "2048"
-      otel-sampler: AlwaysOn
-      otel-sampler-parent-based: "false"
-      otel-sampler-ratio: "1.0"
-      otel-schedule-delay-millis: "5000"
-      otel-service-name: nginx-proxy
-      otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
-      otlp-collector-port: "4317"
-    opentelemetry:
-      enabled: true
+## following section is required to send traces using nginx
+## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
+#      enable-opentelemetry: "true"
+#      log-level: debug
+#      opentelemetry-config: /etc/nginx/opentelemetry.toml
+#      opentelemetry-operation-name: HTTP $request_method $service_name $uri
+#      opentelemetry-trust-incoming-span: "true"
+#      otel-max-export-batch-size: "512"
+#      otel-max-queuesize: "2048"
+#      otel-sampler: AlwaysOn
+#      otel-sampler-parent-based: "false"
+#      otel-sampler-ratio: "1.0"
+#      otel-schedule-delay-millis: "5000"
+#      otel-service-name: nginx-proxy
+#      otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
+#      otlp-collector-port: "4317"
+#    opentelemetry:
+#      enabled: true
 EOF
 ```
 
@@ -271,8 +318,33 @@ The `nginx` ingress class is the main ingress that DP will use. The `azure-appli
 > [!IMPORTANT]
 > You will need to provide this ingress class name i.e. nginx to TIBCO Control Plane when you deploy capability.
 
-### Storage class
+### Storage Class
 
+```bash
+helm upgrade --install --wait --timeout 1h --create-namespace \
+  -n storage-system dp-config-aks-storage dp-config-aks \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" \
+  --labels layer=1 \
+  --version "1.0.12" -f - <<EOF
+dns:
+  domain: "${DP_DOMAIN}"
+httpIngress:
+  enabled: false
+storageClass:
+  azuredisk:
+    enabled: ${DP_DISK_ENABLED}
+    name: ${DP_DISK_STORAGE_CLASS}
+  azurefile:
+    enabled: ${DP_FILE_ENABLED}
+    name: ${DP_FILE_STORAGE_CLASS}
+## following section is required if you want to use an existing storage account. Otherwise, storage account is created in the same resource group.
+#    parameters:
+#      storageAccount: ${STORAGE_ACCOUNT_NAME}
+#      resourceGroup: ${STORAGE_ACCOUNT_RESOURCE_GROUP}
+ingress-nginx:
+  enabled: false
+EOF
+```
 Use the following command to get the storage class name.
 
 ```bash
@@ -286,12 +358,13 @@ azurefile-premium       file.csi.azure.com   Delete          Immediate          
 default (default)       disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
 managed                 disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
 managed-csi             disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
+azure-disk-sc           disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
 managed-csi-premium     disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
 managed-premium         disk.csi.azure.com   Delete          WaitForFirstConsumer   true                   24m
 ```
 
-We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` helm chart will create all these storage classes.
-* `managed-csi` is the storage class for Azure Block Storage. This is used for
+We will be using the following storage classes created with `dp-config-aks` helm chart.
+* `azure-disk-sc` is the storage class for Azure Block Storage. This is used for
   * storage class for data when provision EMS capability
 * `azure-files-sc` is the storage class for Azure Files. This is used for
   * artifactmanager when we provision BWCE capability
@@ -314,16 +387,10 @@ We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` 
 helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
 
 # install dp-config-es
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts
-export DP_DOMAIN=dp1.azure.dataplanes.pro
-export DP_ES_RELEASE_NAME=dp-config-es
-export DP_INGRESS_CLASS=nginx
-export DP_STORAGE_CLASS=managed-csi
-
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-  -n elastic-system dp-config-es ${DP_ES_RELEASE_NAME} \
+  -n elastic-system ${DP_ES_RELEASE_NAME} dp-config-es \
   --labels layer=2 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.15" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.16" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
@@ -331,7 +398,7 @@ es:
     ingressClassName: ${DP_INGRESS_CLASS}
     service: ${DP_ES_RELEASE_NAME}-es-http
   storage:
-    name: ${DP_STORAGE_CLASS}
+    name: ${DP_DISK_STORAGE_CLASS}
 kibana:
   version: "8.9.1"
   ingress:
@@ -365,9 +432,6 @@ kubectl get secret dp-config-es-es-elastic-user -n elastic-system -o jsonpath="{
 
 ```bash
 # install prometheus stack
-export DP_DOMAIN=dp1.azure.dataplanes.pro
-export DP_INGRESS_CLASS=nginx
-
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
   --labels layer=2 \
@@ -436,8 +500,8 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 <summary>Use the following command to install Opentelemetry Collector for metrics...</summary>
 
 ```bash
-# Copy the below content to a YAML file values.yaml
-# Make sure the indetations are right.
+## create the values.yaml file with below contents
+## make sure the identations are in-tact
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
@@ -629,8 +693,7 @@ config:
 ```
 
 ```bash
-# Run the helm upgrade command passing the above values.yaml file
-
+## pass the values.yaml file created to the chart upgrade
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n prometheus-system otel-collector-daemon opentelemetry-collector \
   --labels layer=2 \
@@ -640,31 +703,33 @@ helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
 
 ## Information needed to be set on TIBCO Control Plane
 
-You can get base FQDN by running the following command:
+You can get BASE_FQDN by running the following command:
 ```bash
 kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 ```
 
 | Name                 | Sample value                                                                     | Notes                                                                     |
 |:---------------------|:---------------------------------------------------------------------------------|:--------------------------------------------------------------------------|
-| VPC_CIDR             | 10.224.0.0/12                                                                    | you can find this from eks recipe                                         |
-| ingress class name   | nginx                                                                            | this is used for BWCE                                                     |
-| Azure Files storage class    | azure-files-sc                                                                           | this is used for BWCE EFS storage                                         |
-| Azure Disks storage class    | managed-csi                                                                          | this is used for EMS messaging                                            |
-| BW FQDN              | bwce.\<base FQDN\>                                                               | this is the main domain plus any name you want to use for this capability |
-| User app log index   | user-app-1                                                                       | this comes from dp-config-es index template                               |
-| service ES index     | service-1                                                                        | this comes from dp-config-es index template                               |
-| ES internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | this comes from ES service                                                |
-| ES public endpoint   | https://elastic.\<base FQDN\>                                                    | this comes from ES ingress                                                |
-| ES password          | xxx                                                                              | see above ES password                                                     |
-| tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | same as elastic internal endpoint                                         |
-| Prometheus endpoint  | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | this comes from Prometheus service                                        |
-| Grafana endpoint  | https://grafana.\<base FQDN\> | this comes from Grafana service                                        |
+| VNET_CIDR             | 10.4.0.0/16                                                                    | from VNet                                         |
+| ingress class name   | nginx                                                                            | used for BWCE                                                     |
+| Azure Files storage class    | azure-files-sc                                                                           | BWCE Azure files storage                                         |
+| Azure Disks storage class    | azure-disk-sc                                                                          | used for EMS messaging                                            |
+| BW FQDN              | bwce.\<BASE_FQDN\>                                                               | capability fqdn |
+| Elastic User app logs index   | user-app-1                                                                       | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
+| Elastic Search logs index     | service-1                                                                        | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                                |
+| Elastic Search internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search service                                                |
+| Elastic Search public endpoint   | https://elastic.\<BASE_FQDN\>                                                    | Elastic Search ingress                                                |
+| Elastic Search password          | xxx                                                                              |               | Elastic Search password in dp-config-es-es-elastic-user secret                                                     |
+| Tracing server host  | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search internal endpoint                                         |
+| Prometheus service internal endpoint | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | Prometheus service                                        |
+| Prometheus public endpoint | https://prometheus-internal.\<BASE_FQDN\>  |  Prometheus ingress host                                        |
+| Grafana endpoint  | https://grafana.\<BASE_FQDN\> | Grafana ingress host                                        |
+Network Policies Details for Data Plane Namespace | [Confluence Document for Network Policies](https://confluence.tibco.com/display/TCP/Data+Plane+Network+Polices) | To be replcaed with TIBCO Doc link
 
 ## Clean up
 
-We provide a helper [clean-up](clean-up.sh) to delete the EKS cluster.
+Please process for de-provisioning of all the provisioned capabilities from the UI.
+For the tools charts uninstallation, Azure file shares deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
-export DP_CLUSTER_NAME=dp-cluster
-./clean-up.sh ${DP_CLUSTER_NAME}
+./clean-up.sh
 ```

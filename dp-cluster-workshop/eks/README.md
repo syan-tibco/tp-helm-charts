@@ -6,13 +6,19 @@ Table of Contents
   * [Introduction](#introduction)
   * [Command Line Tools needed](#command-line-tools-needed)
   * [Recommended IAM Policies](#recommended-iam-policies)
+  * [Export required variables](#export-required-variables)
   * [Create EKS cluster](#create-eks-cluster)
   * [Generate kubeconfig to connect to EKS cluster](#generate-kubeconfig-to-connect-to-eks-cluster)
   * [Install common third party tools](#install-common-third-party-tools)
-  * [Install Ingress Controller, Storage class](#install-ingress-controller-storage-class-)
+  * [Install Ingress Controller, Storage Class](#install-ingress-controller-storage-class-)
     * [Setup DNS](#setup-dns)
     * [Setup EFS](#setup-efs)
-    * [Storage class](#storage-class)
+    * [Ingress Controller](#ingress-controller)
+    * [Storage Class](#storage-class)
+  * [Install Calico [OPTIONAL]](#install-calico-optional)
+    * [Pre Installation Steps](#pre-installation-steps)
+    * [Chart Installation Step](#chart-installation-step)
+    * [Post Installation Steps](#post-installation-steps)
   * [Install Observability tools](#install-observability-tools)
     * [Install Elastic stack](#install-elastic-stack)
     * [Install Prometheus stack](#install-prometheus-stack)
@@ -24,6 +30,9 @@ Table of Contents
 # TIBCO Data Plane Cluster Workshop
 
 The goal of this workshop is to provide a hands-on experience to deploy a TIBCO Data Plane cluster in AWS. This is the prerequisite for the TIBCO Data Plane.
+
+> [!Note]
+> This workshop is NOT meant for production deployment.
 
 ## Introduction
 
@@ -90,6 +99,11 @@ export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
 > [!IMPORTANT]
 > The scripts associated with the workshop are NOT idempotent.
 > It is recommended to clean-up the existing setup to create a new one.
+
+Change the directory to eks/ to proceed with the next steps.
+```bash
+cd /eks
+```
 
 ## Create EKS cluster
 
@@ -199,7 +213,7 @@ metrics-server              	kube-system        	1       	2023-10-23 12:19:14.64
 ```
 </details>
 
-## Install Ingress Controller, Storage class 
+## Install Ingress Controller, Storage Class
 
 In this section, we will install ingress controller and storage class. We have made a helm chart called `dp-config-aws` that encapsulates the installation of ingress controller and storage class. 
 It will create the following resources:
@@ -232,6 +246,7 @@ We provide an [EFS creation script](create-efs.sh) to create EFS.
 ./create-efs.sh
 ```
 
+### Ingress Controller
 After running above script; we will get an EFS ID output like `fs-0ec1c745c10d523f6`. We will need to use this value to deploy `dp-config-aws` helm chart.
 
 ```bash
@@ -284,6 +299,20 @@ ingress-nginx:
 #       enabled: true
 EOF
 ```
+Use the following command to get the ingress class name.
+```bash
+$ kubectl get ingressclass
+NAME    CONTROLLER             PARAMETERS   AGE
+alb     ingress.k8s.aws/alb    <none>       7h12m
+nginx   k8s.io/ingress-nginx   <none>       7h11m
+```
+
+The `nginx` ingress class is the main ingress that DP will use. The `alb` ingress class is used by AWS ALB ingress controller.
+
+> [!IMPORTANT]
+> You will need to provide this ingress class name i.e. nginx to TIBCO Control Plane when you deploy capability.
+
+### Storage Class
 
 ```bash
 ## following variable is required to create the storage class
@@ -311,21 +340,6 @@ ingress-nginx:
   enabled: false
 EOF
 ```
-
-Use the following command to get the ingress class name.
-```bash
-$ kubectl get ingressclass
-NAME    CONTROLLER             PARAMETERS   AGE
-alb     ingress.k8s.aws/alb    <none>       7h12m
-nginx   k8s.io/ingress-nginx   <none>       7h11m
-```
-
-The `nginx` ingress class is the main ingress that DP will use. The `alb` ingress class is used by AWS ALB ingress controller.
-
-> [!IMPORTANT]
-> You will need to provide this ingress class name i.e. nginx to TIBCO Control Plane when you deploy capability.
-
-### Storage class
 
 Use the following command to get the storage class name.
 
@@ -565,7 +579,6 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 ```bash
 ## create the values.yaml file with below contents
 ## make sure the identations are in-tact
-cat > values.yaml
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
@@ -650,10 +663,6 @@ config:
           enabled: false
         k8s.pod.memory.working_set:
           enabled: false
-        k8s.container.memory_limit_utilization:
-          enabled: true
-        k8s.container.cpu_limit_utilization:
-          enabled: true
   processors:
     memory_limiter:
       check_interval: 5s
@@ -799,5 +808,5 @@ Network Policies Details for Data Plane Namespace | [Confluence Document for Net
 Please process for de-provisioning of all the provisioned capabilities from the UI.
 For the tools charts uninstallation, EFS mount and security groups deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
-./clean-up.sh ${DP_CLUSTER_NAME}
+./clean-up.sh
 ```
