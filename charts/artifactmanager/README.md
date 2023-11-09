@@ -20,18 +20,18 @@ Or
 helm upgrade --install artifactmanager [--namespace <namespace>] -f <new file name>.yaml
 ```
 
-**Note:** For instructions on how to install a chart follow instructions in its _README.md_.
+**Note:** For instructions on how to install a chart follow the instructions in _README.md_.
 
 ## Contributing to Artifact Manager Charts
 
-Fork the `repo`, make changes and then please run `helm lint` to lint charts locally, and at least install the chart to see it is working. :)
+Fork the `repo`, make changes and then please run `helm lint` to lint charts locally, and at least install the chart to see if it is working. :)
 
 On success make a [pull request](https://help.github.com/articles/using-pull-requests) (PR) on to the `master` branch.
 
-We will take this PR changes internally, review and test.
+We will take these PR changes internally, review and test them.
 
-Upon successful review , someone will give the PR a __LGTM__ (_looks good to me_) in the review thread.
+Upon successful review , someone will give the PR an __LGTM__ (_looks good to me_) in the review thread.
 
-We will add PR changes in upcoming releases and credit the contributor with PR link in changelog (and also closing the PR raised by contributor).
+We will add PR changes in upcoming releases and credit the contributor with the PR link in the changelog (and also close the PR raised by the contributor).
 
 
