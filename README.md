@@ -1,48 +1,50 @@
-# tp-helm-charts
+# Helm Charts for TIBCO® Platform
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This is a temporary repo for helm charts for TIBCO Platform (TP) data plane components.
+Helm Charts for TIBCO® Platform contains a list of helm charts for TIBCO Platform data plane components.
 
-All the charts are supposed to submit under [charts](charts) folder. 
+## Introduction
+TIBCO Platform provides a single pane of glass for the management, monitoring, and observability of TIBCO applications and capabilities. It provides a unified view of all TIBCO applications and capabilities deployed across multiple Kubernetes clusters and cloud environments.
 
-The charts are supposed to be used by helm repo hosted on github pages. There is a github action to update the helm repo index.yaml file and automatically release new charts if the chart version is updated.
+TIBCO Platform consists of two main components:
+* TIBCO Cloud Control Plane is the central monitoring and management interface for n-number of data planes running TIBCO applications and capabilities.
+* TIBCO Cloud Data Plane is the runtime environment for TIBCO applications and capabilities. It contains a set of helm charts that can be deployed on any kubernetes cluster on-premises or in the cloud.
 
-## How to use
+This repository contains helm charts for TIBCO Platform data plane components that can be deployed on the customer's kubernetes cluster.
+
+## Installing
+
+Most of the helm charts in this repository will be installed by the TIBCO Cloud Control Plane. In most cases, customers will not need to install these helm charts manually.
+
+There are some charts that can help customers set up cluster ingress, storage class, observability stack, etc. Customers can install these charts manually.
+
+### Prerequisites
+1. [x] Helm **v3 > 3.12.0** [installed](https://helm.sh/docs/using_helm/#installing-helm): `helm version`
+2. [x] Chart repository: `helm repo add tibco-platform https://tibco.github.io/tp-helm-charts/`
+
+### Deploy TIBCO Platform data plane components
 
 ```bash
-helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts/
-helm repo update tibco-platform
-
-helm upgrade --install --create-namespace -n <namespace> <release name> tibco-platform/<your chart> -f <your values file>
+helm upgrade --install --create-namespace -n <namespace> <release name> tibco-platform/<ingress chart> -f <ingress values file>
 ```
 
-## Chart release process
-* Update the chart version in Chart.yaml
-* Update release annotations in Chart.yaml. eg. [link](https://github.com/kubernetes-sigs/external-dns/blob/master/charts/external-dns/Chart.yaml). detailed spec [link](https://artifacthub.io/docs/topics/annotations/helm/)
+# Licenses
 
-## Agent helm charts
+This project (_Helm Charts for TIBCO® Platform_) is licensed under the [Apache 2.0 License](LICENSE).
 
-[dp-core-infrastructure](charts/dp-core-infrastructure) is used to create
-* tp-tibtunnel
-* tp-provisioner-agent
-* tp-cp-proxy
+## Other software
 
-[tp-provisioner-agent](charts/tp-provisioner-agent) is used for testing DP without CP
+When you use some of the Helm charts, you fetch and use other charts that might fetch other container images, each with their own licenses.
+A partial summary of the third party software and licenses used in this project is available [here](docs/third-party-software-licenses.md).
 
-## helm charts
+---
+Copyright 2023 Cloud Software Group, Inc.
 
-[dp-config-aks](charts/dp-config-aks) is used to create
-* aks ingress
-* aks certificate
+License This project is Licensed under the Apache License, Version 2.0 (the "License"); 
+you may not use this file except in compliance with the License. 
+You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 
-[dp-config-aws](charts/dp-config-aws) is used to create
-* external ingress for DP cluster
-* internal ingress for DP cluster
-* usage: helm install -n citrix-system citrix .
-* usage: helm install -n traefik-system traefik .
-
-[dp-config-es](charts/dp-config-es) is used to create
-* kibana 
-* Elastic
-
-[dp-otel-collectors](charts/dp-otel-collectors) is used to create
-* OTel collectors
+Unless required by applicable law or agreed to in writing, 
+software distributed under the License is distributed on an "AS IS" BASIS, 
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+See the License for the specific language governing permissions and limitations under the License.
