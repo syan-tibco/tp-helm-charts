@@ -19,7 +19,7 @@ in the license file that is distributed with this file.
 {{/* Team we're a part of. */}}
 {{- define "tp-provisioner-agent.consts.team" }}cic-compute{{ end -}}
 
-{{- define "tp-provisioner-agent.consts.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "tp-provisioner-agent.consts.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "tp-provisioner-agent.consts.ecrImageRepo" }}stratosphere{{end}}
 {{- define "tp-provisioner-agent.consts.acrImageRepo" }}stratosphere{{end}}
 {{- define "tp-provisioner-agent.consts.harborImageRepo" }}stratosphere{{end}}

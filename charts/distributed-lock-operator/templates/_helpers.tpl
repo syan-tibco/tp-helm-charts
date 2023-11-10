@@ -72,7 +72,7 @@ platform.tibco.com/workload-type: {{ include "dp-core-distributed-lock-operator.
 {{ .Values.global.cp.dataplaneId }}-{{ include "dp-core-distributed-lock-operator.consts.appName" . }}-
 {{- end -}}
 
-{{- define "dp-core-distributed-lock-operator.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "dp-core-distributed-lock-operator.const.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "dp-core-distributed-lock-operator.const.ecrImageRepo" }}stratosphere{{end}}
 {{- define "dp-core-distributed-lock-operator.const.acrImageRepo" }}stratosphere{{end}}
 {{- define "dp-core-distributed-lock-operator.const.harborImageRepo" }}stratosphere{{end}}
