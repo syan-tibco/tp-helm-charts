@@ -108,7 +108,7 @@ backstage:
     jfrogRepository: platform/dx/tibco-hub
 
     # -- Backstage image tag (immutable tags are recommended)
-    tag: "269-PLTDX-534-base-template"
+    tag: "272-PLTDX-534-base-template"
 
     # -- Specify a imagePullPolicy.
     # Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
