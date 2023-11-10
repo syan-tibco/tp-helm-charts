@@ -3,6 +3,20 @@ entries:
   artifactmanager:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-11-10T05:56:22.047394269Z"
+    description: TIBCO Platform Dataplane Core -- Artifact Manager
+    digest: b020af314283ba29212ea22cc4580eab4a73495e18313680e0df742455bb13f0
+    home: https://github.com/tibco/tp-iapp-artifactmanager.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO Platform Dev Team
+    name: artifactmanager
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/artifactmanager-1.0.24/artifactmanager-1.0.24.tgz
+    version: 1.0.24
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-11-09T16:57:40.322052365Z"
     description: TIBCO Platform Dataplane Core -- Artifact Manager
     digest: 24b254f693b3356794242748dcf1b4f8eb5227795b8733b6ae07748d75ac0bea
@@ -745,6 +759,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/bwprovisioner-1.0.0/bwprovisioner-1.0.0.tgz
     version: 1.0.0
   distributed-lock-operator:
+  - apiVersion: v1
+    appVersion: 1.0.0
+    created: "2023-11-10T05:56:22.249214357Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: 428e95e6b8aeb815660fe580ee351266b1a300072d47e068a482f9d61d3d37b8
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.75/distributed-lock-operator-1.0.75.tgz
+    version: 1.0.75
   - apiVersion: v1
     appVersion: 1.0.0
     created: "2023-11-02T05:39:13.567280966Z"
@@ -4945,6 +4973,42 @@ entries:
   jaeger:
   - apiVersion: v2
     appVersion: 1.45.0
+    created: "2023-11-10T05:56:22.685308288Z"
+    dependencies:
+    - condition: provisionDataStore.cassandra
+      name: cassandra
+      repository: https://charts.helm.sh/incubator
+      version: 0.15.3
+    - condition: provisionDataStore.elasticsearch
+      name: elasticsearch
+      repository: https://helm.elastic.co
+      version: ^7.11.1
+    - condition: provisionDataStore.kafka
+      name: kafka
+      repository: https://charts.bitnami.com/bitnami
+      version: ^19.1.5
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.16.0
+    description: A Jaeger Helm chart for Kubernetes
+    digest: cbf4f20983e37f55966c20ea26eaa503bc7fb5bd834ac51a0e55f002071f7b47
+    home: https://jaegertracing.io
+    icon: https://camo.githubusercontent.com/afa87494e0753b4b1f5719a2f35aa5263859dffb/687474703a2f2f6a61656765722e72656164746865646f63732e696f2f656e2f6c61746573742f696d616765732f6a61656765722d766563746f722e737667
+    keywords:
+    - jaeger
+    - opentracing
+    - tracing
+    - instrumentation
+    kubeVersion: '>= 1.21-0'
+    name: jaeger
+    sources:
+    - https://hub.docker.com/u/jaegertracing/
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/jaeger-0.71.21/jaeger-0.71.21.tgz
+    version: 0.71.21
+  - apiVersion: v2
+    appVersion: 1.45.0
     created: "2023-10-31T10:09:07.058812166Z"
     dependencies:
     - condition: provisionDataStore.cassandra
@@ -5315,6 +5379,20 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/msg-ems-tp-1.0.16/msg-ems-tp-1.0.16.tgz
     version: 1.0.16
   o11yservice:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-11-10T05:56:22.871803756Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
+    digest: a57d507f1dcc795634f0ee69ca1737fde6b5165f6eaadbd2f620f50bdab1dd1f
+    home: https://github.com/tibco/tp-o11y-service.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: o11yservice
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/o11yservice-1.0.48/o11yservice-1.0.48.tgz
+    version: 1.0.48
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-11-09T16:58:01.370808205Z"
@@ -7003,6 +7081,24 @@ entries:
   opentelemetry-collector:
   - apiVersion: v2
     appVersion: 0.86.0
+    created: "2023-11-10T05:56:23.081207003Z"
+    description: OpenTelemetry Collector Helm chart for Kubernetes
+    digest: 8a0e2c404254bb3c31ec984c123e4cf90db7a02fdfe00a82747fbfb581eb3d59
+    home: https://opentelemetry.io/
+    icon: https://opentelemetry.io/img/logos/opentelemetry-logo-nav.png
+    maintainers:
+    - name: dmitryax
+    - name: TylerHelmuth
+    name: opentelemetry-collector
+    sources:
+    - https://github.com/open-telemetry/opentelemetry-collector
+    - https://github.com/open-telemetry/opentelemetry-collector-contrib
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/opentelemetry-collector-0.69.6/opentelemetry-collector-0.69.6.tgz
+    version: 0.69.6
+  - apiVersion: v2
+    appVersion: 0.86.0
     created: "2023-10-31T10:09:07.375157474Z"
     description: OpenTelemetry Collector Helm chart for Kubernetes
     digest: c423e0ec1ac0146f60fead9e33fcc08fa99a50651460814cfc5fb22b6e19029e
@@ -7667,6 +7763,23 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tibco-hub-0.4.10/tibco-hub-0.4.10.tgz
     version: 0.4.10
   tp-cp-proxy:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-11-10T05:56:23.272245306Z"
+    description: TIBCO Data Plane -- Control Plane Proxy
+    digest: 7be9b3403d84a3aeb6421e45b068cca917b832ecea8b5974eac2578360e0b2c3
+    home: https://github.com/tibco/tp-core-cp-proxy
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - cp-proxy
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-cp-proxy
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-cp-proxy-1.0.110/tp-cp-proxy-1.0.110.tgz
+    version: 1.0.110
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-11-02T05:39:13.719934769Z"
@@ -8465,6 +8578,23 @@ entries:
   tp-dp-secret-controller:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-11-10T05:56:23.466874738Z"
+    description: TIBCO Data Plane -- Secret Controller
+    digest: 6a21645c885f4e68df81da6b0ab18a9b2264b6470aec0ecd80171f030341124d
+    home: https://github.com/tibco/tp-core-dp-secret-controller
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - secret-controller
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-dp-secret-controller
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.41/tp-dp-secret-controller-1.0.41.tgz
+    version: 1.0.41
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-11-02T14:59:04.907252494Z"
     description: TIBCO Data Plane -- Secret Controller
     digest: 28bc4ec338906e31d480e1694204f0382a0ad0836fa51421406fc28d79317032
@@ -8770,6 +8900,23 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.20/tp-dp-secret-controller-1.0.20.tgz
     version: 1.0.20
   tp-provisioner-agent:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2023-11-10T05:56:23.673815566Z"
+    description: TIBCO Data Plane -- Provisioner Agent
+    digest: 91d463e67dbd2e8ab75a450b77924fb0cc1f3caecc45c814968c5b8a16418437
+    home: https://github.com/tibco/tp-core-provisioner-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - provisioner-agent
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-provisioner-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.198/tp-provisioner-agent-1.0.198.tgz
+    version: 1.0.198
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-11-03T09:22:17.480908279Z"
@@ -9079,6 +9226,24 @@ entries:
   tp-tibtunnel:
   - apiVersion: v1
     appVersion: 1.0.0
+    created: "2023-11-10T05:56:23.872104326Z"
+    description: A Helm chart for TIBCO Tibtunnel
+    digest: 1a86686600b8e0e88461f48ebe540e8e60a2dd889f3b26519f9655c3b09cb44c
+    home: https://github.com/tibco/tp-core-tibtunnel
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - tibtunnel
+    - data-plane
+    - hybrid-connectivity
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-tibtunnel
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.97/tp-tibtunnel-1.0.97.tgz
+    version: 1.0.97
+  - apiVersion: v1
+    appVersion: 1.0.0
     created: "2023-11-02T05:39:14.112778045Z"
     description: A Helm chart for TIBCO Tibtunnel
     digest: 14b9b1edc10ae8e3bbdbf414cd3bafe7996f49b7f6c739cafada2c88aabcba67
@@ -9329,4 +9494,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-10T05:28:08.375649786Z"
+generated: "2023-11-10T05:56:23.87512455Z"
