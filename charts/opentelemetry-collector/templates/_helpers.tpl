@@ -73,7 +73,7 @@ platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- end }}
 
-{{- define "opentelemetry-collector.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "opentelemetry-collector.const.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "opentelemetry-collector.const.ecrImageRepo" }}stratosphere{{end}}
 {{- define "opentelemetry-collector.const.acrImageRepo" }}stratosphere{{end}}
 {{- define "opentelemetry-collector.const.harborImageRepo" }}stratosphere{{end}}

@@ -19,7 +19,7 @@ in the license file that is distributed with this file.
 {{/* Data plane workload type */}}
 {{- define "tp-dp-secret-controller.consts.workloadType" }}infra{{ end -}}
 
-{{- define "tp-dp-secret-controller.consts.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "tp-dp-secret-controller.consts.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "tp-dp-secret-controller.consts.ecrImageRepo" }}stratosphere{{end}}
 {{- define "tp-dp-secret-controller.consts.acrImageRepo" }}stratosphere{{end}}
 {{- define "tp-dp-secret-controller.consts.harborImageRepo" }}stratosphere{{end}}
