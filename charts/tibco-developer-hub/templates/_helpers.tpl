@@ -165,7 +165,7 @@ nginx.ingress.kubernetes.io/auth-response-headers: >-
 nginx.ingress.kubernetes.io/auth-signin: {{ include "tibcohub.host.url" (dict "path" "tibco/hub/oauth2/start?rd=$escaped_request_uri" "context" $) }}
 nginx.ingress.kubernetes.io/auth-url: {{ include "tibcohub.host.url" (dict "path" "tibco/hub/oauth2/auth" "context" $) }}
 nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
-nginx.ingress.kubernetes.io/auth-snippet: >-
+nginx.ingress.kubernetes.io/auth-snippet: |
     if ( $request_uri !~ "{{ .Values.ingress.pathPrefix }}/(.*)" ) {
         return 200;
     }
