@@ -81,7 +81,7 @@ Integration storage folder pvc name
 {{- define "flogoprovisioner.role-bind" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-role-bind{{ end -}}
 
 
-{{- define "flogoprovisioner.const.jfrogImageRepo" }}platform/flogo{{end}}
+{{- define "flogoprovisioner.const.jfrogImageRepo" }}tibco-platform-local-docker/flogo{{end}}
 {{- define "flogoprovisioner.const.ecrImageRepo" }}piap{{end}}
 {{- define "flogoprovisioner.const.acrImageRepo" }}piap{{end}}
 {{- define "flogoprovisioner.const.harborImageRepo" }}piap{{end}}
@@ -107,7 +107,7 @@ Integration storage folder pvc name
 {{- end -}}
 
 
-{{- define "flogoprovisioner.appinit.const.jfrogImageRepo" }}platform/integration{{end}}
+{{- define "flogoprovisioner.appinit.const.jfrogImageRepo" }}tibco-platform-local-docker/integration{{end}}
 {{- define "flogoprovisioner.appinit.const.ecrImageRepo" }}piap{{end}}
 {{- define "flogoprovisioner.appinit.const.acrImageRepo" }}piap{{end}}
 {{- define "flogoprovisioner.appinit.const.harborImageRepo" }}piap{{end}}
