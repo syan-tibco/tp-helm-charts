@@ -10,7 +10,7 @@ Table of Contents
   * [Create EKS cluster](#create-eks-cluster)
   * [Generate kubeconfig to connect to EKS cluster](#generate-kubeconfig-to-connect-to-eks-cluster)
   * [Install common third party tools](#install-common-third-party-tools)
-  * [Install Ingress Controller, Storage Class](#install-ingress-controller-storage-class-)
+  * [Install Ingress Controller, Storage Class](#install-ingress-controller-storage-class)
     * [Setup DNS](#setup-dns)
     * [Setup EFS](#setup-efs)
     * [Ingress Controller](#ingress-controller)
