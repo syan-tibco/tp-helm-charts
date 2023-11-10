@@ -21,7 +21,7 @@ in the license file that is distributed with this file.
 
 {{- define "tp-tibtunnel.consts.fluentbit.buildNumber" }}1.9.4{{end -}}
 
-{{- define "tp-tibtunnel.consts.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "tp-tibtunnel.consts.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "tp-tibtunnel.consts.ecrImageRepo" }}stratosphere{{end}}
 {{- define "tp-tibtunnel.consts.acrImageRepo" }}stratosphere{{end}}
 {{- define "tp-tibtunnel.consts.harborImageRepo" }}stratosphere{{end}}

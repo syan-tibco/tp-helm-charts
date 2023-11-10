@@ -22,7 +22,7 @@ in the license file that is distributed with this file.
 {{/* Secret name created as part of client credentials generation */}}
 {{- define "tp-cp-proxy.consts.outputSecretName"}}cp-proxy-client-credentials{{ end -}}
 
-{{- define "tp-cp-proxy.consts.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "tp-cp-proxy.consts.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "tp-cp-proxy.consts.ecrImageRepo" }}stratosphere{{end}}
 {{- define "tp-cp-proxy.consts.acrImageRepo" }}stratosphere{{end}}
 {{- define "tp-cp-proxy.consts.harborImageRepo" }}stratosphere{{end}}
