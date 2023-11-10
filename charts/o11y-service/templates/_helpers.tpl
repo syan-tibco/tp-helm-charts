@@ -111,7 +111,7 @@ helm.sh/chart: {{ include "o11y-service.shared.labels.chartLabelValue" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- end -}}
 
-{{- define "o11y-service.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "o11y-service.const.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "o11y-service.const.ecrImageRepo" }}stratosphere{{end}}
 {{- define "o11y-service.const.acrImageRepo" }}stratosphere{{end}}
 {{- define "o11y-service.const.harborImageRepo" }}stratosphere{{end}}

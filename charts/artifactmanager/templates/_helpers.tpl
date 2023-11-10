@@ -74,7 +74,7 @@ Integration storage folder pvc name
 
 {{- define "artifactmanager.sa" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-sa{{ end -}}
 
-{{- define "artifactmanager.const.jfrogImageRepo" }}platform/integration{{end}}
+{{- define "artifactmanager.const.jfrogImageRepo" }}tibco-platform-local-docker/integration{{end}}
 {{- define "artifactmanager.const.ecrImageRepo" }}piap{{end}}
 {{- define "artifactmanager.const.acrImageRepo" }}piap{{end}}
 {{- define "artifactmanager.const.harborImageRepo" }}piap{{end}}

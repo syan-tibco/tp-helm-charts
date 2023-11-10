@@ -106,7 +106,7 @@ platform.tibco.com/dataplane-id: {{ .Values.global.cp.dataplaneId }}
 platform.tibco.com/capability-instance-id: {{ .Values.global.cp.instanceId }}
 {{- end -}}
 
-{{- define "jaeger.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "jaeger.const.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "jaeger.const.ecrImageRepo" }}stratosphere{{end}}
 {{- define "jaeger.const.acrImageRepo" }}stratosphere{{end}}
 {{- define "jaeger.const.harborImageRepo" }}stratosphere{{end}}
