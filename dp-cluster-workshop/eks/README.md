@@ -565,7 +565,6 @@ The username is `admin`. And Prometheus Operator use fixed password: `prom-opera
 ```bash
 ## create the values.yaml file with below contents
 ## make sure the identations are in-tact
-cat > values.yaml
 mode: "daemonset"
 fullnameOverride: otel-kubelet-stats
 podLabels:
