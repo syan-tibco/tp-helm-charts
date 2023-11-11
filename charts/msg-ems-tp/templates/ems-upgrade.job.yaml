@@ -26,13 +26,10 @@ metadata:
       {{ include "msg.dp.labels" . | indent 6 }}
       tib-dp-app: msg-ems-ftl
     namespace: "{{ .Release.Namespace }}"
-    annotations:
-      "helm.sh/hook": post-upgrade
-      "helm.sh/hook-weight": "5"
 spec:
     backoffLimit: 0
     #4hr limit -  activeDeadlineSeconds: 14400
-    ttlSecondsAfterFinished: 180
+    ttlSecondsAfterFinished: 300
     template:
         metadata:
             name: "{{ $jobname }}"
@@ -71,6 +68,7 @@ spec:
                 - >
                   ( mkdir -p /logs/$MY_POD_NAME/boot ; cd /logs/$MY_POD_NAME/boot ;
                       for x in /boot/mk-*.sh ; do bash < $x ; done | tee boot.out ) ;
+                  chmod +x /usr/local/bin/helm ; 
                   echo "Upgrading pods ..." ; 
                   kubectl get pods -l=tib-msg-stsname={{ $stsname }} | egrep -v NAME | while read x o ; do 
                     echo "POD=$x"; done ; 
