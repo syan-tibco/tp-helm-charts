@@ -8,7 +8,7 @@ apiVersion: v2
 appVersion: "10.2.1-8"
 description: Data-plane provisioning chart for EMS server group
 name: msg-ems-tp
-version: "1.0.21"
+version: "1.0.22"
 keywords:
 - tibco-platform
 - data-plane
