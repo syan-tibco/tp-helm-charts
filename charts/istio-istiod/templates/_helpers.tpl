@@ -63,7 +63,7 @@ istio-{{ .Release.Namespace }}{{- if not (eq .Values.revision "") }}-{{ .Values.
 }}
 {{- end }}
 
-{{- define "servicemesh.const.jfrogImageRepo" }}platform/servicemesh{{end}}
+{{- define "servicemesh.const.jfrogImageRepo" }}tibco-platform-local-docker/servicemesh{{end}}
 {{- define "servicemesh.const.ecrImageRepo" }}servicemesh{{end}}
 {{- define "servicemesh.const.acrImageRepo" }}servicemesh{{end}}
 {{- define "servicemesh.const.gcrImageRepo" }}servicemesh{{end}}
