@@ -15,8 +15,6 @@ resources:
 # no of replicas
 replicaCount: "1"
 
-
-
 image:
   name: tp-cp-proxy
   tag: 107
@@ -33,7 +31,7 @@ global:
   cp:
     cpHostname: "acme.local.my.cic2.pro"
     dataplaneId: "abcd"
-    subscriptionId : "sub1"
+    subscriptionId: "sub1"
     containerRegistry:
       url: "reldocker.tibco.com"
       secret: "abcd"
@@ -44,7 +42,7 @@ global:
       # iat : Control Plane Authentication
       # this is used to generate client id and client secret.
       # Client Id and secret are used to generate time bound access token
-      iat: "" #initial access token used to generate client credentials
+      iat: ""  # initial access token used to generate client credentials
 
 enableLogging: true
 

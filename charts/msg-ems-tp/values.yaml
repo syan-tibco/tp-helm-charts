@@ -1,13 +1,13 @@
 #
 # Copyright (c) 2023. Cloud Software Group, Inc.
-# This file is subject to the license terms contained 
-# in the license file that is distributed with this file.  
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
 #
 
-global: 
-  cp: 
-    dataplaneId: 
-    instanceId: 
+global:
+  cp:
+    dataplaneId:
+    instanceId:
 
 dp:
   # CAUTION: Values set here will override .global.cp.*
@@ -30,10 +30,10 @@ ems:
     promTopicsEP: 9093
     watchdogPort: 12502
     loggerPort: 12506
-  msgData: 
+  msgData:
     storageType: emptyDir
     storageName: none
-  logs: 
+  logs:
     storageType: useMsgData
     storageName: none
   sslEnable: true
