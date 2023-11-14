@@ -10,7 +10,7 @@ serviceAccount:
 
 enableLogging: true
 
-# Values.pilot for discovery and mesh wide config
+# .Values.pilot for discovery and mesh wide config
 
 ## Discovery Settings
 pilot:
@@ -194,7 +194,7 @@ telemetry:
       enabled: false
       logging: false
       monitoring: false
-      topology: false                       # deprecated. setting this to true will have no effect, as this option is no longer supported.
+      topology: false  # deprecated. setting this to true will have no effect, as this option is no longer supported.
       disableOutbound: false
       #  configOverride parts give you the ability to override the low level configuration params passed to envoy filter.
 
@@ -233,18 +233,18 @@ meshConfig:
 
   # extensionProviders:
   # - name: logCollector
-  #   envoyOtelAls:
-  #     service: opentelemetry-collector.istio-system.svc.cluster.local
-  #     port: 4317
-  #     logName: "istio_envoy_accesslog"
+  #  envoyOtelAls:
+  #    service: opentelemetry-collector.istio-system.svc.cluster.local
+  #    port: 4317
+  #    logName: "istio_envoy_accesslog"
   # - name: traceCollector
-  #   opentelemetry:
-  #     service: opentelemetry-collector.istio-system.svc.cluster.local
-  #     port: 4317
+  #  opentelemetry:
+  #    service: opentelemetry-collector.istio-system.svc.cluster.local
+  #    port: 4317
   # - name: zipkin
-  #   zipkin:
-  #     service: opentelemetry-collector.istio-system.svc.cluster.local
-  #     port: 9411
+  #  zipkin:
+  #    service: opentelemetry-collector.istio-system.svc.cluster.local
+  #    port: 9411
 
   enablePrometheusMerge: true
 
@@ -615,6 +615,6 @@ fluentBit:
     Port: 4318
     Match: dp.*
     Logs_uri: /v1/logs
-    Log_response_payload: true
+    Log_response_payload: True
     Tls: Off
     Tls.verify: Off
