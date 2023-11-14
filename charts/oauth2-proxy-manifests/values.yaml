@@ -263,7 +263,7 @@ securityContext:
 deploymentAnnotations: {}
 podAnnotations: {}
 
-#hack because PDP-1199 is not being fixed in the upper layer to pass correct properties in the recipe
+# hack because PDP-1199 is not being fixed in the upper layer to pass correct properties in the recipe
 podLabels: {
   egress.networking.platform.tibco.com/internet-web: enable,
   networking.platform.tibco.com/kubernetes-api: enable
@@ -429,23 +429,23 @@ tibco:
 
 global:
   cp:
-    cpHostName: ""   #CP HOST NAME
-    #dataplaneId: "abcd"   #DP ID
-    #subscriptionId : "sub1"
-    instanceId: ""   #CAPABILITY INSTANCE ID
-    #containerRegistry:
-    #  url: "reldocker.tibco.com"
+    cpHostName: ""   # CP HOST NAME
+    # dataplaneId: "abcd"   # DP ID
+    # subscriptionId : "sub1"
+    instanceId: ""   # CAPABILITY INSTANCE ID
+    containerRegistry:
+      url: "reldocker.tibco.com"
     #  secret: "abcd"
     capability:
-      pathPrefix: "/"    #PATH PREFIX FOR CAPABILITY
+      pathPrefix: "/"    # PATH PREFIX FOR CAPABILITY
     resources:
     #   serviceaccount:
-    #     serviceAccountName: ""  #SA NAME
+    #     serviceAccountName: ""  # SA NAME
       ingress:
-        fqdn: ""    #CAPABILITY FQDN
-        ingressClassName: ""  #INGRESS CLASS NAME
+        fqdn: ""    # CAPABILITY FQDN
+        ingressClassName: ""  # INGRESS CLASS NAME
     secrets:
       # iat : Control Plane Authentication
       # this is used to generate client id and client secret.
       # Client Id and secret are used to generate time bound access token
-      iat: "" #initial access token used to generate client credentials
+      iat: ""  # initial access token used to generate client credentials
