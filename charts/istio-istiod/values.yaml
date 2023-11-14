@@ -615,6 +615,6 @@ fluentBit:
     Port: 4318
     Match: dp.*
     Logs_uri: /v1/logs
-    Log_response_payload: True
+    Log_response_payload: true
     Tls: Off
     Tls.verify: Off
