@@ -10,26 +10,26 @@ partOf: TIBCO-Platform
 createdBy: generator
 
 dns:
-  domain: "" # abc.<host-domain>
+  domain: ""  # abc.<host-domain>
   vanity: "*"
 
 # this ingress object is used for AWS Load Balancer Controller to create ALB
 httpIngress:
   enabled: true
-  name: nginx         #traefik for traefik
-  ingressClassName: alb # this is for AWS ingress controller
+  name: nginx   # traefik for traefik
+  ingressClassName: alb  # this is for AWS ingress controller
   backend:
     serviceName: dp-config-aws-ingress-nginx-controller  # serviceName dp-config-aws-traefik for traefik
     servicePort: 80    # port 443 for traefik
   # more AWS annotations: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.6/guide/ingress/annotations/
   annotations:
-    alb.ingress.kubernetes.io/group.name: "" # abc.<host-domain>
+    alb.ingress.kubernetes.io/group.name: ""  # abc.<host-domain>
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
-    alb.ingress.kubernetes.io/backend-protocol: HTTP # HTTPS for traefik
+    alb.ingress.kubernetes.io/backend-protocol: HTTP  # HTTPS for traefik
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/success-codes: 200-499
     alb.ingress.kubernetes.io/target-type: ip
-    external-dns.alpha.kubernetes.io/hostname: "" # *.abc.<host-domain>
+    external-dns.alpha.kubernetes.io/hostname: ""  # *.abc.<host-domain>
 
 # this service object is used for NLB user case. Ideally, we will use annotation to create NLB
 service:
@@ -60,7 +60,7 @@ storageClass:
     parameters:
       type: gp3
       fsType: ext4
-      #iopsPerGB: 10
+      # iopsPerGB: 10
       encrypted: true
     reclaimPolicy: Retain
     allowVolumeExpansion: true
@@ -90,21 +90,21 @@ storageClass:
 traefik:
   # chart values: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
   enabled: false
-  hub: # for hub
+  hub:  # for hub
     enabled: false
-  service: # for external-dns
+  service:  # for external-dns
     type: ClusterIP
-  ingressRoute: # for dashboard
+  ingressRoute:  # for dashboard
     dashboard:
       matchRule: Host(``) && PathPrefix(`/dashboard`) || Host(``) && PathPrefix(`/api`)
       entryPoints:
         - traefik
         - web
         - websecure
-  providers: # for external service
+  providers:  # for external service
     kubernetesIngress:
       allowExternalNameServices: true
-  nodeSelector: # for cic2
+  nodeSelector:  # for cic2
     kubernetes.io/os: linux
   additionalArguments:
     - '--serversTransport.insecureSkipVerify=true'
@@ -113,7 +113,7 @@ ingress-nginx:
   # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
   enabled: true
   controller:
-    service: # for external-dns
+    service:  # for external-dns
       type: ClusterIP
     nodeSelector:
       kubernetes.io/os: linux

@@ -88,7 +88,7 @@ service:
   port: 7813
   targetPort: 7813
 
-#ingress:
+# ingress:
 #  enabled: false
 #  annotations: {}
 #    # kubernetes.io/ingress.class: nginx
@@ -141,7 +141,7 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-#resources:
+# resources:
 #  requests:
 #    cpu: 50m
 #    memory: 128Mi

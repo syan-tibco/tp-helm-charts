@@ -7,7 +7,7 @@
 replicaCount: "1"
 global:
   LOG_LEVEL: debug
-  cp: 
+  cp:
     dataplaneId: "abcd"
     subscriptionId: "sub1"
     instanceId: "qwerty"
@@ -24,6 +24,6 @@ enableIngress: true
 ingress:
   annotations: {}
     # nginx custom annotation example
-    #nginx.org/rewrites: "serviceName={{ include \"tp-dp-monitor-agent.consts.appName\" . }} rewrite=/" #https://github.com/nginxinc/kubernetes-ingress/tree/v2.4.2/examples/ingress-resources/rewrites
+    # nginx.org/rewrites: "serviceName={{ include \"tp-dp-monitor-agent.consts.appName\" . }} rewrite=/" #https://github.com/nginxinc/kubernetes-ingress/tree/v2.4.2/examples/ingress-resources/rewrites
   pathPrefix: /tibco/agent/infra/tp-dp-monitor-agent/
   className: "haproxy-dp-{{ .Values.global.cp.dataplaneId}}"  # Ex: nginx, haproxy
