@@ -618,4 +618,3 @@ fluentBit:
     Log_response_payload: true
     Tls: Off
     Tls.verify: Off
-
