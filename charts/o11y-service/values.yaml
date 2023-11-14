@@ -197,7 +197,7 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-#resources:
+# resources:
 #  requests:
 #    cpu: 50m
 #    memory: 128Mi

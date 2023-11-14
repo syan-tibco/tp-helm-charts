@@ -3,7 +3,7 @@
 # in the license file that is distributed with this file.
 
 global:
-  serviceAccount: "" #user provided service account.
+  serviceAccount: ""  # user provided service account.
   distlockop:
     image:
       registry: 664529841144.dkr.ecr.us-west-2.amazonaws.com
@@ -19,7 +19,7 @@ global:
         namespace: ""
         serviceAccountName: ""
   distlockoperator:
-    serviceAccount: "" #user provided service account.
+    serviceAccount: ""  # user provided service account.
 
 enableWebHooks: true
 
