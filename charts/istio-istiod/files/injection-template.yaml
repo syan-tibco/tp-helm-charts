@@ -4,7 +4,7 @@
 ---
 {{- define "servicemesh.proxy.image" }}
   {{- if contains "jfrog.io" .Values.global.cp.containerRegistry.url }}
-    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}platform/servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
+    {{- .Values.global.cp.containerRegistry.url }}{{"/"}}tibco-platform-local-docker/servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
   {{- else if contains "amazonaws.com" .Values.global.cp.containerRegistry.url }}
     {{- .Values.global.cp.containerRegistry.url }}{{"/"}}servicemesh/{{ .Values.global.proxy.image | default "proxyv2" }}:{{ .Values.pilot.tag | default .Values.global.tag }}{{with (.Values.pilot.variant | default .Values.global.variant)}}-{{.}}{{end}}
   {{- else if contains "azurecr.io" .Values.global.cp.containerRegistry.url }}
