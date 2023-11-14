@@ -105,10 +105,10 @@ backstage:
     repository: pdx/tibco-hub
 
     # -- Backstage image repository for Jfrog environment
-    jfrogRepository: platform/dx/tibco-hub
+    jfrogRepository: tibco-platform-local-docker/dx/tibco-hub
 
     # -- Backstage image tag (immutable tags are recommended)
-    tag: "262"
+    tag: "278"
 
     # -- Specify a imagePullPolicy.
     # Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -291,7 +291,7 @@ postgresql:
   image:
     registry: ""
     repository: pdx/postgresql
-    jfrogRepository: platform/dx/postgresql
+    jfrogRepository: tibco-platform-local-docker/dx/postgresql
     tag: 14.5.0-debian-11-r35
   commonLabels: '{{- include "tibcohub.platform.commonLabels" . -}}'
 
@@ -388,7 +388,7 @@ fluentbit:
   image:
     registry: ""
     repository: pdx/fluent-bit
-    jfrogRepository: platform/dx/fluent-bit
+    jfrogRepository: tibco-platform-local-docker/dx/fluent-bit
     tag: 2.1.6
     pullPolicy: Always
 
