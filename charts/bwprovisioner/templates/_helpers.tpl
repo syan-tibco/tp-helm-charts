@@ -81,7 +81,7 @@ Integration storage folder pvc name
 {{- define "bwprovisioner.role-bind" }}tp-dp-{{ .Values.global.cp.dataplaneId }}-role-bind{{ end -}}
 
 
-{{- define "bwprovisioner.const.jfrogImageRepo" }}platform/bwce{{end}}
+{{- define "bwprovisioner.const.jfrogImageRepo" }}tibco-platform-local-docker/bwce{{end}}
 {{- define "bwprovisioner.const.ecrImageRepo" }}piap{{end}}
 {{- define "bwprovisioner.const.acrImageRepo" }}piap{{end}}
 {{- define "bwprovisioner.const.harborImageRepo" }}piap{{end}}
@@ -107,7 +107,7 @@ Integration storage folder pvc name
 {{- end -}}
 
 
-{{- define "bwprovisioner.appinit.const.jfrogImageRepo" }}platform/integration{{end}}
+{{- define "bwprovisioner.appinit.const.jfrogImageRepo" }}tibco-platform-local-docker/integration{{end}}
 {{- define "bwprovisioner.appinit.const.ecrImageRepo" }}piap{{end}}
 {{- define "bwprovisioner.appinit.const.acrImageRepo" }}piap{{end}}
 {{- define "bwprovisioner.appinit.const.harborImageRepo" }}piap{{end}}
