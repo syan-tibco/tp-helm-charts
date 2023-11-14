@@ -425,7 +425,7 @@ global:
     # Expected values are: trace|debug|info|warning|error|critical|off
     logLevel: warning
 
-    #If set to true, istio-proxy container will have privileged securityContext
+    # If set to true, istio-proxy container will have privileged securityContext
     privileged: false
 
     # The number of successive failed probes before indicating readiness failure.
