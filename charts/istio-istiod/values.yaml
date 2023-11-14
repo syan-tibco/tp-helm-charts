@@ -10,7 +10,7 @@ serviceAccount:
 
 enableLogging: true
 
-#.Values.pilot for discovery and mesh wide config
+# Values.pilot for discovery and mesh wide config
 
 ## Discovery Settings
 pilot:
@@ -194,7 +194,7 @@ telemetry:
       enabled: false
       logging: false
       monitoring: false
-      topology: false # deprecated. setting this to true will have no effect, as this option is no longer supported.
+      topology: false                       # deprecated. setting this to true will have no effect, as this option is no longer supported.
       disableOutbound: false
       #  configOverride parts give you the ability to override the low level configuration params passed to envoy filter.
 
@@ -227,24 +227,24 @@ meshConfig:
   holdApplicationUntilProxyStarts: false
 
   defaultProviders:
-      metrics: ["prometheus"]
+    metrics: ["prometheus"]
   #    tracing: ["traceCollector"]
   #    accessLogging: ["logCollector"]
 
-  #extensionProviders:
-  #- name: logCollector
-  #  envoyOtelAls:
-  #    service: opentelemetry-collector.istio-system.svc.cluster.local
-  #    port: 4317
-  #    logName: "istio_envoy_accesslog"
-  #- name: traceCollector
-  #  opentelemetry:
-  #    service: opentelemetry-collector.istio-system.svc.cluster.local
-  #    port: 4317
-  #- name: zipkin
-  #  zipkin:
-  #    service: opentelemetry-collector.istio-system.svc.cluster.local
-  #    port: 9411
+  # extensionProviders:
+  # - name: logCollector
+  #   envoyOtelAls:
+  #     service: opentelemetry-collector.istio-system.svc.cluster.local
+  #     port: 4317
+  #     logName: "istio_envoy_accesslog"
+  # - name: traceCollector
+  #   opentelemetry:
+  #     service: opentelemetry-collector.istio-system.svc.cluster.local
+  #     port: 4317
+  # - name: zipkin
+  #   zipkin:
+  #     service: opentelemetry-collector.istio-system.svc.cluster.local
+  #     port: 9411
 
   enablePrometheusMerge: true
 
@@ -299,7 +299,7 @@ global:
 
   # Specifies peer authentication mode between services.
   security:
-     peerAuthentication: PERMISIVE
+    peerAuthentication: PERMISIVE
 
   # enable pod disruption budget for the control plane, which is used to
   # ensure Istio control plane components are gradually upgraded or recovered.
@@ -377,9 +377,9 @@ global:
   # set of DNS settings than the normal application pods (e.g., in
   # multicluster scenarios).
   # NOTE: If using templates, follow the pattern in the commented example below.
-  #podDNSSearchNamespaces:
-  #- global
-  #- "{{ valueOrDefault .DeploymentMeta.Namespace \"default\" }}.global"
+  # podDNSSearchNamespaces:
+  # - global
+  # - "{{ valueOrDefault .DeploymentMeta.Namespace \"default\" }}.global"
 
   # Kubernetes >=v1.11.0 will create two PriorityClass, including system-cluster-critical and
   # system-node-critical, it is better to configure this in order to make sure your Istio pods
@@ -615,7 +615,7 @@ fluentBit:
     Port: 4318
     Match: dp.*
     Logs_uri: /v1/logs
-    Log_response_payload: True
+    Log_response_payload: true
     Tls: Off
     Tls.verify: Off
 
