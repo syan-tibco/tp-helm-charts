@@ -28,7 +28,7 @@ jobs:
         with:
           version: '3.13.1'
 
-      - name: Configure Tibco Platform repo
+      - name: Add dependency chart repos
         run: |
           helm repo add tibco-platform https://syan-tibco.github.io/tp-helm-charts
 
