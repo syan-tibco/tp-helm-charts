@@ -89,4 +89,4 @@ az aks create -g "${DP_RESOURCE_GROUP}" -n "${DP_CLUSTER_NAME}" \
 _ret=$?
 verify_error "${_ret}" "cluster"
 
-echo "finished creating AKS"
+echo "finished creating AKS cluster"
