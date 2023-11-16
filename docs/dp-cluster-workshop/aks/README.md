@@ -5,10 +5,11 @@ Table of Contents
 * [TIBCO Data Plane Cluster Workshop](#tibco-data-plane-cluster-workshop)
   * [Introduction](#introduction)
   * [Command Line Tools needed](#command-line-tools-needed)
-  * [Azure Login](#azure-login)
+  * [Recommended Roles and Permissions](#recommended-roles-and-permissions)
   * [Export required variables](#export-required-variables)
+  * [PRE AKS cluster create scripts](#pre-aks-cluster-create-scripts)
   * [Create AKS cluster](#create-aks-cluster)
-  * [Configure cluster](#configure-cluster)
+  * [POST AKS cluster create scripts](#post-aks-cluster-create-scripts)
   * [Generate kubeconfig to connect to AKS cluster](#generate-kubeconfig-to-connect-to-aks-cluster)
   * [Install common third party tools](#install-common-third-party-tools)
   * [Install Ingress Controller, Storage class](#install-ingress-controller-storage-class)
@@ -61,12 +62,14 @@ docker buildx build --platform=${platform} --progress=plain \
   --build-arg YQ_VERSION=${YQ_VERSION} \
   -t workshop-cli-tools:latest --load .
 ```
-## Azure Login
-We have used a user with Contributor & User Access Administrator roles for the workshop.
+## Recommended Roles and Permissions
+We have used a user with Contributor & User Access Administrator over the scope of subscription for the workshop.
+Additionally, API permissions for Directory.Read.All and ServicePrincipalEndpoint.Read.All are required for the AAD role to propagate.
 
-This is to ensure that user can create resource group, create resources, assign roles to managed identity and create dns zones.
+You can optionally choose to [create a service principal with these role assignments](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash) with the above roles and permissions. That is tested to work.
 
-You can optionally choose to [create a service principal with these role assignments](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash) and login. 
+> [!NOTE]
+> Please use this role with recommended roles and permissions, to create and access AKS cluster
 
 ## Export required variables
 ```bash
@@ -97,9 +100,8 @@ export NAT_GW_SUBNET_CIDR="10.4.18.0/27" # CIDR of the NAT gateway subnet addres
 export AUTHORIZED_IP=""  # declare additional IPs to be whitelisted for accessing cluster
 
 ## Tooling specific variables
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts # location of charts repo url
-#export DP_DOMAIN="dp1.azure.example.com" # domain to be used
-export DP_DOMAIN="dp1.azure.dataplanes.pro"
+export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.com/tp-helm-charts # location of charts repo url
+export DP_DOMAIN="dp1.azure.example.com" # domain to be used
 export MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of azure application gateway ingress controller
 export DP_DISK_ENABLED="true" # to enable azure block storage class
 export DP_DISK_STORAGE_CLASS="azure-disk-sc" # name of azure block storage class
@@ -108,9 +110,9 @@ export DP_FILE_STORAGE_CLASS="azure-files-sc" # name of azure files storage clas
 export DP_INGRESS_CLASS="nginx" # name of main ingress class used by capabilities 
 export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
 export DP_DNS_RESOURCE_GROUP="" # replace with name of resource group containing dns record sets
+export DP_NETWORK_POLICY="" # possible values "" (to disable network policy), "azure", "calico"
 export STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account to be used for azure files
 export STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group
-
 export MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of azure application gateway ingress controller class
 ```
 
@@ -118,6 +120,27 @@ Change the directory to aks/ to proceed with the next steps.
 ```bash
 cd /aks
 ```
+
+## PRE AKS cluster create scripts
+Execute the script to create
+1. Resource group
+2. User assigned identity
+3. Role assignment for the user assigned identity
+  1. as contributor over the scope of subscription
+  2. as dns zone contributor over the scope of DNS resource group
+  3. as network contributor over the scope of data plane resource group
+4. NAT gateway
+5. Virtual network
+6. Subnets for
+  1. AKS cluster
+  2. Application gateway
+  3. NAT gateway
+
+```bash
+./pre-aks-cluster-script.sh
+```
+It will take around 5 minutes to complete the configuration.
+
 ## Create AKS cluster
 > [!IMPORTNANT]
 > Please note, for cluster we are using a flag --enable-workload-identity.
@@ -135,13 +158,12 @@ It will take around 15 minutes to create an empty AKS cluster.
 > [!NOTE]
 > The AKS cluster provisioned is of version 1.28 which is in [public preview mode](https://> azure.microsoft.com/en-us/updates/public-preview-aks-support-for-kubernetes-version-128/)
 
-## Configure cluster
+## POST AKS cluster create scripts
 Execute the script to
-1. create necessary role assignments
-2. create federated workload identity federation
-3. create namespace and secrets for external dns
+1. create federated workload identity federation
+2. create namespace and secret for external dns
 ```bash
-./configure-cluster.sh
+./post-aks-cluster-script.sh
 ```
 It will take around 5 minutes to complete the configuration.
 
@@ -286,22 +308,22 @@ ingress-nginx:
       use-forwarded-headers: "true"
 ## following section is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
-#      enable-opentelemetry: "true"
-#      log-level: debug
-#      opentelemetry-config: /etc/nginx/opentelemetry.toml
-#      opentelemetry-operation-name: HTTP $request_method $service_name $uri
-#      opentelemetry-trust-incoming-span: "true"
-#      otel-max-export-batch-size: "512"
-#      otel-max-queuesize: "2048"
-#      otel-sampler: AlwaysOn
-#      otel-sampler-parent-based: "false"
-#      otel-sampler-ratio: "1.0"
-#      otel-schedule-delay-millis: "5000"
-#      otel-service-name: nginx-proxy
-#      otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
-#      otlp-collector-port: "4317"
-#    opentelemetry:
-#      enabled: true
+    # enable-opentelemetry: "true"
+    # log-level: debug
+    # opentelemetry-config: /etc/nginx/opentelemetry.toml
+    # opentelemetry-operation-name: HTTP $request_method $service_name $uri
+    # opentelemetry-trust-incoming-span: "true"
+    # otel-max-export-batch-size: "512"
+    # otel-max-queuesize: "2048"
+    # otel-sampler: AlwaysOn
+    # otel-sampler-parent-based: "false"
+    # otel-sampler-ratio: "1.0"
+    # otel-schedule-delay-millis: "5000"
+    # otel-service-name: nginx-proxy
+    # otlp-collector-host: otel-userapp.${DP_NAMESPACE}.svc
+    # otlp-collector-port: "4317"
+  # opentelemetry:
+    # enabled: true
 EOF
 ```
 
@@ -330,6 +352,8 @@ dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
   enabled: false
+clusterIssuer:
+  create: false
 storageClass:
   azuredisk:
     enabled: ${DP_DISK_ENABLED}
@@ -338,9 +362,9 @@ storageClass:
     enabled: ${DP_FILE_ENABLED}
     name: ${DP_FILE_STORAGE_CLASS}
 ## following section is required if you want to use an existing storage account. Otherwise, storage account is created in the same resource group.
-#    parameters:
-#      storageAccount: ${STORAGE_ACCOUNT_NAME}
-#      resourceGroup: ${STORAGE_ACCOUNT_RESOURCE_GROUP}
+  # parameters:
+    # storageAccount: ${STORAGE_ACCOUNT_NAME}
+    # resourceGroup: ${STORAGE_ACCOUNT_RESOURCE_GROUP}
 ingress-nginx:
   enabled: false
 EOF
@@ -728,7 +752,7 @@ Network Policies Details for Data Plane Namespace | [Confluence Document for Net
 
 ## Clean up
 
-Please process for de-provisioning of all the provisioned capabilities from the UI.
+Please process for de-provisioning of all the provisioned capabilities from the UI, first.
 For the tools charts uninstallation, Azure file shares deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
 ./clean-up.sh

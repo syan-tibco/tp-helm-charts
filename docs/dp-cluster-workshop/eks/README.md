@@ -74,6 +74,8 @@ docker buildx build --platform=${platform} --progress=plain \
 ## Recommended IAM Policies
 It is recommeded to have the [Minimum IAM Policies](https://eksctl.io/usage/minimum-iam-policies/ attached to the role which is being used for the cluster creation.
 Additionally, you will need to add the AmazonElasticFileSystemFullAccess (arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess) policy to the role you are going to use.
+> [!NOTE]
+> Please use this role with recommended IAM policies attached, to create and access EKS cluster
 
 ## Export required variables
 ```bash
@@ -84,7 +86,7 @@ export DP_CLUSTER_NAME=dp-cluster # name of the cluster to be prvisioned, used f
 export KUBECONFIG=${DP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
 
 ## Tooling specific variables
-export TIBCO_DP_HELM_CHART_REPO=https://syan-tibco.github.io/tp-helm-charts # location of charts repo url
+export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.com/tp-helm-charts # location of charts repo url
 export DP_DOMAIN=dp1.aws.example.com # domain to be used
 export MAIN_INGRESS_CONTROLLER=alb # name of aws load balancer controller
 export DP_EBS_ENABLED=true # to enable ebs storage class
@@ -805,7 +807,7 @@ Network Policies Details for Data Plane Namespace | [Confluence Document for Net
 
 ## Clean up
 
-Please process for de-provisioning of all the provisioned capabilities from the UI.
+Please process for de-provisioning of all the provisioned capabilities from the UI, first.
 For the tools charts uninstallation, EFS mount and security groups deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
 ./clean-up.sh

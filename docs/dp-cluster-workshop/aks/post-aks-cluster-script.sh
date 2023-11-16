@@ -2,23 +2,6 @@
 set +x
 
 export USER_ASSIGNED_IDENTITY_CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
-export USER_ASSIGNED_IDENTITY_PRINCIPAL_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.objectId" --output tsv)
-export USER_ASSIGNED_IDENTITY_OBJECT_ID="${USER_ASSIGNED_IDENTITY_PRINCIPAL_ID}"
-
-# add contributor privileged role
-# required to create resources
-az role assignment create --assignee-object-id "${USER_ASSIGNED_IDENTITY_OBJECT_ID}" \
-  --assignee-principal-type "ServicePrincipal" --role "Contributor" \
-  --scope /subscriptions/${SUBSCRIPTION_ID} \
-  --description "Allow Contributor access to AKS Managed Identity"
-
-# add dns zone contributor permission
-# required to create new record sets in dns zone
-az role assignment create \
-  --role "DNS Zone Contributor" \
-  --assignee-object-id "${USER_ASSIGNED_IDENTITY_OBJECT_ID}" \
-  --assignee-principal-type "ServicePrincipal" \
-  --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${DP_DNS_RESOURCE_GROUP}"
 
 # get oidc issuer
 export AKS_OIDC_ISSUER="$(az aks show -n ${DP_CLUSTER_NAME} -g "${DP_RESOURCE_GROUP}" --query "oidcIssuerProfile.issuerUrl" -otsv)"
@@ -63,3 +46,5 @@ kubectl delete secret --namespace external-dns-system azure-config-file
 kubectl create secret generic azure-config-file --namespace external-dns-system --from-file ./${AZURE_EXTERNAL_DNS_JSON_FILE}
 
 rm -rf ./${AZURE_EXTERNAL_DNS_JSON_FILE}
+
+echo "finished running post-creation scripts of AKS cluster"
