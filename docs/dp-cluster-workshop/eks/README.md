@@ -86,7 +86,7 @@ export DP_CLUSTER_NAME=dp-cluster # name of the cluster to be prvisioned, used f
 export KUBECONFIG=${DP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
 
 ## Tooling specific variables
-export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.com/tp-helm-charts # location of charts repo url
+export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
 export DP_DOMAIN=dp1.aws.example.com # domain to be used
 export MAIN_INGRESS_CONTROLLER=alb # name of aws load balancer controller
 export DP_EBS_ENABLED=true # to enable ebs storage class

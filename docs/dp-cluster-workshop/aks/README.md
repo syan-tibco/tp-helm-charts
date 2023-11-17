@@ -100,7 +100,7 @@ export NAT_GW_SUBNET_CIDR="10.4.18.0/27" # CIDR of the NAT gateway subnet addres
 export AUTHORIZED_IP=""  # declare additional IPs to be whitelisted for accessing cluster
 
 ## Tooling specific variables
-export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.com/tp-helm-charts # location of charts repo url
+export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
 export DP_DOMAIN="dp1.azure.example.com" # domain to be used
 export DP_SANDBOX_SUBDOMAIN="dp1" # hostname of DP_DOMAIN
 export DP_TOP_LEVEL_DOMAIN="azure.example.com" # top level domain of DP_DOMAIN
