@@ -109,8 +109,24 @@ function watcher {
         done
     done
 }
+
+function wait_for_release {
+    # Expects $MY_RELEASE to be set as helm release name
+    relname=${1:-$MY_RELEASE}
+    for try in $(seq 600 ) ; do
+        hstatus=$(helm status $relname 2>/dev/null | egrep '^STATUS: ' | cut -f2 -d: | tr -d ' ' )
+        [ "$hstatus" = "deployed" ] && break
+        log ".. Waiting ($hstatus : $relname)"
+        sleep 3
+    done
+    [ "$hstatus" != 'deployed' ] && log "Error: upgrade did not complete successfully, aborting" && return 1
+    log "INFO: helm upgrade Complete."
+}
+
 function redeploy {
-    log "#===== REDEPLOY STARTING ===="
+    log "#===== WAITING ON RELEASE ====="
+    wait_for_release
+    log "#===== REDEPLOY STARTING ====="
     sts_get_config
     sts_check_health 
     [ "$health" != 'great' ] && log "Warning: STS=$STS_NAME not healthy - aborting ($missingList)." && return 1

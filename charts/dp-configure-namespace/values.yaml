@@ -8,7 +8,7 @@ global:
     # Provide the name of primary namespace where dp-core-infrastrcuture is to be deployed
     # This namespace has the service account for which the role-bindig will be created for primary namespace and additional namespaces
     primaryNamespaceName: "dp-namespace"
-    # Provide the name of the service account from primary namespace 
+    # Provide the name of the service account from primary namespace
     # This will be used for dp-core-infrastrcuture, capability provisioning, application deployment
     # serviceAccount: "sa"
 
@@ -25,4 +25,3 @@ networkPolicy:
   nodeCidrIpBlock: ""
   # pod CIDR IP block
   podCidrIpBlock: ""
-  

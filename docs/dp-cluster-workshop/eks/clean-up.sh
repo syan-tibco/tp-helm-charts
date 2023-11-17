@@ -38,7 +38,7 @@ if [ "${EFS_ID}" != "" ]; then
   sleep 120
   aws efs delete-file-system --file-system-id ${EFS_ID}
 
-  EFS_SG_ID=$(aws ec2 describe-security-groups --filters Name=tag:Cluster,Values=${CLUSTER_NAME} --query "SecurityGroups[*].{Name:GroupName,ID:GroupId}" | yq eval '.[].ID  // ""')
+  EFS_SG_ID=$(aws ec2 describe-security-groups --filters Name=tag:Cluster,Values=${DP_CLUSTER_NAME} --query "SecurityGroups[*].{Name:GroupName,ID:GroupId}" | yq eval '.[].ID  // ""')
   if [ "${EFS_SG_ID}" != "" ]; then
     echo "detected EFS_SG_ID: ${EFS_SG_ID} now deleting EFS_SG_ID"
     aws ec2 delete-security-group --group-id ${EFS_SG_ID}
@@ -46,4 +46,4 @@ if [ "${EFS_ID}" != "" ]; then
 fi
 
 echo "deleting cluster"
-eksctl delete cluster --name=${CLUSTER_NAME} --disable-nodegroup-eviction --force
+eksctl delete cluster --name=${DP_CLUSTER_NAME} --disable-nodegroup-eviction --force

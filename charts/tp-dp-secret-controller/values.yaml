@@ -15,8 +15,6 @@ resources:
 # no of replicas
 replicaCount: "1"
 
-
-
 image:
   name: tp-dp-secret-controller
   tag: 40
@@ -33,7 +31,7 @@ global:
   cp:
     cpHostName: "acme.local.my.cic2.pro"
     dataplaneId: "abcd"
-    subscriptionId : "sub1"
+    subscriptionId: "sub1"
     containerRegistry:
       url: "reldocker.tibco.com"
       secret: "abcd"

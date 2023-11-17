@@ -112,7 +112,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 
 
-{{- define "haproxy-ingress.const.jfrogImageRepo" }}platform/infra{{end}}
+{{- define "haproxy-ingress.const.jfrogImageRepo" }}tibco-platform-local-docker/infra{{end}}
 {{- define "haproxy-ingress.const.ecrImageRepo" }}stratosphere{{end}}
 {{- define "haproxy-ingress.const.acrImageRepo" }}stratosphere{{end}}
 {{- define "haproxy-ingress.const.harborImageRepo" }}stratosphere{{end}}

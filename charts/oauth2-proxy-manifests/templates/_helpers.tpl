@@ -100,6 +100,12 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 {{- end -}}
 
 {{/*
+Suppress lint errors with this because we do not use redis
+*/}}
+{{- define "common.names.fullname" -}}
+{{- end -}}
+
+{{/*
 Redis subcharts fullname
 */}}
 {{- define "oauth2-proxy.redis.fullname" -}}
