@@ -102,6 +102,8 @@ export AUTHORIZED_IP=""  # declare additional IPs to be whitelisted for accessin
 ## Tooling specific variables
 export TIBCO_DP_HELM_CHART_REPO=https://tibcosoftware.github.com/tp-helm-charts # location of charts repo url
 export DP_DOMAIN="dp1.azure.example.com" # domain to be used
+export DP_SANDBOX_SUBDOMAIN="dp1" # hostname of DP_DOMAIN
+export DP_TOP_LEVEL_DOMAIN="azure.example.com" # top level domain of DP_DOMAIN
 export MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of azure application gateway ingress controller
 export DP_DISK_ENABLED="true" # to enable azure block storage class
 export DP_DISK_STORAGE_CLASS="azure-disk-sc" # name of azure block storage class
@@ -273,8 +275,6 @@ We are using the following services in this workshop:
 ### Ingress Controller
 
 ```bash
-export DP_SANDBOX_SUBDOMAIN="dp1"
-export DP_TOP_LEVEL_DOMAIN="azure.example.com"
 export CLIENT_ID=$(az aks show --resource-group "${DP_RESOURCE_GROUP}" --name "${DP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
 ## following section is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
@@ -283,7 +283,7 @@ export DP_NAMESPACE="ns"
 helm upgrade --install --wait --timeout 1h --create-namespace \
   -n ingress-system dp-config-aks dp-config-aks \
   --labels layer=1 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.12" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.13" -f - <<EOF
 global:
   dnsSandboxSubdomain: "${DP_SANDBOX_SUBDOMAIN}"
   dnsGlobalTopDomain: "${DP_TOP_LEVEL_DOMAIN}"
@@ -347,7 +347,7 @@ helm upgrade --install --wait --timeout 1h --create-namespace \
   -n storage-system dp-config-aks-storage dp-config-aks \
   --repo "${TIBCO_DP_HELM_CHART_REPO}" \
   --labels layer=1 \
-  --version "1.0.12" -f - <<EOF
+  --version "1.0.13" -f - <<EOF
 dns:
   domain: "${DP_DOMAIN}"
 httpIngress:
@@ -752,7 +752,9 @@ Network Policies Details for Data Plane Namespace | [Confluence Document for Net
 
 ## Clean up
 
-Please process for de-provisioning of all the provisioned capabilities from the UI, first.
+Please process for de-provisioning of all the provisioned capabilities from the control plane UI, first.
+On successful de-provisionong, delete the data plane from the control plane UI.
+
 For the tools charts uninstallation, Azure file shares deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
 ./clean-up.sh

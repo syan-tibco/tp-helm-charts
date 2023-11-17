@@ -807,7 +807,9 @@ Network Policies Details for Data Plane Namespace | [Confluence Document for Net
 
 ## Clean up
 
-Please process for de-provisioning of all the provisioned capabilities from the UI, first.
+Please process for de-provisioning of all the provisioned capabilities from the control plane UI, first.
+On successful de-provisionong, delete the data plane from the control plane UI.
+
 For the tools charts uninstallation, EFS mount and security groups deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
 ```bash
 ./clean-up.sh
