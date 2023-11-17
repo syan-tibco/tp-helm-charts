@@ -16,7 +16,7 @@ else
 fi
 
 if [ -n "${DP_NETWORK_POLICY}" ]; then
-  export DP_NETWORK_POLICY="--network-policy ${DP_NETWORK_POLICY}"
+  export NETWORK_POLICY_PARAMETER=" --network-policy ${DP_NETWORK_POLICY}"
 fi
 
 # append nat gateway public ip
@@ -42,7 +42,7 @@ az aks create -g "${DP_RESOURCE_GROUP}" -n "${DP_CLUSTER_NAME}" \
   --api-server-authorized-ip-ranges "${AUTHORIZED_IP}" \
   --enable-oidc-issuer \
   --enable-workload-identity \
-  --network-plugin azure ${DP_NETWORK_POLICY} \
+  --network-plugin azure${NETWORK_POLICY_PARAMETER} \
   --kubernetes-version "1.28.0" \
   --outbound-type userAssignedNATGateway \
   --appgw-name gateway \
