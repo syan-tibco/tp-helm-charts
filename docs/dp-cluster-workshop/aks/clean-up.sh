@@ -1,8 +1,14 @@
 #!/bin/bash
 set +x
 
-# need to output empty string otherwise will output null
-PVC_LIST=$(kubectl get pv -o jsonpath='{range .items[?(@.spec.csi.driver=="file.csi.azure.com")]}{.metadata.name}{"\n"}{end}')
+# delete the tmp file if it already exists
+if [ -f tmp_pvc_list.txt ]; then
+  echo "removing the existing tmp file"
+  rm -rf tmp_pvc_list.txt
+fi
+
+# list the persistent volumes in a file
+kubectl get pv -o jsonpath='{range .items[?(@.spec.csi.driver=="file.csi.azure.com")]}{.metadata.name}{"\n"}{end}' >> tmp_pvc_list.txt
 
 echo "deleting all ingress objects"
 kubectl delete ingress -A --all
@@ -35,4 +41,7 @@ while read -r line
   do
     echo "deleting ${line} in storage account ${STORAGE_ACCOUNT_NAME}"
     az storage share delete --name ${line} --delete-snapshots "include" --account-name ${STORAGE_ACCOUNT_NAME}
-  done <<< ${PVC_LIST}
+  done < tmp_pvc_list.txt
+
+# remove tmp file
+rm -rf tmp_pvc_list.txt
