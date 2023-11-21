@@ -1,14 +1,14 @@
 #
 # Copyright (c) 2023. Cloud Software Group, Inc.
-# This file is subject to the license terms contained
-# in the license file that is distributed with this file.
+# This file is subject to the license terms contained 
+# in the license file that is distributed with this file.  
 #
 
 apiVersion: v2
-appVersion: "10.2.1-8"
+appVersion: "10.2.1-9"
 description: Data-plane provisioning chart for EMS server group
 name: msg-ems-tp
-version: "1.0.22"
+version: "1.0.23"
 keywords:
 - tibco-platform
 - data-plane
