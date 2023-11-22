@@ -19,4 +19,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: {{ include "dp-configure-namespace.serviceAccount" . | quote }}
-  namespace: {{ include "dp-configure-namespace.primaryNamespaceName" . }}
+  namespace: {{ include "dp-configure-namespace.primaryNamespaceName" . | quote }}
