@@ -37,7 +37,7 @@ In order to deploy TIBCO Data Plane, you need to have a Kubernetes cluster and i
 
 ## Command Line Tools needed
 
-We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/): 
+We are running the steps in a MacBook Pro. The following tools are installed using [brew](https://brew.sh/):
 * envsubst (part of homebrew gettext)
 * yq (v4.35.2)
 * jq (1.7)
@@ -128,15 +128,15 @@ Execute the script to create
 1. Resource group
 2. User assigned identity
 3. Role assignment for the user assigned identity
-  1. as contributor over the scope of subscription
-  2. as dns zone contributor over the scope of DNS resource group
-  3. as network contributor over the scope of data plane resource group
+1. as contributor over the scope of subscription
+2. as dns zone contributor over the scope of DNS resource group
+3. as network contributor over the scope of data plane resource group
 4. NAT gateway
 5. Virtual network
 6. Subnets for
-  1. AKS cluster
-  2. Application gateway
-  3. NAT gateway
+1. AKS cluster
+2. Application gateway
+3. NAT gateway
 
 ```bash
 ./pre-aks-cluster-script.sh
@@ -151,12 +151,12 @@ It will take around 5 minutes to complete the configuration.
 > This is one time step and you can also enable explicitly using the [cli command to register feature](https://learn.microsoft.com/en-us/cli/azure/feature?view=azure-cli-latest#az-feature-register)
 > e.g. az feature register --namespace Microsoft.ContainerService --name EnableWorkloadIdentityPreview
 
-Execute the script 
+Execute the script
 ```bash
 ./aks-cluster-create.sh
 ```
 
-It will take around 15 minutes to create an empty AKS cluster. 
+It will take around 15 minutes to create an empty AKS cluster.
 > [!NOTE]
 > The AKS cluster provisioned is of version 1.28 which is in [public preview mode](https://> azure.microsoft.com/en-us/updates/public-preview-aks-support-for-kubernetes-version-128/)
 
@@ -182,7 +182,7 @@ kubectl get nodes
 
 ## Install common third party tools
 
-Before we deploy ingress or observability tools on an empty AKS cluster; we need to install some basic tools. 
+Before we deploy ingress or observability tools on an empty AKS cluster; we need to install some basic tools.
 * [cert-manager](https://cert-manager.io/docs/installation/helm/)
 * [external-dns](https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns)
 
@@ -257,7 +257,7 @@ NAME                        CONTROLLER                  PARAMETERS   AGE
 azure-application-gateway   azure/application-gateway   <none>       19m
 ```
 
-In this section, we will install ingress controller and storage class. We have made a helm chart called `dp-config-aks` that encapsulates the installation of ingress controller and storage class. 
+In this section, we will install ingress controller and storage class. We have made a helm chart called `dp-config-aks` that encapsulates the installation of ingress controller and storage class.
 It will create the following resources:
 * a main ingress object which will be able to create Azure Application Gateway and act as a main ingress for DP cluster
 * annotation for external-dns to create DNS record for the main ingress
@@ -339,6 +339,9 @@ The `nginx` ingress class is the main ingress that DP will use. The `azure-appli
 
 > [!IMPORTANT]
 > You will need to provide this ingress class name i.e. nginx to TIBCO Control Plane when you deploy capability.
+
+> [!IMPORTANT]
+> When creating a k8 service with type: loadbalancer, in cases where the virtual machine scale set has a network security group on the subnet level, additional inbound security rules may need to be created to the load balancer external IP address to ensure outside connectivity
 
 ### Storage Class
 
