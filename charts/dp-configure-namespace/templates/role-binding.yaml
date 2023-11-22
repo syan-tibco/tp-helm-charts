@@ -8,7 +8,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "dp-configure-namespace.dataPlaneId" . | quote }}
+  name: {{ include "dp-configure-namespace.dataPlaneId" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "dp-configure-namespace.labels" . | nindent 4 }}
@@ -18,5 +18,5 @@ roleRef:
   name: {{ include "dp-configure-namespace.dataPlaneId" . }}-ns-scope
 subjects:
 - kind: ServiceAccount
-  name: {{ include "dp-configure-namespace.serviceAccount" . | quote }}
+  name: {{ include "dp-configure-namespace.serviceAccount" . }}
   namespace: {{ include "dp-configure-namespace.primaryNamespaceName" . }}
