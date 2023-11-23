@@ -423,7 +423,7 @@ helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system ${DP_ES_RELEASE_NAME} dp-config-es \
   --labels layer=2 \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.16" -f - <<EOF
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
 domain: ${DP_DOMAIN}
 es:
   version: "8.9.1"
