@@ -55,7 +55,7 @@ The subsequent steps can be followed from within the container.
 
 > [!IMPORTANT]
 > Please use --platform while building the image with [docker buildx commands](https://docs.docker.com/engine/reference/commandline/buildx_build/).
-> This can be different based on your machine OS and hardware architecture
+> This can be different based on your machine OS and hardware architecture.
 
 A sample command on Linux AMD64 is
 ```bash
@@ -359,7 +359,7 @@ We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` 
 * `efs-sc` is the storage class for EFS. This is used for
   * artifactmanager while provisioning TIBCO BusinessWorks™ Container Edition capability
   * storage class for log when we provision EMS capability
-* `gp2` is the default storage class for EKS. AWS creates it by default and doesn't recommend to use it.
+* `gp2` is the default storage class for EKS. AWS creates it by default and we don't recommend to use it.
 
 > [!IMPORTANT]
 > You will need to provide this storage class name to TIBCO® Control Plane when you deploy capability.
@@ -782,7 +782,7 @@ helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
 
 ## Information needed to be set on TIBCO® Control Plane
 
-You can get BASE_FQDN by running the following command:
+You can get BASE_FQDN (fully qualified domain name) by running the following command:
 ```bash
 kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 ```
@@ -794,8 +794,8 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 | EFS storage class    | efs-sc                                                                           | used for TIBCO BusinessWorks™ Container Edition EFS storage                                         |
 | EBS storage class    | ebs-gp3                                                                          | used for TIBCO Enterprise Message Service™ (EMS)|
 | BW FQDN              | bwce.\<BASE_FQDN\>                                                               | Capability FQDN |
-| Elastic User app logs index   | user-app-1                                                                       | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
-| Elastic Search logs index     | service-1                                                                        | dp-config-es index template (value configured with o11y-data-plane-configuration in CP UI)                               |
+| Elastic User app logs index   | user-app-1                                                                       | dp-config-es index template (value configured with o11y-data-plane-configuration in TIBCO® Control Plane)                               |
+| Elastic Search logs index     | service-1                                                                        | dp-config-es index template (value configured with o11y-data-plane-configuration in TIBCO® Control Plane)                               |
 | Elastic Search internal endpoint | https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200               | Elastic Search service                                                |
 | Elastic Search public endpoint   | https://elastic.\<BASE_FQDN\>                                                    | Elastic Search ingress host                                                |
 | Elastic Search password          | xxx                                                                              | Elastic Search password in dp-config-es-es-elastic-user secret                                             |
@@ -803,12 +803,12 @@ kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
 | Prometheus service internal endpoint | http://kube-prometheus-stack-prometheus.prometheus-system.svc.cluster.local:9090 | Prometheus service                                        |
 | Prometheus public endpoint | https://prometheus-internal.\<BASE_FQDN\>  |  Prometheus ingress host                                        |
 | Grafana endpoint  | https://grafana.\<BASE_FQDN\> | Grafana ingress host                                        |
-Network Policies Details for Data Plane Namespace | [Network Policies Document](https://docs.tibco.com/emp/platform-cp/1.0.0/doc/html/UserGuide/controlling-traffic-with-network-policies.htm) | 
+Network Policies Details for Data Plane Namespace | [Data Plane Network Policies Document](https://docs.tibco.com/emp/platform-cp/1.0.0/doc/html/UserGuide/controlling-traffic-with-network-policies.htm) | 
 
 ## Clean up
 
 Please delete the Data Plane from TIBCO® Control Plane UI.
-Refer to [the document for the steps to delete the Data Plane](https://docs.tibco.com/emp/platform-cp/1.0.0/doc/html/Default.htm#UserGuide/deleting-data-planes.htm?TocPath=Managing%2520Data%2520Planes%257C_____2).
+Refer to [the steps to delete the Data Plane](https://docs.tibco.com/emp/platform-cp/1.0.0/doc/html/Default.htm#UserGuide/deleting-data-planes.htm?TocPath=Managing%2520Data%2520Planes%257C_____2).
 
 
 For the tools charts uninstallation, EFS mount and security groups deletion and cluster deletion, we have provided a helper [clean-up](clean-up.sh).
