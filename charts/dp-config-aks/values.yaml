@@ -78,7 +78,6 @@ storageClass:
       # - gid=0
       # - cache=strict
       # - actimeo=30
-      # - version=4.1
 
 ingress-nginx:
   # chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
