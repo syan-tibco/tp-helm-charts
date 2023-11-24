@@ -61,7 +61,7 @@ global:
               host: "dummy"
               port: 4317
             es:
-              host: "tracesServer-config-es-host"
+              endpoint: "tracesServer-config-es-endpoint"
               port: 9200
               username: "tracesServer-config-es-username"
           secret:
