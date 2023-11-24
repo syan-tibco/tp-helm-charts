@@ -8,11 +8,11 @@ dependencies:
 - condition: tp-tibtunnel.enabled
   name: tp-tibtunnel
   repository: alias:tibco-platform
-  version: 1.0.*
+  version: 1.0.97
 - condition: tp-provisioner-agent.enabled
   name: tp-provisioner-agent
   repository: alias:tibco-platform
-  version: 1.0.*
+  version: 1.0.199
 - condition: haproxy-ingress.enabled
   name: haproxy-ingress
   repository: ""
