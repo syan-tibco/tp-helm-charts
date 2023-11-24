@@ -13,8 +13,8 @@ Table of Contents
   * [Install Ingress Controller, Storage Class](#install-ingress-controller-storage-class)
     * [Setup DNS](#setup-dns)
     * [Setup EFS](#setup-efs)
-    * [Ingress Controller](#ingress-controller)
     * [Storage Class](#storage-class)
+    * [Ingress Controller](#ingress-controller)
   * [Install Calico [OPTIONAL]](#install-calico-optional)
     * [Pre Installation Steps](#pre-installation-steps)
     * [Chart Installation Step](#chart-installation-step)
@@ -248,9 +248,58 @@ We provide an [EFS creation script](create-efs.sh) to create EFS.
 ./create-efs.sh
 ```
 
-### Ingress Controller
-After running above script; we will get an EFS ID output like `fs-0ec1c745c10d523f6`. We will need to use this value to deploy `dp-config-aws` helm chart.
+### Storage Class
+After running above script; we will get an EFS ID output like `fs-0ec1c745c10d523f6`. We will need to use that value to deploy `dp-config-aws` helm chart.
 
+```bash
+## following variable is required to create the storage class
+export DP_EFS_ID="fs-0ec1c745c10d523f6" # replace with the EFS ID created in your installation
+
+helm upgrade --install --wait --timeout 1h --create-namespace \
+  -n storage-system dp-config-aws-storage dp-config-aws \
+  --repo "${TIBCO_DP_HELM_CHART_REPO}" \
+  --labels layer=1 \
+  --version "1.0.23" -f - <<EOF
+dns:
+  domain: "${DP_DOMAIN}"
+httpIngress:
+  enabled: false
+storageClass:
+  ebs:
+    enabled: ${DP_EBS_ENABLED}
+  efs:
+    enabled: ${DP_EFS_ENABLED}
+    parameters:
+      fileSystemId: "${DP_EFS_ID}"
+tigera-operator:
+  enabled: false
+ingress-nginx:
+  enabled: false
+EOF
+```
+
+Use the following command to get the storage class name.
+
+```bash
+$ kubectl get storageclass
+NAME            PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
+ebs-gp3         ebs.csi.aws.com         Retain          WaitForFirstConsumer   true                   7h17m
+efs-sc          efs.csi.aws.com         Delete          Immediate              false                  7h17m
+gp2 (default)   kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  7h41m
+```
+
+We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` helm chart will create all these storage classes.
+* `ebs-gp3` is the storage class for EBS. This is used for
+  * storage class for data while provisioning TIBCO Enterprise Message Service™ (EMS) capability
+* `efs-sc` is the storage class for EFS. This is used for
+  * artifactmanager while provisioning TIBCO BusinessWorks™ Container Edition capability
+  * storage class for log when we provision EMS capability
+* `gp2` is the default storage class for EKS. AWS creates it by default and we don't recommend to use it.
+
+> [!IMPORTANT]
+> You will need to provide this storage class name to TIBCO® Control Plane when you deploy capability.
+
+### Ingress Controller
 ```bash
 ## following variable is required to send traces using nginx
 ## uncomment the below commented section to run/re-run the command, once DP_NAMESPACE is available
@@ -313,56 +362,6 @@ The `nginx` ingress class is the main ingress that DP will use. The `alb` ingres
 
 > [!IMPORTANT]
 > You will need to provide this ingress class name i.e. nginx to TIBCO® Control Plane when you deploy capability.
-
-### Storage Class
-
-```bash
-## following variable is required to create the storage class
-export DP_EFS_ID="fs-0ec1c745c10d523f6" # Replace with the EFS ID created in your installation
-
-helm upgrade --install --wait --timeout 1h --create-namespace \
-  -n storage-system dp-config-aws-storage dp-config-aws \
-  --repo "${TIBCO_DP_HELM_CHART_REPO}" \
-  --labels layer=1 \
-  --version "1.0.23" -f - <<EOF
-dns:
-  domain: "${DP_DOMAIN}"
-httpIngress:
-  enabled: false
-storageClass:
-  ebs:
-    enabled: ${DP_EBS_ENABLED}
-  efs:
-    enabled: ${DP_EFS_ENABLED}
-    parameters:
-      fileSystemId: "${DP_EFS_ID}"
-tigera-operator:
-  enabled: false
-ingress-nginx:
-  enabled: false
-EOF
-```
-
-Use the following command to get the storage class name.
-
-```bash
-$ kubectl get storageclass
-NAME            PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
-ebs-gp3         ebs.csi.aws.com         Retain          WaitForFirstConsumer   true                   7h17m
-efs-sc          efs.csi.aws.com         Delete          Immediate              false                  7h17m
-gp2 (default)   kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  7h41m
-```
-
-We have some scripts in the recipe to create and setup EFS. The `dp-config-aws` helm chart will create all these storage classes.
-* `ebs-gp3` is the storage class for EBS. This is used for
-  * storage class for data while provisioning TIBCO Enterprise Message Service™ (EMS) capability
-* `efs-sc` is the storage class for EFS. This is used for
-  * artifactmanager while provisioning TIBCO BusinessWorks™ Container Edition capability
-  * storage class for log when we provision EMS capability
-* `gp2` is the default storage class for EKS. AWS creates it by default and we don't recommend to use it.
-
-> [!IMPORTANT]
-> You will need to provide this storage class name to TIBCO® Control Plane when you deploy capability.
 
 ## Install Calico [OPTIONAL]
 For network policies to take effect in the EKS cluster, we will need to deploy [calico](https://www.tigera.io/project-calico/).
