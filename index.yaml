@@ -1967,6 +1967,25 @@ entries:
   dp-config-es:
   - apiVersion: v2
     appVersion: 1.0.0
+    created: "2023-11-28T04:21:51.053591079Z"
+    dependencies:
+    - condition: eck-custom-resources-operator.enabled
+      name: eck-custom-resources-operator
+      repository: https://xco-sk.github.io/eck-custom-resources/
+      version: 0.5.6
+    description: dp-config-es
+    digest: 8247934e7d9e61cb32698cd8adf9f8b3fb5f2d520dddaac65ef8e8a3870b1caa
+    home: https://github.com/tibco/cicinfra-integration
+    maintainers:
+    - email: cloud@tibco.com
+      name: TIBCO Cloud Dev Team
+    name: dp-config-es
+    type: application
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/dp-config-es-1.0.19/dp-config-es-1.0.19.tgz
+    version: 1.0.19
+  - apiVersion: v2
+    appVersion: 1.0.0
     created: "2023-11-24T15:23:11.924380899Z"
     dependencies:
     - condition: eck-custom-resources-operator.enabled
@@ -10007,4 +10026,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-11-24T15:23:11.925164726Z"
+generated: "2023-11-28T04:21:51.054438045Z"
