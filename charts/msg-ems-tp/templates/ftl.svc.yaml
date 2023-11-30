@@ -86,3 +86,4 @@ spec:
     protocol: TCP
   selector:
     tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-stsrole: "leader"
