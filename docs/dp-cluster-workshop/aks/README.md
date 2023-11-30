@@ -119,7 +119,7 @@ export DP_FILE_STORAGE_CLASS="azure-files-sc" # name of azure files storage clas
 export DP_INGRESS_CLASS="nginx" # name of main ingress class used by capabilities 
 export DP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
 export DP_DNS_RESOURCE_GROUP="" # replace with name of resource group containing dns record sets
-export DP_NETWORK_POLICY="" # possible values "" (to disable network policy), "calico"
+export DP_NETWORK_POLICY="" # possible values "" (to disable network policy), "azure", "calico"
 export STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account to be used for azure file shares
 export STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group
 ```
