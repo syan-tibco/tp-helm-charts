@@ -63,6 +63,7 @@ spec:
                 {{ include "msg.dp.labels" . | indent 16 }}
                 {{ include "msg.dp.net.all" . | indent 16}}
                 tib-msg-stsname: "{{ $stsname }}"
+                tib-msg-stsrole: "standby"
                 name: ems
                 app: msg-ems-ftl
                 app.kubernetes.io/name: "ems"
@@ -90,7 +91,7 @@ spec:
             topologySpreadConstraints:
             - maxSkew: 1
               topologyKey: kubernetes.io/hostname
-              {{- if eq "false" ( $emsParams.ems.allowNodeSkew | default "true" ) }}
+              {{- if eq "no" ( $emsParams.ems.allowNodeSkew | default "yes" ) }}
               whenUnsatisfiable: DoNotSchedule
               {{- else }}
               whenUnsatisfiable: ScheduleAnyway
@@ -99,10 +100,9 @@ spec:
                 matchLabels:
                   tib-msg-stsname: "{{ $stsname }}"
                   tib-dp-release: "{{ .Release.Name }}"
-            {{- if eq $emsParams.dp.where "aws" }}
             - maxSkew: 1
               topologyKey: topology.kubernetes.io/zone
-              {{- if eq "false" ( $emsParams.ems.allowZoneSkew | default "true" ) }}
+              {{- if eq "no" ( $emsParams.ems.allowZoneSkew | default "yes" ) }}
               whenUnsatisfiable: DoNotSchedule
               {{- else }}
               whenUnsatisfiable: ScheduleAnyway
@@ -111,7 +111,6 @@ spec:
                 matchLabels:
                   tib-msg-stsname: "{{ $stsname }}"
                   tib-dp-release: "{{ .Release.Name }}"
-            {{- end }}
             containers:
             - name: "{{ $stsname }}"
               image: "{{ $emsParams.ems.image }}"
