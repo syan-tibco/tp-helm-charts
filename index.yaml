@@ -802,6 +802,20 @@ entries:
     version: 1.0.0
   distributed-lock-operator:
   - apiVersion: v1
+    appVersion: 1.0.1
+    created: "2023-12-01T05:39:13.565193515Z"
+    description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
+    digest: e176fc28f2f52d52afa5073e73dd2b76d2cd4b8257502787022edcc00a032dc5
+    home: https://github.tibco.com/tibco/cicinfra-cic2-distributed-lock-operator.git
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: distributed-lock-operator
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/distributed-lock-operator-1.0.77/distributed-lock-operator-1.0.77.tgz
+    version: 1.0.77
+  - apiVersion: v1
     appVersion: 1.0.0
     created: "2023-11-30T09:17:39.627112465Z"
     description: TIBCO Platform Dataplane Infrastructre Core -- Distributed Lock operator
@@ -9347,6 +9361,23 @@ entries:
     version: 1.0.0
   tp-dp-secret-controller:
   - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2023-12-01T05:39:13.78792191Z"
+    description: TIBCO Data Plane -- Secret Controller
+    digest: c5267c1eecb34643ef06d70275c18bd95e15e8f8364f572c611cefe2ac5f667a
+    home: https://github.com/tibco/tp-core-dp-secret-controller
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - secret-controller
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-dp-secret-controller
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.43/tp-dp-secret-controller-1.0.43.tgz
+    version: 1.0.43
+  - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-11-30T09:17:40.656159398Z"
     description: TIBCO Data Plane -- Secret Controller
@@ -9687,6 +9718,23 @@ entries:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-dp-secret-controller-1.0.20/tp-dp-secret-controller-1.0.20.tgz
     version: 1.0.20
   tp-provisioner-agent:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2023-12-01T05:39:14.059861108Z"
+    description: TIBCO Data Plane -- Provisioner Agent
+    digest: 4e5ecf674f6e2b2d1617a6236986e7ae8520d04ed8b84a3aca9f4fbfb13a83d8
+    home: https://github.com/tibco/tp-core-provisioner-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - provisioner-agent
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-provisioner-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.200/tp-provisioner-agent-1.0.200.tgz
+    version: 1.0.200
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2023-11-17T08:42:11.910517891Z"
@@ -10298,4 +10346,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-12-01T04:43:36.353563345Z"
+generated: "2023-12-01T05:39:14.06087439Z"
