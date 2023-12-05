@@ -9767,6 +9767,23 @@ entries:
   tp-provisioner-agent:
   - apiVersion: v2
     appVersion: 1.0.1
+    created: "2023-12-05T08:43:28.035512534Z"
+    description: TIBCO Data Plane -- Provisioner Agent
+    digest: 6fe089d8a123955e7a939a889f8a0a9ae897490ea28e00234a45c26869179728
+    home: https://github.com/tibco/tp-core-provisioner-agent
+    icon: https://pbs.twimg.com/profile_images/1064638558110007296/K6HqaXwh_400x400.jpg
+    keywords:
+    - provisioner-agent
+    - data-plane
+    maintainers:
+    - email: compute-dev@tibco.com
+      name: TIBCO CIC Compute Dev Team
+    name: tp-provisioner-agent
+    urls:
+    - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-provisioner-agent-1.0.201/tp-provisioner-agent-1.0.201.tgz
+    version: 1.0.201
+  - apiVersion: v2
+    appVersion: 1.0.1
     created: "2023-12-01T05:39:14.059861108Z"
     description: TIBCO Data Plane -- Provisioner Agent
     digest: 4e5ecf674f6e2b2d1617a6236986e7ae8520d04ed8b84a3aca9f4fbfb13a83d8
@@ -10393,4 +10410,4 @@ entries:
     urls:
     - https://github.com/syan-tibco/tp-helm-charts/releases/download/tp-tibtunnel-1.0.70/tp-tibtunnel-1.0.70.tgz
     version: 1.0.70
-generated: "2023-12-04T11:24:37.215067523Z"
+generated: "2023-12-05T08:43:28.037230288Z"
