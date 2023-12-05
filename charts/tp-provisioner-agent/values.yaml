@@ -17,7 +17,7 @@ replicaCount: "1"
 
 image:
   name: tp-provisioner-agent
-  tag: 235
+  tag: 237
   pullPolicy: Always
 
 nodeSelector:
