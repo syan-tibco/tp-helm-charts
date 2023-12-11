@@ -29,7 +29,8 @@ data:
       clientId=$(echo -n "$response" | jq -rj .client_id | base64)
       clientSecret=$(echo -n "$response" | jq -rj .client_secret | base64)
       if [ -z "$clientId" ] || [ "$clientId" = "$(echo -n null | base64)" ]; then
-        echo "Failed to register client. Existing"
+        echo "Failed to register client!"
+        revokeIat
         exit 1
       fi
     }
@@ -121,14 +122,14 @@ data:
           exchangeIatForClientId
           createSecret
       fi
+      revokeIat
       if [ "$http_code" -eq 200 ] || [ "$http_code" -eq 201 ]; then
           echo "Secret created. Initialized successfully."
+          exit 0
       else
           echo "Client registration failed. Aborting!"
           exit "$http_code"
       fi
-      revokeIat
-      exit 0
     }
 
     # deletes the secret if it does not exist
