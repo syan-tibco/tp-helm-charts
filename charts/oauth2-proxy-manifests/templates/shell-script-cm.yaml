@@ -25,7 +25,13 @@ data:
     }'
 
     exchangeIatForClientId () {
-      response=$(curl -s https://{{ .Values.global.cp.cpHostname }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.global.cp.secrets.iat }}" --data "${body}" --header 'Content-Type: application/json')
+      response=$(curl -f -s https://{{ .Values.global.cp.cpHostname }}/idm/v1/oauth2/clients/register --header "Authorization: Bearer {{ .Values.global.cp.secrets.iat }}" --data "${body}" --header 'Content-Type: application/json')
+      exitCode=$?
+      if [ "$exitCode" -ne 0 ]; then
+          echo "Failed to register client!"
+          revokeIat
+          exit "$exitCode"
+      fi
       clientId=$(echo -n "$response" | jq -rj .client_id | base64)
       clientSecret=$(echo -n "$response" | jq -rj .client_secret | base64)
       if [ -z "$clientId" ] || [ "$clientId" = "$(echo -n null | base64)" ]; then
