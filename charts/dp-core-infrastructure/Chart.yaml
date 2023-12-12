@@ -12,7 +12,7 @@ dependencies:
 - condition: tp-provisioner-agent.enabled
   name: tp-provisioner-agent
   repository: alias:tibco-platform
-  version: 1.0.200
+  version: 1.0.202
 - condition: haproxy-ingress.enabled
   name: haproxy-ingress
   repository: ""
@@ -24,4 +24,4 @@ dependencies:
 description: A Helm chart for TIBCO Platform Data Plane Infrastructure
 name: dp-core-infrastructure
 type: application
-version: 1.0.262
+version: 1.0.263
