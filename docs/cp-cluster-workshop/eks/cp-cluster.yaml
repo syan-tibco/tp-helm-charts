@@ -1,0 +1,32 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJZkhvUmV5UGp4K0V3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TXpFeU1EZ3dOakEwTkRaYUZ3MHpNekV5TURVd05qQTVORFphTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUM1K3VmTEZBOEdXVlhwMnJCWllVYjQ4Vm9WQUY4V1VIYkI3Q1ZONDVwM3piSDl1bnhtVjhPcHcxWWcKMVJBaElIV2RaNDZkYlI1bGM1S0xUdGNiRHJHNDBQeUx2K0VKUG02SzJNaUJya3JENGsvUE04SHNpblg5cnRlegp5VEJ2alBhNGVMQjZsUVJkbGZnYlRVdzVpT1lVcDYwUGZaeU1TTDN2V3VaY3FJYlNBUlhIdGIyaUszYUtPa3RrCmhhNXRBM0UwRmphSy8rWURkOTV2cnE3Y05vcmpRU09HUVUrdUZXZXdacy8zd3A2WGExT1l1V3JhTjZ6SVE1NkQKbUtxb0I1NTRwQnJxZXZjZGNwMVZLckhySUtGOGgxVDFwdFFnUXVOelNzakRlUjFBVnJhTnpxQ1V0WGM5eUwvUgpzZmJRQ09aK1N1djJlM1dtUVhhMDlzaVVqd1ZaQWdNQkFBR2pXVEJYTUE0R0ExVWREd0VCL3dRRUF3SUNwREFQCkJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJUODVMVFFBZy90cXN2NkFyZHRqVnlXY0VPSTNUQVYKQmdOVkhSRUVEakFNZ2dwcmRXSmxjbTVsZEdWek1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQkFRQ3NRMGFkOVZ2TgplTzdqZFdsT3k3T2d6U2w4Mzh6N1k0TmZ4cE1rbHZmOTAyZFVFSzl0MXVXNlpPZXdLOG5aSklLb2NIM3R3QUNlCmVxTjIxcWNJcjFZYWxsM2Mrc08yMkVNS3plbGgzUnBXdEJpVHBqcCtQUUdqU2ZtQU5wWURUTm1PUldMM1FnRVQKdlRWZ3MvYUxNT2RRZUZXZXo0VTRNSkZjMDY4K3dtZmx3RXJTU1NGVWpvQXF4bUdOM2VJdTY4Nk9KTTlyeEVlVgp6V1JFdUZhM3FKdk4rUGtQd1R4NFY5ZkkwZjFwbGFCQ0NsVlE2ZVBrbkNpbWlGRjlGYXA4dG5seEtHQ2o5WGpLCnhnK1poMDE3Qkh6cldsRDhmZlZFZHpyT1ZZcFAzeUNheGNTSnJQV0xhd0tPdjJTcHF2U3pyK2JXbGRISzQ4SkEKVmFHTktWU2JSM0cvCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    server: https://099D8799C24535E1D73FA5A6F6032147.gr7.us-west-2.eks.amazonaws.com
+  name: cp-cluster.us-west-2.eksctl.io
+contexts:
+- context:
+    cluster: cp-cluster.us-west-2.eksctl.io
+    user: test@cp-cluster.us-west-2.eksctl.io
+  name: test@cp-cluster.us-west-2.eksctl.io
+current-context: test@cp-cluster.us-west-2.eksctl.io
+kind: Config
+preferences: {}
+users:
+- name: test@cp-cluster.us-west-2.eksctl.io
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - token
+      - -i
+      - cp-cluster
+      command: aws-iam-authenticator
+      env:
+      - name: AWS_STS_REGIONAL_ENDPOINTS
+        value: regional
+      - name: AWS_DEFAULT_REGION
+        value: us-west-2
+      - name: AWS_PROFILE
+        value: tropdev-view
+      provideClusterInfo: false
