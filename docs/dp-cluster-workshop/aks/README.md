@@ -67,7 +67,7 @@ The steps are run with a Service Principal sign in.
 The Service Principal has:
 * Contributor role assigned over the scope of subscription used for the workshop
 * User Access Administrator role assigned over the scope of subscription used for the workshop
-* API permissions for Directory.Read.All and ServicePrincipalEndpoint.Read.All for the AAD role to propagate
+* Microsoft Graph API permission for Directory.Read.All of type Application for the AAD role to propagate
 
 You will need to [create a service principal with these role assignments](https://learn.microsoft.com/en-us/cli/azure/azure-cli-sp-tutorial-1?tabs=bash) with the above roles and permissions.
 
