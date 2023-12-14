@@ -5,7 +5,7 @@
 #
 apiVersion: v2
 name: o11yservice
-version: 1.0.55
+version: 1.0.56
 appVersion: "1.0.1"
 description: TIBCO Platform Dataplane Infrastructre Core -- o11y-service
 home: https://github.com/tibco/tp-o11y-service.git

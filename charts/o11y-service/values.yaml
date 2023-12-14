@@ -86,6 +86,12 @@ global:
               service:
                 name: "otel-userapp"
                 port: 4317
+              logs:
+                name: "otel-userapp"
+              metrics:
+                name: "otel-userapp-metrics"
+              traces:
+                name: "otel-userapp"
           finops:
             collector:
               endpoint: "finops-collector-endpoint"
