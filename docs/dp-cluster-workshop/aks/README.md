@@ -379,6 +379,10 @@ storageClass:
   azuredisk:
     enabled: ${DP_DISK_ENABLED}
     name: ${DP_DISK_STORAGE_CLASS}
+  # reclaimPolicy: "Retain" # uncomment for TIBCO Enterprise Message Service™ (EMS) production recommended configuration
+## uncomment following section, if you want to use TIBCO Enterprise Message Service™ (EMS) production recommended configuration
+  # parameters:
+    # skuname: Premium_LRS # other values: Premium_ZRS, StandardSSD_LRS (default)
   azurefile:
     enabled: ${DP_FILE_ENABLED}
     name: ${DP_FILE_STORAGE_CLASS}
@@ -386,6 +390,16 @@ storageClass:
   # parameters:
     # storageAccount: ${STORAGE_ACCOUNT_NAME}
     # resourceGroup: ${STORAGE_ACCOUNT_RESOURCE_GROUP}
+## uncomment following section, if you want to use TIBCO Enterprise Message Service™ (EMS) production recommended configuration for Azure Files
+    # skuname: Premium_LRS # other values: Premium_ZRS, Standard_LRS (default)
+    # TIBCO Enterprise Message Service™ (EMS) production recommended values for mountOptions
+      # mountOptions:
+      # - soft
+      # - timeo=300
+      # - actimeo=1
+      # - retrans=2
+      # - vers=4.1
+      # - _netdev
 ingress-nginx:
   enabled: false
 EOF
