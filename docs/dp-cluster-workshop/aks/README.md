@@ -392,7 +392,7 @@ storageClass:
     #   storageAccount: ${STORAGE_ACCOUNT_NAME}
     #   resourceGroup: ${STORAGE_ACCOUNT_RESOURCE_GROUP}
 ## uncomment following section, if you want to use TIBCO Enterprise Message Service™ (EMS) recommended production configuration for Azure Files
-        # skuName: Premium_LRS # other values: Premium_ZRS, Standard_LRS (default)
+    #   skuName: Premium_LRS # other values: Premium_ZRS, Standard_LRS (default)
     ## TIBCO Enterprise Message Service™ (EMS) recommended production values for mountOptions
     # mountOptions:
     #   - soft
