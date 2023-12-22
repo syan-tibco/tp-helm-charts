@@ -2,5 +2,5 @@
 kubectl exec -it -n cp1-tibco-cp tp-cp-web-server-<POD_ID> -c cpwebserver -- bash
  
 ## Run the following inside container
-ls /private/tsc/servicemesh/
+ls /private/tsc/contributors/servicemesh/
 cic20_automation_infrastructure_aws.tgz  properties.bash
