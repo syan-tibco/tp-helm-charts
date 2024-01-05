@@ -3,7 +3,7 @@
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 #
-{{ if .Values.hpa.enabled -}}
+{{ if .Values.autoscaling.enabled -}}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -13,19 +13,19 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ include "o11y-service.consts.appName" . }}
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.cpu }}
+          averageUtilization: {{ .Values.autoscaling.cpu }}
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: {{ .Values.hpa.memory }}
+          averageUtilization: {{ .Values.autoscaling.memory }}
 {{- end -}}
