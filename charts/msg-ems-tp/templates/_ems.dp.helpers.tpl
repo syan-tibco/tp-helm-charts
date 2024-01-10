@@ -1,8 +1,8 @@
 
 {{/*
-MSG DP EMS-on-FTL Helpers
+MSGDP EMS Helpers
 #
-# Copyright (c) 2023. Cloud Software Group, Inc.
+# Copyright (c) 2023-2024. Cloud Software Group, Inc.
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 #
@@ -14,8 +14,8 @@ need.msg.ems.params
 */}}
 {{ define "need.msg.ems.params" }}
 {{-  $dpParams := include "need.msg.dp.params" . | fromYaml -}}
-{{-  $emsDefaultFullImage := printf "%s/%s/msg-ems-all:10.2.1-9" $dpParams.dp.registry $dpParams.dp.repo -}}
-{{-  $opsDefaultFullImage := printf "%s/%s/msg-dp-ops:1.0.0-2" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $emsDefaultFullImage := printf "%s/%s/msg-ems-all:10.3.0-1" $dpParams.dp.registry $dpParams.dp.repo -}}
+{{-  $opsDefaultFullImage := printf "%s/%s/msg-dp-ops:1.1.0-1" $dpParams.dp.registry $dpParams.dp.repo -}}
 # Set EMS defaults
 {{- $name := ternary .Release.Name .Values.ems.name ( not .Values.ems.name ) -}}
 {{- $sizing := ternary  "small" .Values.ems.sizing ( not  .Values.ems.sizing ) -}}

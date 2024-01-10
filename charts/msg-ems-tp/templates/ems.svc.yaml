@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023. Cloud Software Group, Inc.
+# Copyright (c) 2023-2024. Cloud Software Group, Inc.
 # This file is subject to the license terms contained
 # in the license file that is distributed with this file.
 #
@@ -13,6 +13,7 @@
 {{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
 {{- $svcProm := printf "%s-%s" $emsParams.ems.name "prom" -}}
 {{- $stsname := printf "%s-%s" $emsParams.ems.name "ems" -}}
+# NOTE: $svcProm is deprecated, use $name-metric-server starting in 1.1 in ems.prom.svc.yaml
 #
 kind: Service
 apiVersion: v1
@@ -69,7 +70,7 @@ metadata:
     tib-dp-app: msg-ems-ftl
     tib-msg-stsname: "{{ $stsname }}"
     tib-msg-ems-name: "{{ $emsParams.ems.name }}"
-    tib-msg-svcname: "{{ $svcEms }}"
+    tib-msg-svcname: "{{ $svcProm }}"
     {{ include "msg.dp.labels" . | indent 4 }}
     prometheus.io/scrape: "true"
     platform.tibco.com/scrape_finops: "true"

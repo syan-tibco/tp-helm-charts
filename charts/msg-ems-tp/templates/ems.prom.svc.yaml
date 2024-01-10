@@ -1,0 +1,104 @@
+#
+# Copyright (c) 2023-2024. Cloud Software Group, Inc.
+# This file is subject to the license terms contained
+# in the license file that is distributed with this file.
+#
+
+# .......... FTL SERVICE ..........
+---
+#
+# HELPER VARIABLE DEFINITIONS
+{{-  $emsParams := include "need.msg.ems.params" . | fromYaml -}}
+{{- $stsname := printf "%s-%s" $emsParams.ems.name "ems" -}}
+{{- $svcEms := printf "%s-%s" $emsParams.ems.name "ems" -}}
+{{- $svcPromServer := printf "%s-%s" $emsParams.ems.name "prom-server" -}}
+{{- $svcPromQueues := printf "%s-%s" $emsParams.ems.name "prom-queues" -}}
+{{- $svcPromTopics := printf "%s-%s" $emsParams.ems.name "prom-topics" -}}
+#
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "{{ $svcPromServer }}"
+  labels:
+    tib-dp-app: msg-ems-ftl
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-ems-name: "{{ $emsParams.ems.name }}"
+    tib-msg-svcname: "{{ $svcPromServer }}"
+    {{ include "msg.dp.labels" . | indent 4 }}
+    prometheus.io/scrape: "true"
+    platform.tibco.com/scrape_finops: "true"
+    prometheus.io/port: "{{ $emsParams.ems.ports.httpPort }}"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ $emsParams.ems.ports.httpPort }}"
+    prometheus.io/scheme: "http"
+    prometheus.io/path: /metrics
+    prometheus.io/insecure_skip_verify: "true"
+spec:
+  ports:
+  - name: ems-http-port
+    port: {{ int $emsParams.ems.ports.httpPort }}
+    protocol: TCP
+  selector:
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-stsrole: "leader"
+...
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "{{ $svcPromQueues }}"
+  labels:
+    tib-dp-app: msg-ems-ftl
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-ems-name: "{{ $emsParams.ems.name }}"
+    tib-msg-svcname: "{{ $svcPromServer }}"
+    {{ include "msg.dp.labels" . | indent 4 }}
+    prometheus.io/scrape: "true"
+    platform.tibco.com/scrape_finops: "true"
+    prometheus.io/port: "{{ $emsParams.ems.ports.httpPort }}"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ $emsParams.ems.ports.httpPort }}"
+    prometheus.io/scheme: "http"
+    prometheus.io/path: /metrics/queues
+    prometheus.io/insecure_skip_verify: "true"
+spec:
+  ports:
+  - name: ems-http-port
+    port: {{ int $emsParams.ems.ports.httpPort }}
+    protocol: TCP
+  selector:
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-stsrole: "leader"
+...
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "{{ $svcPromTopics }}"
+  labels:
+    tib-dp-app: msg-ems-ftl
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-ems-name: "{{ $emsParams.ems.name }}"
+    tib-msg-svcname: "{{ $svcPromServer }}"
+    {{ include "msg.dp.labels" . | indent 4 }}
+    prometheus.io/scrape: "true"
+    platform.tibco.com/scrape_finops: "true"
+    prometheus.io/port: "{{ $emsParams.ems.ports.httpPort }}"
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ $emsParams.ems.ports.httpPort }}"
+    prometheus.io/scheme: "http"
+    prometheus.io/path: /metrics/topics
+    prometheus.io/insecure_skip_verify: "true"
+spec:
+  ports:
+  - name: ems-http-port
+    port: {{ int $emsParams.ems.ports.httpPort }}
+    protocol: TCP
+  selector:
+    tib-msg-stsname: "{{ $stsname }}"
+    tib-msg-stsrole: "leader"
+...
