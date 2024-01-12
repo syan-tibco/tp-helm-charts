@@ -1,3 +1,7 @@
+# The development of TIBCO Platform has been moved to internal private repo! 
+This repo is archived and will be closed. 
+
+
 # Helm Charts for TIBCO® Platform
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
